@@ -75,11 +75,6 @@ Filter by specifig subscription is optional.
 
 ![image](https://user-images.githubusercontent.com/69309933/172848889-f25c8fce-ce12-4d0a-b426-a0fc64e40e17.png)
 
-I would love your response:
-1.	How many orphan resources have you found?
-2.	What Type of resources?
-3.	How much potential money has been saved?
-
 
 
 
