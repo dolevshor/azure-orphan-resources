@@ -4,9 +4,9 @@
     {
       "type": 1,
       "content": {
-        "json": "## Orphan resources\r\nUse this report to analyze all your orphan resources. \r\n<br/>\r\n<br/>"
+        "json": "## Orphan resources\r\nUse this report to analyze all your orphan resources."
       },
-      "name": "text - 1"
+      "name": "text - Title"
     },
     {
       "type": 9,
@@ -38,7 +38,7 @@
         "queryType": 0,
         "resourceType": "microsoft.operationalinsights/workspaces"
       },
-      "name": "parameters - 8"
+      "name": "parameters - Filter by Subscription"
     },
     {
       "type": 11,
@@ -129,7 +129,7 @@
           }
         ]
       },
-      "name": "links - 6",
+      "name": "links - Tabs",
       "styleSettings": {
         "padding": "0 0 20px 0"
       }
@@ -156,7 +156,7 @@
         "comparison": "isEqualTo",
         "value": "overview"
       },
-      "name": "text - Title"
+      "name": "text - Overview Azure Orphan Resources"
     },
     {
       "type": 3,
@@ -250,7 +250,7 @@
         "value": "overview"
       },
       "customWidth": "15",
-      "name": "query - Orphan Disks Count - Copy"
+      "name": "query - Orphan Disks Count"
     },
     {
       "type": 3,
@@ -344,7 +344,7 @@
         "value": "overview"
       },
       "customWidth": "15",
-      "name": "query - Orphan Disks Count - Copy - Copy"
+      "name": "query - Orphan Network Interfaces Count"
     },
     {
       "type": 3,
@@ -438,7 +438,7 @@
         "value": "overview"
       },
       "customWidth": "15",
-      "name": "query - Orphan Disks Count - Copy - Copy - Copy"
+      "name": "query - Orphan Public IPs Count"
     },
     {
       "type": 3,
@@ -532,7 +532,7 @@
         "value": "overview"
       },
       "customWidth": "15",
-      "name": "query - Orphan Disks Count - Copy - Copy - Copy - Copy"
+      "name": "query - Orphan Resource Groups Count"
     },
     {
       "type": 3,
@@ -626,7 +626,7 @@
         "value": "overview"
       },
       "customWidth": "15",
-      "name": "query - Orphan Disks Count - Copy - Copy - Copy - Copy - Copy"
+      "name": "query - Orphan Network Security Groups Count"
     },
     {
       "type": 3,
@@ -720,7 +720,7 @@
         "value": "overview"
       },
       "customWidth": "15",
-      "name": "query - Orphan Disks Count - Copy - Copy - Copy - Copy - Copy - Copy"
+      "name": "query - Orphan Availability Set Count"
     },
     {
       "type": 3,
@@ -814,7 +814,7 @@
         "value": "overview"
       },
       "customWidth": "15",
-      "name": "query - Total Route Tables"
+      "name": "query - Orphan Route Tables Count"
     },
     {
       "type": 3,
@@ -908,7 +908,7 @@
         "value": "overview"
       },
       "customWidth": "15",
-      "name": "query - Total Load Balancer"
+      "name": "query - Orphan Load Balancers Count"
     },
     {
       "type": 3,
@@ -1002,7 +1002,7 @@
         "value": "overview"
       },
       "customWidth": "15",
-      "name": "query - Total App Service Plan"
+      "name": "query - Orphan App Service Plans Count"
     },
     {
       "type": 1,
@@ -1026,7 +1026,7 @@
         "comparison": "isEqualTo",
         "value": "disks"
       },
-      "name": "text - Disks"
+      "name": "text - Title Orphan Disks"
     },
     {
       "type": 3,
@@ -1461,7 +1461,7 @@
         "query": "Resources\r\n| where type has \"microsoft.compute/disks\"\r\n| extend diskState = tostring(properties.diskState)\r\n| where managedBy == \"\" or diskState == 'Unattached'\r\n| extend Details = pack_all()\r\n| project id, resourceGroup, diskState, sku.name, properties.diskSizeGB, location, tags, subscriptionId, Details\r\n",
         "size": 3,
         "title": "Orphan Disks",
-        "noDataMessage": "No oprhaned disks found",
+        "noDataMessage": "No oprhan disks found",
         "showExportToExcel": true,
         "queryType": 1,
         "resourceType": "microsoft.resourcegraph/resources",
@@ -1598,7 +1598,7 @@
         "comparison": "isEqualTo",
         "value": "disks"
       },
-      "name": "query - Orphaned Disks"
+      "name": "query - Orphan Disks"
     },
     {
       "type": 1,
@@ -1622,7 +1622,7 @@
         "comparison": "isEqualTo",
         "value": "nics"
       },
-      "name": "text - Disks - Copy"
+      "name": "text - Title Network interfaces"
     },
     {
       "type": 3,
@@ -1716,7 +1716,7 @@
         "value": "nics"
       },
       "customWidth": "15",
-      "name": "query - Orphan Network Count"
+      "name": "query - Orphan Network Interfaces Count"
     },
     {
       "type": 3,
@@ -1833,7 +1833,7 @@
         "value": "nics"
       },
       "customWidth": "30",
-      "name": "query - Orphan Disks by Location"
+      "name": "query - Orphan Network Interfaces by Location"
     },
     {
       "type": 3,
@@ -1842,7 +1842,7 @@
         "query": "Resources\r\n| where type has \"microsoft.network/networkinterfaces\"\r\n| where isnull(properties.privateEndpoint)\r\n| where isnull(properties.privateLinkService)\r\n| where properties !has 'virtualmachine'\r\n| extend Details = pack_all()\r\n| project Resource=id, resourceGroup, location, tags, subscriptionId, Details",
         "size": 3,
         "title": "Orphan Network Interfaces",
-        "noDataMessage": "No oprhaned Network Interfaces found",
+        "noDataMessage": "No oprhan Network Interfaces found",
         "showExportToExcel": true,
         "queryType": 1,
         "resourceType": "microsoft.resourcegraph/resources",
@@ -1968,7 +1968,7 @@
         "comparison": "isEqualTo",
         "value": "nics"
       },
-      "name": "query - Orphan NICs"
+      "name": "query - Orphan Network Interfaces"
     },
     {
       "type": 1,
@@ -1992,7 +1992,7 @@
         "comparison": "isEqualTo",
         "value": "pip"
       },
-      "name": "text - Disks - Copy - Copy"
+      "name": "text - Title Orphan Public IPs"
     },
     {
       "type": 3,
@@ -2329,7 +2329,7 @@
         "query": "Resources\r\n| where type == \"microsoft.network/publicipaddresses\"\r\n| where properties.ipConfiguration == \"\"\r\n| extend Details = pack_all()\r\n| project Resource=id, resourceGroup, location, subscriptionId, sku.name, tags ,Details",
         "size": 3,
         "title": "Orphan Public IPs",
-        "noDataMessage": "No oprhaned Public IPs found",
+        "noDataMessage": "No oprhan Public IPs found",
         "showExportToExcel": true,
         "queryType": 1,
         "resourceType": "microsoft.resourcegraph/resources",
@@ -2487,7 +2487,7 @@
         "comparison": "isEqualTo",
         "value": "rg"
       },
-      "name": "text - Orphan Resource Groups"
+      "name": "text - Title Orphan Resource Groups"
     },
     {
       "type": 3,
@@ -2707,7 +2707,7 @@
         "query": "ResourceContainers\r\n | where type == \"microsoft.resources/subscriptions/resourcegroups\"\r\n | extend rgAndSub = strcat(resourceGroup, \"--\", subscriptionId)\r\n | join kind=leftouter (\r\n     Resources\r\n     | extend rgAndSub = strcat(resourceGroup, \"--\", subscriptionId)\r\n     | summarize count() by rgAndSub\r\n ) on rgAndSub\r\n | where isnull(count_)\r\n | extend Details = pack_all()\r\n | project subscriptionId, Resource=id, location, tags ,Details",
         "size": 3,
         "title": "Orphan Resource Groups",
-        "noDataMessage": "No oprhaned Resource Groups found",
+        "noDataMessage": "No oprhan Resource Groups found",
         "showExportToExcel": true,
         "queryType": 1,
         "resourceType": "microsoft.resourcegraph/resources",
@@ -2822,7 +2822,7 @@
         "comparison": "isEqualTo",
         "value": "rg"
       },
-      "name": "query - Orphan Public IPs - Copy"
+      "name": "query - Orphan Resource Groups"
     },
     {
       "type": 1,
@@ -2846,7 +2846,7 @@
         "comparison": "isEqualTo",
         "value": "nsg"
       },
-      "name": "text - Orphan Network Security Groups"
+      "name": "text - Title Orphan Network Security Groups"
     },
     {
       "type": 3,
@@ -3066,7 +3066,7 @@
         "query": "Resources\r\n| where type == \"microsoft.network/networksecuritygroups\" and isnull(properties.networkInterfaces) and isnull(properties.subnets)\r\n| extend Details = pack_all()\r\n| project subscriptionId, Resource=id, resourceGroup, location, tags, Details",
         "size": 3,
         "title": "Orphan Netwםrk Security Group",
-        "noDataMessage": "No oprhaned NSGs found",
+        "noDataMessage": "No oprhan NSGs found",
         "showExportToExcel": true,
         "queryType": 1,
         "resourceType": "microsoft.resourcegraph/resources",
@@ -3205,7 +3205,7 @@
         "comparison": "isEqualTo",
         "value": "avset"
       },
-      "name": "text - Orphan Network Security Groups - Copy"
+      "name": "text - Title Orphan Availability Set"
     },
     {
       "type": 3,
@@ -3425,7 +3425,7 @@
         "query": "Resources\r\n| where type =~ 'Microsoft.Compute/availabilitySets'\r\n| where properties.virtualMachines == \"[]\"\r\n| extend Details = pack_all()\r\n| project subscriptionId, Resource=id, resourceGroup, location, tags, Details",
         "size": 3,
         "title": "Orphan Availability Set",
-        "noDataMessage": "No oprhaned Availability Set found",
+        "noDataMessage": "No oprhan Availability Set found",
         "showExportToExcel": true,
         "queryType": 1,
         "resourceType": "microsoft.resourcegraph/resources",
@@ -3544,7 +3544,7 @@
         "comparison": "isEqualTo",
         "value": "avset"
       },
-      "name": "query - Orphan Public IPs - Copy - Copy - Copy"
+      "name": "query - Orphan Availability Set"
     },
     {
       "type": 1,
@@ -3568,7 +3568,7 @@
         "comparison": "isEqualTo",
         "value": "rt"
       },
-      "name": "text - Orphan Route Tables"
+      "name": "text - Title Orphan Route Tables"
     },
     {
       "type": 3,
@@ -3801,7 +3801,7 @@
         "value": "rt"
       },
       "customWidth": "30",
-      "name": "query - Orphan Availability Set by Location"
+      "name": "query - Orphan Route Tables by Location"
     },
     {
       "type": 3,
@@ -3810,7 +3810,7 @@
         "query": "resources\r\n| where type == \"microsoft.network/routetables\"\r\n| where isnull(properties.subnets)\r\n| extend Details = pack_all()\r\n| project subscriptionId, Resource=id, resourceGroup, location, tags, Details",
         "size": 3,
         "title": "Orphan Route Tables",
-        "noDataMessage": "No oprhaned Route Tables found",
+        "noDataMessage": "No oprhan Route Tables found",
         "showExportToExcel": true,
         "queryType": 1,
         "resourceType": "microsoft.resourcegraph/resources",
@@ -3941,7 +3941,7 @@
         "comparison": "isEqualTo",
         "value": "noshow"
       },
-      "name": "text - NoShow Route Tables - Copy"
+      "name": "text - NoShow begin Load Balancers"
     },
     {
       "type": 1,
@@ -3953,7 +3953,7 @@
         "comparison": "isEqualTo",
         "value": "lb"
       },
-      "name": "text - Orphan Load Balancers"
+      "name": "text - Title Orphan Load Balancers"
     },
     {
       "type": 3,
@@ -4047,7 +4047,7 @@
         "value": "lb"
       },
       "customWidth": "15",
-      "name": "query - Orphan Route Tables Count - Copy"
+      "name": "query - Orphan Load Balancers count"
     },
     {
       "type": 3,
@@ -4186,7 +4186,7 @@
         "value": "lb"
       },
       "customWidth": "30",
-      "name": "query - Orphan Availability Set by Location - Copy"
+      "name": "query - Orphan Load Balancers by Location"
     },
     {
       "type": 3,
@@ -4195,7 +4195,7 @@
         "query": "resources\r\n| where type == \"microsoft.network/loadbalancers\"\r\n| where properties.backendAddressPools == \"[]\"\r\n| extend Details = pack_all()\r\n| project subscriptionId, Resource=id, resourceGroup, location, tags, Details",
         "size": 3,
         "title": "Orphan Load Balances",
-        "noDataMessage": "No oprhaned Load Balances found",
+        "noDataMessage": "No oprhan Load Balances found",
         "showExportToExcel": true,
         "queryType": 1,
         "resourceType": "microsoft.resourcegraph/resources",
@@ -4314,7 +4314,7 @@
         "comparison": "isEqualTo",
         "value": "lb"
       },
-      "name": "query - Orphan Route Tables - Copy"
+      "name": "query - Orphan Load Balancers"
     },
     {
       "type": 1,
@@ -4326,7 +4326,7 @@
         "comparison": "isEqualTo",
         "value": "noshow"
       },
-      "name": "text - NoShow Route Tables - Copy - Copy"
+      "name": "text - NoShow begin App Service Plans"
     },
     {
       "type": 1,
@@ -4338,7 +4338,7 @@
         "comparison": "isEqualTo",
         "value": "appsp"
       },
-      "name": "text - Orphan App Service Plans"
+      "name": "text - Title Orphan App Service Plans"
     },
     {
       "type": 3,
@@ -4432,7 +4432,7 @@
         "value": "appsp"
       },
       "customWidth": "15",
-      "name": "query - Orphan App Service Plans"
+      "name": "query - Orphan App Service Plan count"
     },
     {
       "type": 3,
@@ -4858,7 +4858,7 @@
         "query": "resources\r\n| where type =~ \"microsoft.web/serverfarms\"\r\n| where properties.numberOfSites == 0\r\n| extend Details = pack_all()\r\n| project Resource=id, resourceGroup, location, subscriptionId, Sku=sku.name, Tier=sku.tier, tags ,Details",
         "size": 3,
         "title": "Orphan Load Balances",
-        "noDataMessage": "No oprhaned Load Balances found",
+        "noDataMessage": "No oprhan App Service Plans found",
         "showExportToExcel": true,
         "queryType": 1,
         "resourceType": "microsoft.resourcegraph/resources",
