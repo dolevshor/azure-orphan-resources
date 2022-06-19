@@ -25,10 +25,21 @@ Resources
 | where type has "microsoft.network/networkinterfaces"
 | where isnull(properties.privateEndpoint)
 | where isnull(properties.privateLinkService)
+| where properties.hostedWorkloads == "[]"
 | where properties !has 'virtualmachine'
 | extend Details = pack_all()
 | project Resource=id, resourceGroup, location, tags, subscriptionId, Details
 ```
+
+> **_Note:_** Azure Netapp Volumes are excluded from the orphaned resource query.
+
+> <sub> When creating a _Volume_ in _Azure Netapp Account_: <br/>
+        1) A delegated subnet created in the virtaul network (vNET). <br/>
+        2) A Network Interface created in the subnet with the fields: <br/><sub>
+&nbsp;&nbsp;&nbsp;&nbsp;- "linkedResourceType": "Microsoft.Netapp/volumes" <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- "hostedWorkloads": ["/subscriptions/<_**SubscriptionId**_>/resourceGroups/<_**RG-Name**_>/providers/Microsoft.NetApp/netAppAccounts/<_**NetAppAccount-Name**_>/capacityPools/<NetAppCapacityPool-Name>/volumes/<_**NetAppVolume-Name**_>" <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- "bareMetalServer": { "id": "/subscriptions/<_**SubscriptionId**_>/resourceGroups/<_**RG-Name**_>/providers/Microsoft.Network/bareMetalServers/<_**baremetalTenant_svm_ID**_>"}</sub></sub>
+
 
 #### Public IPs
 ```
