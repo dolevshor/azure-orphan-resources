@@ -256,7 +256,7 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "Resources\r\n| where type has \"microsoft.network/networkinterfaces\"\r\n| where isnull(properties.privateEndpoint)\r\n| where isnull(properties.privateLinkService)\r\n| where properties !has 'virtualmachine'\r\n| summarize count(type)",
+        "query": "Resources\r\n| where type has \"microsoft.network/networkinterfaces\"\r\n| where isnull(properties.privateEndpoint)\r\n| where isnull(properties.privateLinkService)\r\n| where properties.hostedWorkloads == \"[]\"\r\n| where properties !has 'virtualmachine'\r\n| summarize count(type)",
         "size": 4,
         "title": "Network Interfaces",
         "queryType": 1,
@@ -1628,7 +1628,7 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "Resources\r\n| where type has \"microsoft.network/networkinterfaces\"\r\n| where isnull(properties.privateEndpoint)\r\n| where isnull(properties.privateLinkService)\r\n| where properties !has 'virtualmachine'\r\n| summarize count(type)",
+        "query": "Resources\r\n| where type has \"microsoft.network/networkinterfaces\"\r\n| where isnull(properties.privateEndpoint)\r\n| where isnull(properties.privateLinkService)\r\n| where properties.hostedWorkloads == \"[]\"\r\n| where properties !has 'virtualmachine'\r\n| summarize count(type)",
         "size": 4,
         "title": "Total",
         "queryType": 1,
@@ -1722,7 +1722,7 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "Resources\r\n| where type has \"microsoft.network/networkinterfaces\"\r\n| where isnull(properties.privateEndpoint)\r\n| where isnull(properties.privateLinkService)\r\n| where properties !has 'virtualmachine'\r\n| summarize count(type) by location",
+        "query": "Resources\r\n| where type has \"microsoft.network/networkinterfaces\"\r\n| where isnull(properties.privateEndpoint)\r\n| where isnull(properties.privateLinkService)\r\n| where properties.hostedWorkloads == \"[]\"\r\n| where properties !has 'virtualmachine'\r\n| summarize count(type) by location",
         "size": 4,
         "title": "Count by Location",
         "queryType": 1,
@@ -3065,7 +3065,7 @@
         "version": "KqlItem/1.0",
         "query": "Resources\r\n| where type == \"microsoft.network/networksecuritygroups\" and isnull(properties.networkInterfaces) and isnull(properties.subnets)\r\n| extend Details = pack_all()\r\n| project subscriptionId, Resource=id, resourceGroup, location, tags, Details",
         "size": 3,
-        "title": "Orphan Netwםrk Security Group",
+        "title": "Orphan Network Security Group",
         "noDataMessage": "No oprhan NSGs found",
         "showExportToExcel": true,
         "queryType": 1,
