@@ -1,5 +1,13 @@
 {
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.7.4.23292",
+      "templateHash": "7036201207638235653"
+    }
+  },
   "parameters": {
     "workbookDisplayName": {
       "type": "string",
@@ -28,10 +36,24 @@
       "metadata": {
         "description": "The unique guid for this workbook instance"
       }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "The location in which this workbook instance will be deployed"
+      }
+    },
+    "isLocked": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "Define if this workbook instance should be locked or not."
+      }
     }
   },
   "variables": {
-    "workbookContent": {
+    "$fxv#0": {
       "version": "Notebook/1.0",
       "items": [
         {
@@ -277,12 +299,12 @@
               "style": "bignumber"
             }
           },
-          "customWidth": "15",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "overview"
           },
+          "customWidth": "15",
           "name": "query - Orphan Disks Count"
         },
         {
@@ -371,12 +393,12 @@
               "style": "bignumber"
             }
           },
-          "customWidth": "15",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "overview"
           },
+          "customWidth": "15",
           "name": "query - Orphan Network Interfaces Count"
         },
         {
@@ -465,12 +487,12 @@
               "style": "bignumber"
             }
           },
-          "customWidth": "15",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "overview"
           },
+          "customWidth": "15",
           "name": "query - Orphan Public IPs Count"
         },
         {
@@ -559,12 +581,12 @@
               "style": "bignumber"
             }
           },
-          "customWidth": "15",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "overview"
           },
+          "customWidth": "15",
           "name": "query - Orphan Resource Groups Count"
         },
         {
@@ -653,12 +675,12 @@
               "style": "bignumber"
             }
           },
-          "customWidth": "15",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "overview"
           },
+          "customWidth": "15",
           "name": "query - Orphan Network Security Groups Count"
         },
         {
@@ -747,12 +769,12 @@
               "style": "bignumber"
             }
           },
-          "customWidth": "15",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "overview"
           },
+          "customWidth": "15",
           "name": "query - Orphan Availability Set Count"
         },
         {
@@ -841,12 +863,12 @@
               "style": "bignumber"
             }
           },
-          "customWidth": "15",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "overview"
           },
+          "customWidth": "15",
           "name": "query - Orphan Route Tables Count"
         },
         {
@@ -935,12 +957,12 @@
               "style": "bignumber"
             }
           },
-          "customWidth": "15",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "overview"
           },
+          "customWidth": "15",
           "name": "query - Orphan Load Balancers Count"
         },
         {
@@ -1029,12 +1051,12 @@
               "style": "bignumber"
             }
           },
-          "customWidth": "15",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "overview"
           },
+          "customWidth": "15",
           "name": "query - Orphan App Service Plans Count"
         },
         {
@@ -1147,12 +1169,12 @@
               "style": "bignumber"
             }
           },
-          "customWidth": "15",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "disks"
           },
+          "customWidth": "15",
           "name": "query - Orphan Disks Count"
         },
         {
@@ -1245,12 +1267,12 @@
               "style": "bignumber"
             }
           },
-          "customWidth": "15",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "disks"
           },
+          "customWidth": "15",
           "name": "query - Total Orphan Disk Size (GB)"
         },
         {
@@ -1362,12 +1384,12 @@
               }
             }
           },
-          "customWidth": "30",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "disks"
           },
+          "customWidth": "30",
           "name": "query - Orphan Disks by DiskType"
         },
         {
@@ -1479,12 +1501,12 @@
               }
             }
           },
-          "customWidth": "30",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "disks"
           },
+          "customWidth": "30",
           "name": "query - Orphan Disks by Location"
         },
         {
@@ -1743,12 +1765,12 @@
               "style": "bignumber"
             }
           },
-          "customWidth": "15",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "nics"
           },
+          "customWidth": "15",
           "name": "query - Orphan Network Interfaces Count"
         },
         {
@@ -1860,12 +1882,12 @@
               }
             }
           },
-          "customWidth": "30",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "nics"
           },
+          "customWidth": "30",
           "name": "query - Orphan Network Interfaces by Location"
         },
         {
@@ -2113,12 +2135,12 @@
               "style": "bignumber"
             }
           },
-          "customWidth": "15",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "pip"
           },
+          "customWidth": "15",
           "name": "query - Orphan Public IPs Count"
         },
         {
@@ -2230,12 +2252,12 @@
               }
             }
           },
-          "customWidth": "30",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "pip"
           },
+          "customWidth": "30",
           "name": "query - Orphan Public IPs by Type"
         },
         {
@@ -2347,12 +2369,12 @@
               }
             }
           },
-          "customWidth": "30",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "pip"
           },
+          "customWidth": "30",
           "name": "query - Orphan Public IPs by Location"
         },
         {
@@ -2608,12 +2630,12 @@
               "style": "bignumber"
             }
           },
-          "customWidth": "15",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "rg"
           },
+          "customWidth": "15",
           "name": "query - Orphan Resource Groups Count"
         },
         {
@@ -2725,12 +2747,12 @@
               }
             }
           },
-          "customWidth": "30",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "rg"
           },
+          "customWidth": "30",
           "name": "query - Orphan Resource Groups by Location"
         },
         {
@@ -2967,12 +2989,12 @@
               "style": "bignumber"
             }
           },
-          "customWidth": "15",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "nsg"
           },
+          "customWidth": "15",
           "name": "query - Orphan NSGs Count"
         },
         {
@@ -3084,12 +3106,12 @@
               }
             }
           },
-          "customWidth": "30",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "nsg"
           },
+          "customWidth": "30",
           "name": "query - Orphan NSGs by Location"
         },
         {
@@ -3326,12 +3348,12 @@
               "style": "bignumber"
             }
           },
-          "customWidth": "15",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "avset"
           },
+          "customWidth": "15",
           "name": "query - Orphan Availability Set Count"
         },
         {
@@ -3443,12 +3465,12 @@
               }
             }
           },
-          "customWidth": "30",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "avset"
           },
+          "customWidth": "30",
           "name": "query - Orphan Availability Set by Location"
         },
         {
@@ -3689,12 +3711,12 @@
               "style": "bignumber"
             }
           },
-          "customWidth": "15",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "rt"
           },
+          "customWidth": "15",
           "name": "query - Orphan Route Tables Count"
         },
         {
@@ -3828,12 +3850,12 @@
               }
             }
           },
-          "customWidth": "30",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "rt"
           },
+          "customWidth": "30",
           "name": "query - Orphan Route Tables by Location"
         },
         {
@@ -4074,12 +4096,12 @@
               "style": "bignumber"
             }
           },
-          "customWidth": "15",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "lb"
           },
+          "customWidth": "15",
           "name": "query - Orphan Load Balancers count"
         },
         {
@@ -4213,12 +4235,12 @@
               }
             }
           },
-          "customWidth": "30",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "lb"
           },
+          "customWidth": "30",
           "name": "query - Orphan Load Balancers by Location"
         },
         {
@@ -4459,12 +4481,12 @@
               "style": "bignumber"
             }
           },
-          "customWidth": "15",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "appsp"
           },
+          "customWidth": "15",
           "name": "query - Orphan App Service Plan count"
         },
         {
@@ -4598,12 +4620,12 @@
               }
             }
           },
-          "customWidth": "25",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "appsp"
           },
+          "customWidth": "25",
           "name": "query - Orphan App Service Plan by sku"
         },
         {
@@ -4737,12 +4759,12 @@
               }
             }
           },
-          "customWidth": "25",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "appsp"
           },
+          "customWidth": "25",
           "name": "query - Orphan App Service Plan by Tier"
         },
         {
@@ -4876,12 +4898,12 @@
               }
             }
           },
-          "customWidth": "30",
           "conditionalVisibility": {
             "parameterName": "selectedTab",
             "comparison": "isEqualTo",
             "value": "appsp"
           },
+          "customWidth": "30",
           "name": "query - Orphan App Service Plan by Location"
         },
         {
@@ -5009,16 +5031,16 @@
           "name": "query - Orphan App Service Plans"
         }
       ],
-      "isLocked": false
-    }
+      "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+    },
+    "workbookContent": "[union(variables('$fxv#0'), createObject('isLocked', parameters('isLocked')))]"
   },
   "resources": [
     {
+      "type": "Microsoft.Insights/workbooks",
+      "apiVersion": "2022-04-01",
       "name": "[parameters('workbookId')]",
-      "type": "microsoft.insights/workbooks",
-      "location": "[resourceGroup().location]",
-      "apiVersion": "2021-03-08",
-      "dependsOn": [],
+      "location": "[parameters('location')]",
       "kind": "shared",
       "properties": {
         "displayName": "[parameters('workbookDisplayName')]",
@@ -5032,8 +5054,7 @@
   "outputs": {
     "workbookId": {
       "type": "string",
-      "value": "[resourceId( 'microsoft.insights/workbooks', parameters('workbookId'))]"
+      "value": "[resourceId('Microsoft.Insights/workbooks', parameters('workbookId'))]"
     }
-  },
-  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#"
+  }
 }
