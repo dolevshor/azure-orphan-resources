@@ -108,3 +108,21 @@ resources
 | extend Details = pack_all()
 | project Resource=id, resourceGroup, location, subscriptionId, Sku=sku.name, Tier=sku.tier, tags ,Details
 ```
+        
+#### Front Door WAF Policy
+```
+resources
+| where type == "microsoft.network/frontdoorwebapplicationfirewallpolicies"
+| where properties.frontendEndpointLinks== "[]" and properties.securityPolicyLinks == "[]"
+| extend Details = pack_all()
+| project Resource=id, resourceGroup, location, subscriptionId, Sku=sku.name, tags, Details
+```
+        
+#### Traffic Manager Profiles
+```
+resources
+| where type == "microsoft.network/trafficmanagerprofiles"
+| where properties.endpoints == "[]"
+| extend Details = pack_all()
+| project Resource=id, resourceGroup, location, subscriptionId, tags, Details
+```
