@@ -99,7 +99,7 @@
             "id": "284d9e1f-d3f9-477e-8fac-0fad54c0b392",
             "cellValue": "selectedTab",
             "linkTarget": "parameter",
-            "linkLabel": "Availability Set",
+            "linkLabel": "Availability Sets",
             "subTarget": "avset",
             "style": "link"
           },
@@ -125,6 +125,22 @@
             "linkTarget": "parameter",
             "linkLabel": "App Service Plans",
             "subTarget": "appsp",
+            "style": "link"
+          },
+          {
+            "id": "5dcae591-edaa-4077-8f49-adb192de2993",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Front Door WAF Policy",
+            "subTarget": "fdwafpolicy",
+            "style": "link"
+          },
+          {
+            "id": "726ea119-4802-49c5-b504-def16c4727d0",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Traffic Manager Profiles",
+            "subTarget": "tmprofile",
             "style": "link"
           }
         ]
@@ -350,9 +366,9 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "Resources\r\n| where type == \"microsoft.network/publicipaddresses\"\r\n| where properties.ipConfiguration == \"\"\r\n| summarize count(type)",
+        "query": "Resources\r\n| where type == \"microsoft.network/publicipaddresses\"\r\n| where properties.ipConfiguration == \"\" and properties.natGateway == \"\"\r\n| summarize count(type)",
         "size": 4,
-        "title": "Total Public IPs",
+        "title": "Public IPs",
         "queryType": 1,
         "resourceType": "microsoft.resourcegraph/resources",
         "crossComponentResources": [
@@ -634,7 +650,7 @@
         "version": "KqlItem/1.0",
         "query": "Resources\r\n| where type =~ 'Microsoft.Compute/availabilitySets'\r\n| where properties.virtualMachines == \"[]\"\r\n| summarize count(type)",
         "size": 4,
-        "title": "Availability Set",
+        "title": "Availability Sets",
         "queryType": 1,
         "resourceType": "microsoft.resourcegraph/resources",
         "crossComponentResources": [
@@ -720,7 +736,7 @@
         "value": "overview"
       },
       "customWidth": "15",
-      "name": "query - Orphan Availability Set Count"
+      "name": "query - Orphan Availability Sets Count"
     },
     {
       "type": 3,
@@ -916,7 +932,7 @@
         "version": "KqlItem/1.0",
         "query": "resources\r\n| where type =~ \"microsoft.web/serverfarms\"\r\n| where properties.numberOfSites == 0\r\n| summarize count(type)",
         "size": 4,
-        "title": "App Service Plan",
+        "title": "App Service Plans",
         "queryType": 1,
         "resourceType": "microsoft.resourcegraph/resources",
         "crossComponentResources": [
@@ -1003,6 +1019,194 @@
       },
       "customWidth": "15",
       "name": "query - Orphan App Service Plans Count"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "resources\r\n| where type =~ \"microsoft.network/frontdoorwebapplicationfirewallpolicies\"\r\n| where properties.frontendEndpointLinks== \"[]\" and properties.securityPolicyLinks == \"[]\"\r\n| summarize count(type)",
+        "size": 4,
+        "title": "Front Door WAF Policy",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "{Subscriptions}"
+        ],
+        "visualization": "tiles",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "$gen_group",
+              "formatter": 13,
+              "formatOptions": {
+                "linkTarget": "Resource",
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "id",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "subscriptionId",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "Details",
+              "formatter": 7,
+              "formatOptions": {
+                "linkTarget": "CellDetails",
+                "linkLabel": "🔍 View Details",
+                "linkIsContextBlade": true
+              }
+            }
+          ],
+          "rowLimit": 1000,
+          "hierarchySettings": {
+            "treeType": 1,
+            "groupBy": [
+              "subscriptionId"
+            ],
+            "expandTopLevel": true,
+            "finalBy": "id"
+          }
+        },
+        "sortBy": [],
+        "tileSettings": {
+          "titleContent": {
+            "columnMatch": "count_type",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "auto"
+            }
+          },
+          "showBorder": true,
+          "sortOrderField": 2,
+          "size": "auto"
+        },
+        "graphSettings": {
+          "type": 0,
+          "topContent": {
+            "columnMatch": "vmSize",
+            "formatter": 1
+          },
+          "centerContent": {
+            "columnMatch": "Count",
+            "formatter": 1,
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        },
+        "textSettings": {
+          "style": "bignumber"
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "overview"
+      },
+      "customWidth": "15",
+      "name": "query - Orphan Front Door WAF Policy Count"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "resources\r\n| where type =~ \"microsoft.network/trafficmanagerprofiles\"\r\n| where properties.endpoints == \"[]\"\r\n| summarize count(type)",
+        "size": 4,
+        "title": "Traffic Manager Profiles",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "{Subscriptions}"
+        ],
+        "visualization": "tiles",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "$gen_group",
+              "formatter": 13,
+              "formatOptions": {
+                "linkTarget": "Resource",
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "id",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "subscriptionId",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "Details",
+              "formatter": 7,
+              "formatOptions": {
+                "linkTarget": "CellDetails",
+                "linkLabel": "🔍 View Details",
+                "linkIsContextBlade": true
+              }
+            }
+          ],
+          "rowLimit": 1000,
+          "hierarchySettings": {
+            "treeType": 1,
+            "groupBy": [
+              "subscriptionId"
+            ],
+            "expandTopLevel": true,
+            "finalBy": "id"
+          }
+        },
+        "sortBy": [],
+        "tileSettings": {
+          "titleContent": {
+            "columnMatch": "count_type",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "auto"
+            }
+          },
+          "showBorder": true,
+          "sortOrderField": 2,
+          "size": "auto"
+        },
+        "graphSettings": {
+          "type": 0,
+          "topContent": {
+            "columnMatch": "vmSize",
+            "formatter": 1
+          },
+          "centerContent": {
+            "columnMatch": "Count",
+            "formatter": 1,
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        },
+        "textSettings": {
+          "style": "bignumber"
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "overview"
+      },
+      "customWidth": "15",
+      "name": "query - Orphan Traffic Manager Profiles Count"
     },
     {
       "type": 1,
@@ -1508,8 +1712,8 @@
           },
           "sortBy": [
             {
-              "itemKey": "resourceGroup",
-              "sortOrder": 2
+              "itemKey": "$gen_link_sku_name_4",
+              "sortOrder": 1
             }
           ],
           "labelSettings": [
@@ -1545,8 +1749,8 @@
         },
         "sortBy": [
           {
-            "itemKey": "resourceGroup",
-            "sortOrder": 2
+            "itemKey": "$gen_link_sku_name_4",
+            "sortOrder": 1
           }
         ],
         "tileSettings": {
@@ -1998,7 +2202,7 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "Resources\r\n| where type == \"microsoft.network/publicipaddresses\"\r\n| where properties.ipConfiguration == \"\"\r\n| summarize count(type)",
+        "query": "Resources\r\n| where type == \"microsoft.network/publicipaddresses\"\r\n| where properties.ipConfiguration == \"\" and properties.natGateway == \"\"\r\n| summarize count(type)",
         "size": 4,
         "title": "Total",
         "queryType": 1,
@@ -2092,7 +2296,7 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "Resources\r\n| where type == \"microsoft.network/publicipaddresses\"\r\n| where properties.ipConfiguration == \"\"\r\n| summarize count(type) by tostring(sku.name)",
+        "query": "Resources\r\n| where type == \"microsoft.network/publicipaddresses\"\r\n| where properties.ipConfiguration == \"\" and properties.natGateway == \"\"\r\n| summarize count(type) by tostring(sku.name)",
         "size": 4,
         "title": "Count by Type",
         "queryType": 1,
@@ -2202,14 +2406,131 @@
         "comparison": "isEqualTo",
         "value": "pip"
       },
-      "customWidth": "30",
+      "customWidth": "25",
       "name": "query - Orphan Public IPs by Type"
     },
     {
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "Resources\r\n| where type == \"microsoft.network/publicipaddresses\"\r\n| where properties.ipConfiguration == \"\"\r\n| summarize count(type) by location",
+        "query": "Resources\r\n| where type == \"microsoft.network/publicipaddresses\"\r\n| where properties.ipConfiguration == \"\" and properties.natGateway == \"\"\r\n| summarize count(type) by AllocationMethod=tostring(properties.publicIPAllocationMethod)",
+        "size": 4,
+        "title": "Count by Allocation Method",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "{Subscriptions}"
+        ],
+        "visualization": "piechart",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "$gen_group",
+              "formatter": 13,
+              "formatOptions": {
+                "linkTarget": "Resource",
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "id",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "subscriptionId",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "Details",
+              "formatter": 7,
+              "formatOptions": {
+                "linkTarget": "CellDetails",
+                "linkLabel": "🔍 View Details",
+                "linkIsContextBlade": true
+              }
+            }
+          ],
+          "rowLimit": 1000,
+          "hierarchySettings": {
+            "treeType": 1,
+            "groupBy": [
+              "subscriptionId"
+            ],
+            "expandTopLevel": true,
+            "finalBy": "id"
+          }
+        },
+        "sortBy": [],
+        "tileSettings": {
+          "titleContent": {
+            "columnMatch": "DiskType",
+            "formatter": 1
+          },
+          "leftContent": {
+            "columnMatch": "Count",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "auto"
+            },
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          },
+          "showBorder": true
+        },
+        "graphSettings": {
+          "type": 0,
+          "topContent": {
+            "columnMatch": "vmSize",
+            "formatter": 1
+          },
+          "centerContent": {
+            "columnMatch": "Count",
+            "formatter": 1,
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        },
+        "chartSettings": {
+          "showMetrics": false,
+          "showLegend": true
+        },
+        "mapSettings": {
+          "locInfo": "LatLong",
+          "sizeSettings": "Count",
+          "sizeAggregation": "Sum",
+          "legendMetric": "Count",
+          "legendAggregation": "Sum",
+          "itemColorSettings": {
+            "type": "heatmap",
+            "colorAggregation": "Sum",
+            "nodeColorField": "Count",
+            "heatmapPalette": "greenRed"
+          }
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "pip"
+      },
+      "customWidth": "25",
+      "name": "query - Orphan Public IPs by Allocation Method"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "Resources\r\n| where type == \"microsoft.network/publicipaddresses\"\r\n| where properties.ipConfiguration == \"\" and properties.natGateway == \"\"\r\n| summarize count(type) by location",
         "size": 4,
         "title": "Count by Location",
         "queryType": 1,
@@ -2319,14 +2640,14 @@
         "comparison": "isEqualTo",
         "value": "pip"
       },
-      "customWidth": "30",
+      "customWidth": "25",
       "name": "query - Orphan Public IPs by Location"
     },
     {
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "Resources\r\n| where type == \"microsoft.network/publicipaddresses\"\r\n| where properties.ipConfiguration == \"\"\r\n| extend Details = pack_all()\r\n| project Resource=id, resourceGroup, location, subscriptionId, sku.name, tags ,Details",
+        "query": "Resources\r\n| where type == \"microsoft.network/publicipaddresses\"\r\n| where properties.ipConfiguration == \"\" and properties.natGateway == \"\"\r\n| extend Details = pack_all()\r\n| project Resource=id, resourceGroup, location, subscriptionId, tostring(sku.name), AllocationMethod=tostring(properties.publicIPAllocationMethod), tags, Details",
         "size": 3,
         "title": "Orphan Public IPs",
         "noDataMessage": "No oprhan Public IPs found",
@@ -4053,6 +4374,145 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
+        "query": "resources\r\n| where type == \"microsoft.network/loadbalancers\"\r\n| where properties.backendAddressPools == \"[]\"\r\n| summarize count(type) by tostring(sku.name)",
+        "size": 4,
+        "title": "Count by Type",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "{Subscriptions}"
+        ],
+        "visualization": "piechart",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "$gen_group",
+              "formatter": 13,
+              "formatOptions": {
+                "linkTarget": "Resource",
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "id",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "subscriptionId",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "Details",
+              "formatter": 7,
+              "formatOptions": {
+                "linkTarget": "CellDetails",
+                "linkLabel": "🔍 View Details",
+                "linkIsContextBlade": true
+              }
+            }
+          ],
+          "rowLimit": 1000,
+          "hierarchySettings": {
+            "treeType": 1,
+            "groupBy": [
+              "subscriptionId"
+            ],
+            "expandTopLevel": true,
+            "finalBy": "id"
+          },
+          "labelSettings": [
+            {
+              "columnId": "subscriptionId",
+              "label": "Subscription"
+            },
+            {
+              "columnId": "Resource",
+              "label": "Resource Name"
+            },
+            {
+              "columnId": "resourceGroup",
+              "label": "Resource Group"
+            },
+            {
+              "columnId": "location",
+              "label": "Location"
+            },
+            {
+              "columnId": "tags",
+              "label": "Tags"
+            }
+          ]
+        },
+        "sortBy": [],
+        "tileSettings": {
+          "titleContent": {
+            "columnMatch": "DiskType",
+            "formatter": 1
+          },
+          "leftContent": {
+            "columnMatch": "Count",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "auto"
+            },
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          },
+          "showBorder": true
+        },
+        "graphSettings": {
+          "type": 0,
+          "topContent": {
+            "columnMatch": "vmSize",
+            "formatter": 1
+          },
+          "centerContent": {
+            "columnMatch": "Count",
+            "formatter": 1,
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        },
+        "chartSettings": {
+          "showMetrics": false,
+          "showLegend": true
+        },
+        "mapSettings": {
+          "locInfo": "LatLong",
+          "sizeSettings": "Count",
+          "sizeAggregation": "Sum",
+          "legendMetric": "Count",
+          "legendAggregation": "Sum",
+          "itemColorSettings": {
+            "type": "heatmap",
+            "colorAggregation": "Sum",
+            "nodeColorField": "Count",
+            "heatmapPalette": "greenRed"
+          }
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "lb"
+      },
+      "customWidth": "30",
+      "name": "query - Orphan Load Balancers by Type"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
         "query": "resources\r\n| where type == \"microsoft.network/loadbalancers\"\r\n| where properties.backendAddressPools == \"[]\"\r\n| summarize count(type) by location",
         "size": 4,
         "title": "Count by Location",
@@ -4192,7 +4652,7 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "resources\r\n| where type == \"microsoft.network/loadbalancers\"\r\n| where properties.backendAddressPools == \"[]\"\r\n| extend Details = pack_all()\r\n| project subscriptionId, Resource=id, resourceGroup, location, tags, Details",
+        "query": "resources\r\n| where type == \"microsoft.network/loadbalancers\"\r\n| where properties.backendAddressPools == \"[]\"\r\n| extend Details = pack_all()\r\n| project subscriptionId, Resource=id, resourceGroup, location, tostring(sku.name), tags, Details",
         "size": 3,
         "title": "Orphan Load Balances",
         "noDataMessage": "No oprhan Load Balances found",
@@ -4257,6 +4717,10 @@
             {
               "columnId": "location",
               "label": "Location"
+            },
+            {
+              "columnId": "sku_name",
+              "label": "Type"
             },
             {
               "columnId": "tags",
@@ -4974,7 +5438,633 @@
         "value": "appsp"
       },
       "name": "query - Orphan App Service Plans"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## NoShow - End App Service Plans\r\n\r\n## NoShow - Begin Front Door WAF Policy"
+      },
+      "conditionalVisibility": {
+        "parameterName": "noshow",
+        "comparison": "isEqualTo",
+        "value": "noshow"
+      },
+      "name": "text - NoShow begin Front Door WAF Policy"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "# Orphan Front Door WAF Policy"
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "fdwafpolicy"
+      },
+      "name": "text - Title Orphan Front Door WAF Policy"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "resources\r\n| where type == \"microsoft.network/frontdoorwebapplicationfirewallpolicies\"\r\n| where properties.frontendEndpointLinks== \"[]\" and properties.securityPolicyLinks == \"[]\"\r\n| summarize count(type)",
+        "size": 4,
+        "title": "Total",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "{Subscriptions}"
+        ],
+        "visualization": "tiles",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "$gen_group",
+              "formatter": 13,
+              "formatOptions": {
+                "linkTarget": "Resource",
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "id",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "subscriptionId",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "Details",
+              "formatter": 7,
+              "formatOptions": {
+                "linkTarget": "CellDetails",
+                "linkLabel": "🔍 View Details",
+                "linkIsContextBlade": true
+              }
+            }
+          ],
+          "rowLimit": 1000,
+          "hierarchySettings": {
+            "treeType": 1,
+            "groupBy": [
+              "subscriptionId"
+            ],
+            "expandTopLevel": true,
+            "finalBy": "id"
+          }
+        },
+        "sortBy": [],
+        "tileSettings": {
+          "titleContent": {
+            "columnMatch": "count_type",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "auto"
+            }
+          },
+          "showBorder": true,
+          "sortOrderField": 2,
+          "size": "auto"
+        },
+        "graphSettings": {
+          "type": 0,
+          "topContent": {
+            "columnMatch": "vmSize",
+            "formatter": 1
+          },
+          "centerContent": {
+            "columnMatch": "Count",
+            "formatter": 1,
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        },
+        "textSettings": {
+          "style": "bignumber"
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "fdwafpolicy"
+      },
+      "customWidth": "15",
+      "name": "query - Orphan Front Door WAF Policy count"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "resources\r\n| where type == \"microsoft.network/frontdoorwebapplicationfirewallpolicies\"\r\n| where properties.frontendEndpointLinks== \"[]\" and properties.securityPolicyLinks == \"[]\"\r\n| summarize count(type) by tostring(sku.name)",
+        "size": 4,
+        "title": "Count by sku",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "{Subscriptions}"
+        ],
+        "visualization": "piechart",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "$gen_group",
+              "formatter": 13,
+              "formatOptions": {
+                "linkTarget": "Resource",
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "id",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "subscriptionId",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "Details",
+              "formatter": 7,
+              "formatOptions": {
+                "linkTarget": "CellDetails",
+                "linkLabel": "🔍 View Details",
+                "linkIsContextBlade": true
+              }
+            }
+          ],
+          "rowLimit": 1000,
+          "hierarchySettings": {
+            "treeType": 1,
+            "groupBy": [
+              "subscriptionId"
+            ],
+            "expandTopLevel": true,
+            "finalBy": "id"
+          },
+          "labelSettings": [
+            {
+              "columnId": "subscriptionId",
+              "label": "Subscription"
+            },
+            {
+              "columnId": "Resource",
+              "label": "Resource Name"
+            },
+            {
+              "columnId": "resourceGroup",
+              "label": "Resource Group"
+            },
+            {
+              "columnId": "location",
+              "label": "Location"
+            },
+            {
+              "columnId": "tags",
+              "label": "Tags"
+            }
+          ]
+        },
+        "sortBy": [],
+        "tileSettings": {
+          "titleContent": {
+            "columnMatch": "DiskType",
+            "formatter": 1
+          },
+          "leftContent": {
+            "columnMatch": "Count",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "auto"
+            },
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          },
+          "showBorder": true
+        },
+        "graphSettings": {
+          "type": 0,
+          "topContent": {
+            "columnMatch": "vmSize",
+            "formatter": 1
+          },
+          "centerContent": {
+            "columnMatch": "Count",
+            "formatter": 1,
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        },
+        "chartSettings": {
+          "showMetrics": false,
+          "showLegend": true
+        },
+        "mapSettings": {
+          "locInfo": "LatLong",
+          "sizeSettings": "Count",
+          "sizeAggregation": "Sum",
+          "legendMetric": "Count",
+          "legendAggregation": "Sum",
+          "itemColorSettings": {
+            "type": "heatmap",
+            "colorAggregation": "Sum",
+            "nodeColorField": "Count",
+            "heatmapPalette": "greenRed"
+          }
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "fdwafpolicy"
+      },
+      "customWidth": "25",
+      "name": "query - Orphan Front Door WAF Policy by sku"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "resources\r\n| where type == \"microsoft.network/frontdoorwebapplicationfirewallpolicies\"\r\n| where properties.frontendEndpointLinks== \"[]\" and properties.securityPolicyLinks == \"[]\"\r\n| extend Details = pack_all()\r\n| project Resource=id, resourceGroup, location, subscriptionId, Sku=sku.name, tags, Details",
+        "size": 3,
+        "title": "Orphan Front Door WAF Policy",
+        "noDataMessage": "No oprhan Front Door WAF Policy found",
+        "showExportToExcel": true,
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "{Subscriptions}"
+        ],
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "$gen_group",
+              "formatter": 13,
+              "formatOptions": {
+                "linkTarget": "Resource",
+                "linkIsContextBlade": true,
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "subscriptionId",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "Resource",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "Details",
+              "formatter": 7,
+              "formatOptions": {
+                "linkTarget": "CellDetails",
+                "linkLabel": "🔍 View Details",
+                "linkIsContextBlade": true
+              }
+            }
+          ],
+          "rowLimit": 1000,
+          "filter": true,
+          "hierarchySettings": {
+            "treeType": 1,
+            "groupBy": [
+              "subscriptionId"
+            ],
+            "expandTopLevel": true,
+            "finalBy": "Resource"
+          },
+          "labelSettings": [
+            {
+              "columnId": "resourceGroup",
+              "label": "Resource Group"
+            },
+            {
+              "columnId": "location",
+              "label": "Location"
+            },
+            {
+              "columnId": "subscriptionId",
+              "label": "Subscription"
+            },
+            {
+              "columnId": "tags",
+              "label": "Tags"
+            }
+          ]
+        },
+        "sortBy": [],
+        "tileSettings": {
+          "titleContent": {
+            "columnMatch": "vmSize",
+            "formatter": 1,
+            "formatOptions": {
+              "showIcon": true
+            }
+          },
+          "leftContent": {
+            "columnMatch": "Count",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "auto",
+              "showIcon": true
+            },
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          },
+          "showBorder": true
+        },
+        "graphSettings": {
+          "type": 0,
+          "topContent": {
+            "columnMatch": "vmSize",
+            "formatter": 1
+          },
+          "centerContent": {
+            "columnMatch": "Count",
+            "formatter": 1,
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "fdwafpolicy"
+      },
+      "name": "query - Orphan Front Door WAF Policy"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## NoShow - End Front Door WAF Policy\r\n\r\n## NoShow - Begin Traffic Manager Profiles"
+      },
+      "conditionalVisibility": {
+        "parameterName": "noshow",
+        "comparison": "isEqualTo",
+        "value": "noshow"
+      },
+      "name": "text - NoShow begin Traffic Manager Profiles"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "# Orphan Traffic Manager Profiles"
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "tmprofile"
+      },
+      "name": "text - Title Orphan Traffic Manager Profiles"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "resources\r\n| where type == \"microsoft.network/trafficmanagerprofiles\"\r\n| where properties.endpoints == \"[]\"\r\n| summarize count(type)",
+        "size": 4,
+        "title": "Total",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "{Subscriptions}"
+        ],
+        "visualization": "tiles",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "$gen_group",
+              "formatter": 13,
+              "formatOptions": {
+                "linkTarget": "Resource",
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "id",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "subscriptionId",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "Details",
+              "formatter": 7,
+              "formatOptions": {
+                "linkTarget": "CellDetails",
+                "linkLabel": "🔍 View Details",
+                "linkIsContextBlade": true
+              }
+            }
+          ],
+          "rowLimit": 1000,
+          "hierarchySettings": {
+            "treeType": 1,
+            "groupBy": [
+              "subscriptionId"
+            ],
+            "expandTopLevel": true,
+            "finalBy": "id"
+          }
+        },
+        "sortBy": [],
+        "tileSettings": {
+          "titleContent": {
+            "columnMatch": "count_type",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "auto"
+            }
+          },
+          "showBorder": true,
+          "sortOrderField": 2,
+          "size": "auto"
+        },
+        "graphSettings": {
+          "type": 0,
+          "topContent": {
+            "columnMatch": "vmSize",
+            "formatter": 1
+          },
+          "centerContent": {
+            "columnMatch": "Count",
+            "formatter": 1,
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        },
+        "textSettings": {
+          "style": "bignumber"
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "tmprofile"
+      },
+      "customWidth": "15",
+      "name": "query - Orphan Traffic Manager Profiles"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "resources\r\n| where type == \"microsoft.network/trafficmanagerprofiles\"\r\n| where properties.endpoints == \"[]\"\r\n| extend Details = pack_all()\r\n| project Resource=id, resourceGroup, location, subscriptionId, tags, Details",
+        "size": 3,
+        "title": "Orphan Traffic Manager Profiles",
+        "noDataMessage": "No oprhan Traffic Manager Profiles found",
+        "showExportToExcel": true,
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "{Subscriptions}"
+        ],
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "$gen_group",
+              "formatter": 13,
+              "formatOptions": {
+                "linkTarget": "Resource",
+                "linkIsContextBlade": true,
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "subscriptionId",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "Resource",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "Details",
+              "formatter": 7,
+              "formatOptions": {
+                "linkTarget": "CellDetails",
+                "linkLabel": "🔍 View Details",
+                "linkIsContextBlade": true
+              }
+            }
+          ],
+          "rowLimit": 1000,
+          "filter": true,
+          "hierarchySettings": {
+            "treeType": 1,
+            "groupBy": [
+              "subscriptionId"
+            ],
+            "expandTopLevel": true,
+            "finalBy": "Resource"
+          },
+          "labelSettings": [
+            {
+              "columnId": "resourceGroup",
+              "label": "Resource Group"
+            },
+            {
+              "columnId": "location",
+              "label": "Location"
+            },
+            {
+              "columnId": "subscriptionId",
+              "label": "Subscription"
+            },
+            {
+              "columnId": "tags",
+              "label": "Tags"
+            }
+          ]
+        },
+        "sortBy": [],
+        "tileSettings": {
+          "titleContent": {
+            "columnMatch": "vmSize",
+            "formatter": 1,
+            "formatOptions": {
+              "showIcon": true
+            }
+          },
+          "leftContent": {
+            "columnMatch": "Count",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "auto",
+              "showIcon": true
+            },
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          },
+          "showBorder": true
+        },
+        "graphSettings": {
+          "type": 0,
+          "topContent": {
+            "columnMatch": "vmSize",
+            "formatter": 1
+          },
+          "centerContent": {
+            "columnMatch": "Count",
+            "formatter": 1,
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "tmprofile"
+      },
+      "name": "query - Orphan Traffic Manager Profiles"
     }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
   ],
   "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
 }
