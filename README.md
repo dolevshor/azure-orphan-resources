@@ -24,6 +24,8 @@ Type of resources covered:
 * Route Tables
 * Load Balancers
 * App Service Plans
+* Front Door WAF Policy
+* Traffic Manager Profiles
 
 ## How to use it?
 Importing this Workbook to your Azure environment is quite simple.
