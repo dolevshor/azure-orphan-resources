@@ -126,3 +126,66 @@ resources
 | extend Details = pack_all()
 | project Resource=id, resourceGroup, location, subscriptionId, tags, Details
 ```
+        
+#### Snapshots
+```
+resources
+| where type == 'microsoft.compute/snapshots'
+| extend TimeCreated = properties.timeCreated
+| where TimeCreated < ago(30d)
+| extend Details = pack_all()
+| project Resource=id, resourceGroup, location, TimeCreated ,subscriptionId, tags, Details
+```
+                              
+#### VM
+```
+resources
+| where type == 'microsoft.compute/virtualmachines'
+| extend vmstatus = properties.extended.instanceView.powerState.displayStatus
+| where vmstatus != 'VM running'
+| summarize count(type)
+```
+                              
+#### Alerts
+```
+resources
+| where type contains 'microsoft.insights/scheduledqueryrules' or type contains 'microsoft.insights/activitylogalerts' or type contains 'microsoft.insights/metricalerts'
+| extend alertstatus = properties.enabled
+| where alertstatus == 'false'
+| summarize count(name)
+```
+                              
+#### LB
+```
+resources
+| where type == "microsoft.network/loadbalancers"
+| where properties.loadBalancingRules == "[]"
+| extend Details = pack_all()
+| project Resource=id, resourceGroup, location, subscriptionId, tags, Details
+```
+                              
+#### Certificate Expiration(Defined 30 days as an example)
+```
+resources
+| where type == 'microsoft.web/certificates'
+| extend expiry = todatetime(properties.expirationDate)
+| where expiry between (now().. ago(-30d))
+| project CertName=properties.subjectName, expiry
+```
+                              
+#### Virtual Networks without Subnet
+```
+resources
+| where type == "microsoft.network/virtualnetworks"
+| where properties.subnets == "[]"
+| extend Details = pack_all()
+| project Resource=id, resourceGroup, location, subscriptionId, tags, Details
+```
+                              
+#### Unassociated network security groups
+```
+Resources
+| where type =~ 'microsoft.network/networksecuritygroups' and isnull(properties.networkInterfaces) and isnull(properties.subnets)
+| project name, resourceGroup
+| project Resource=id, resourceGroup, location, subscriptionId, tags, Details
+```

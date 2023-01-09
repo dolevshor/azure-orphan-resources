@@ -26,6 +26,13 @@ Type of resources covered:
 * App Service Plans
 * Front Door WAF Policy
 * Traffic Manager Profiles
+* Snapshots
+* VMs
+* Alerts
+* Load Balancers
+* Certificates
+* VNets vithout subnets
+* NSGs with no associations
 
 ## How to use it?
 Importing this Workbook to your Azure environment is quite simple.
