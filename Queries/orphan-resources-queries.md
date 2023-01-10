@@ -118,6 +118,15 @@ resources
 | project Resource=id, resourceGroup, location, subscriptionId, Sku=sku.name, tags, Details
 ```
         
+#### Application Gateway WAF Policy        
+```        
+resources
+| where type == "microsoft.network/applicationgatewaywebapplicationfirewallpolicies"
+| where properties.applicationGateways == ""
+| extend Details = pack_all()
+| project Resource=id, resourceGroup, location, subscriptionId,tags, Details
+```
+        
 #### Traffic Manager Profiles
 ```
 resources

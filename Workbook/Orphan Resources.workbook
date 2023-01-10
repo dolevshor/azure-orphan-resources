@@ -131,7 +131,7 @@
             "id": "5dcae591-edaa-4077-8f49-adb192de2993",
             "cellValue": "selectedTab",
             "linkTarget": "parameter",
-            "linkLabel": "Front Door WAF Policy",
+            "linkLabel": "WAF Policies",
             "subTarget": "fdwafpolicy",
             "style": "link"
           },
@@ -1174,6 +1174,100 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
+        "query": "resources\r\n| where type == \"microsoft.network/applicationgatewaywebapplicationfirewallpolicies\"\r\n| where properties.applicationGateways == \"\"\r\n| summarize count(kind)",
+        "size": 4,
+        "title": "Application Gateways WAF Policy",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "{Subscriptions}"
+        ],
+        "visualization": "tiles",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "$gen_group",
+              "formatter": 13,
+              "formatOptions": {
+                "linkTarget": "Resource",
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "id",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "subscriptionId",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "Details",
+              "formatter": 7,
+              "formatOptions": {
+                "linkTarget": "CellDetails",
+                "linkLabel": "🔍 View Details",
+                "linkIsContextBlade": true
+              }
+            }
+          ],
+          "rowLimit": 1000,
+          "hierarchySettings": {
+            "treeType": 1,
+            "groupBy": [
+              "subscriptionId"
+            ],
+            "expandTopLevel": true,
+            "finalBy": "id"
+          }
+        },
+        "sortBy": [],
+        "tileSettings": {
+          "titleContent": {
+            "columnMatch": "count_kind",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "auto"
+            }
+          },
+          "showBorder": true,
+          "sortOrderField": 2,
+          "size": "auto"
+        },
+        "graphSettings": {
+          "type": 0,
+          "topContent": {
+            "columnMatch": "vmSize",
+            "formatter": 1
+          },
+          "centerContent": {
+            "columnMatch": "Count",
+            "formatter": 1,
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        },
+        "textSettings": {
+          "style": "bignumber"
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "overview"
+      },
+      "customWidth": "15",
+      "name": "query - Orphan Application Gateways WAF Policy Count"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
         "query": "resources\r\n| where type =~ \"microsoft.network/trafficmanagerprofiles\"\r\n| where properties.endpoints == \"[]\"\r\n| summarize count(type)",
         "size": 4,
         "title": "Traffic Manager Profiles",
@@ -1832,9 +1926,103 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
+        "query": "resources\r\n| where type == \"microsoft.network/virtualnetworks\"\r\n| extend subnet = properties.subnets\r\n| mv-expand subnet\r\n| where subnet.name !in (\"GatewaySubnet\",\"AzureBastionSubnet\",\"AzureFirewallSubnet\",\"gatewaysubnet\")\r\n| where subnet.properties.networkSecurityGroup == \"\"\r\n| summarize count(subnet.name)",
+        "size": 4,
+        "title": "Subnets without NSGs",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "{Subscriptions}"
+        ],
+        "visualization": "tiles",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "$gen_group",
+              "formatter": 13,
+              "formatOptions": {
+                "linkTarget": "Resource",
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "id",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "subscriptionId",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "Details",
+              "formatter": 7,
+              "formatOptions": {
+                "linkTarget": "CellDetails",
+                "linkLabel": "🔍 View Details",
+                "linkIsContextBlade": true
+              }
+            }
+          ],
+          "rowLimit": 1000,
+          "hierarchySettings": {
+            "treeType": 1,
+            "groupBy": [
+              "subscriptionId"
+            ],
+            "expandTopLevel": true,
+            "finalBy": "id"
+          }
+        },
+        "sortBy": [],
+        "tileSettings": {
+          "titleContent": {
+            "columnMatch": "count_subnet_name",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "auto"
+            }
+          },
+          "showBorder": true,
+          "sortOrderField": 2,
+          "size": "auto"
+        },
+        "graphSettings": {
+          "type": 0,
+          "topContent": {
+            "columnMatch": "vmSize",
+            "formatter": 1
+          },
+          "centerContent": {
+            "columnMatch": "Count",
+            "formatter": 1,
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        },
+        "textSettings": {
+          "style": "bignumber"
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "overview"
+      },
+      "customWidth": "15",
+      "name": "query - Subnets without NSGs"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
         "query": "Resources\r\n| where type =~ 'microsoft.network/networksecuritygroups' and isnull(properties.networkInterfaces) and isnull(properties.subnets)\r\n| summarize count(name)",
         "size": 4,
-        "title": "NSG ",
+        "title": "Unassociated NSGs",
         "queryType": 1,
         "resourceType": "microsoft.resourcegraph/resources",
         "crossComponentResources": [
@@ -6168,7 +6356,7 @@
     {
       "type": 1,
       "content": {
-        "json": "# Orphan Front Door WAF Policy"
+        "json": "# Orphan WAF Policies"
       },
       "conditionalVisibility": {
         "parameterName": "selectedTab",
@@ -6183,7 +6371,7 @@
         "version": "KqlItem/1.0",
         "query": "resources\r\n| where type == \"microsoft.network/frontdoorwebapplicationfirewallpolicies\"\r\n| where properties.frontendEndpointLinks== \"[]\" and properties.securityPolicyLinks == \"[]\"\r\n| summarize count(type)",
         "size": 4,
-        "title": "Total",
+        "title": "Total Front Door",
         "queryType": 1,
         "resourceType": "microsoft.resourcegraph/resources",
         "crossComponentResources": [
@@ -6409,6 +6597,239 @@
       },
       "customWidth": "25",
       "name": "query - Orphan Front Door WAF Policy by sku"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "resources\r\n| where type == \"microsoft.network/frontdoorwebapplicationfirewallpolicies\"\r\n| where properties.frontendEndpointLinks== \"[]\" and properties.securityPolicyLinks == \"[]\"\r\n| summarize count(type)",
+        "size": 4,
+        "title": "Total Web Application Gateway",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "{Subscriptions}"
+        ],
+        "visualization": "tiles",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "$gen_group",
+              "formatter": 13,
+              "formatOptions": {
+                "linkTarget": "Resource",
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "id",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "subscriptionId",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "Details",
+              "formatter": 7,
+              "formatOptions": {
+                "linkTarget": "CellDetails",
+                "linkLabel": "🔍 View Details",
+                "linkIsContextBlade": true
+              }
+            }
+          ],
+          "rowLimit": 1000,
+          "hierarchySettings": {
+            "treeType": 1,
+            "groupBy": [
+              "subscriptionId"
+            ],
+            "expandTopLevel": true,
+            "finalBy": "id"
+          }
+        },
+        "sortBy": [],
+        "tileSettings": {
+          "titleContent": {
+            "columnMatch": "count_type",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "auto"
+            }
+          },
+          "showBorder": true,
+          "sortOrderField": 2,
+          "size": "auto"
+        },
+        "graphSettings": {
+          "type": 0,
+          "topContent": {
+            "columnMatch": "vmSize",
+            "formatter": 1
+          },
+          "centerContent": {
+            "columnMatch": "Count",
+            "formatter": 1,
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        },
+        "textSettings": {
+          "style": "bignumber"
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "fdwafpolicy"
+      },
+      "customWidth": "15",
+      "name": "query - Orphan WAG WAF Policy count"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "resources\r\n| where type == \"microsoft.network/applicationgatewaywebapplicationfirewallpolicies\"\r\n| where properties.applicationGateways == \"\"\r\n| extend Details = pack_all()\r\n| project Resource=id, resourceGroup, location, subscriptionId,tags, Details",
+        "size": 4,
+        "title": "Orphan WAF policies (WAG)",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "{Subscriptions}"
+        ],
+        "visualization": "piechart",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "$gen_group",
+              "formatter": 13,
+              "formatOptions": {
+                "linkTarget": "Resource",
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "id",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "subscriptionId",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "Details",
+              "formatter": 7,
+              "formatOptions": {
+                "linkTarget": "CellDetails",
+                "linkLabel": "🔍 View Details",
+                "linkIsContextBlade": true
+              }
+            }
+          ],
+          "rowLimit": 1000,
+          "hierarchySettings": {
+            "treeType": 1,
+            "groupBy": [
+              "subscriptionId"
+            ],
+            "expandTopLevel": true,
+            "finalBy": "id"
+          },
+          "labelSettings": [
+            {
+              "columnId": "subscriptionId",
+              "label": "Subscription"
+            },
+            {
+              "columnId": "Resource",
+              "label": "Resource Name"
+            },
+            {
+              "columnId": "resourceGroup",
+              "label": "Resource Group"
+            },
+            {
+              "columnId": "location",
+              "label": "Location"
+            },
+            {
+              "columnId": "tags",
+              "label": "Tags"
+            }
+          ]
+        },
+        "sortBy": [],
+        "tileSettings": {
+          "titleContent": {
+            "columnMatch": "DiskType",
+            "formatter": 1
+          },
+          "leftContent": {
+            "columnMatch": "Count",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "auto"
+            },
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          },
+          "showBorder": true
+        },
+        "graphSettings": {
+          "type": 0,
+          "topContent": {
+            "columnMatch": "vmSize",
+            "formatter": 1
+          },
+          "centerContent": {
+            "columnMatch": "Count",
+            "formatter": 1,
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        },
+        "chartSettings": {
+          "showMetrics": false,
+          "showLegend": true
+        },
+        "mapSettings": {
+          "locInfo": "LatLong",
+          "sizeSettings": "Count",
+          "sizeAggregation": "Sum",
+          "legendMetric": "Count",
+          "legendAggregation": "Sum",
+          "itemColorSettings": {
+            "type": "heatmap",
+            "colorAggregation": "Sum",
+            "nodeColorField": "Count",
+            "heatmapPalette": "greenRed"
+          }
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "fdwafpolicy"
+      },
+      "customWidth": "25",
+      "name": "query - Orphan WAG WAF Policy"
     },
     {
       "type": 3,
@@ -6779,6 +7200,18 @@
     {
       "type": 1,
       "content": {
+        "json": "## NoShow - End Traffic Manager Profiles\r\n\r\n## NoShow - Begin Snapshots"
+      },
+      "conditionalVisibility": {
+        "parameterName": "noshow",
+        "comparison": "isEqualTo",
+        "value": "noshow"
+      },
+      "name": "text - NoShow begin Traffic Manager Profiles - Copy"
+    },
+    {
+      "type": 1,
+      "content": {
         "json": "# Snapshots"
       },
       "conditionalVisibility": {
@@ -7005,6 +7438,18 @@
         "value": "snpshts"
       },
       "name": "query - Orphan Snapshots"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## NoShow - End Snapshots\r\n\r\n## NoShow - Begin VMs"
+      },
+      "conditionalVisibility": {
+        "parameterName": "noshow",
+        "comparison": "isEqualTo",
+        "value": "noshow"
+      },
+      "name": "text - NoShow begin Traffic Manager Profiles - Copy - Copy"
     },
     {
       "type": 1,
@@ -7239,6 +7684,18 @@
     {
       "type": 1,
       "content": {
+        "json": "## NoShow - End VMs\r\n\r\n## NoShow - Begin Alerts"
+      },
+      "conditionalVisibility": {
+        "parameterName": "noshow",
+        "comparison": "isEqualTo",
+        "value": "noshow"
+      },
+      "name": "text - NoShow begin Traffic Manager Profiles - Copy - Copy - Copy"
+    },
+    {
+      "type": 1,
+      "content": {
         "json": "# Alerts"
       },
       "conditionalVisibility": {
@@ -7465,6 +7922,18 @@
         "value": "alerts"
       },
       "name": "query - Orphan Alerts"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## NoShow - End Alerts\r\n\r\n## NoShow - Begin LBs"
+      },
+      "conditionalVisibility": {
+        "parameterName": "noshow",
+        "comparison": "isEqualTo",
+        "value": "noshow"
+      },
+      "name": "text - NoShow begin Traffic Manager Profiles - Copy - Copy - Copy - Copy"
     },
     {
       "type": 1,
@@ -7699,6 +8168,18 @@
     {
       "type": 1,
       "content": {
+        "json": "## NoShow - End LBs\r\n\r\n## NoShow - Begin Certificates"
+      },
+      "conditionalVisibility": {
+        "parameterName": "noshow",
+        "comparison": "isEqualTo",
+        "value": "noshow"
+      },
+      "name": "text - NoShow begin Traffic Manager Profiles - Copy - Copy - Copy - Copy - Copy"
+    },
+    {
+      "type": 1,
+      "content": {
         "json": "# Certificate about to expire"
       },
       "conditionalVisibility": {
@@ -7925,6 +8406,18 @@
         "value": "certs"
       },
       "name": "query - Orphan Certs"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## NoShow - End Certificates\r\n\r\n## NoShow - Begin VNETs"
+      },
+      "conditionalVisibility": {
+        "parameterName": "noshow",
+        "comparison": "isEqualTo",
+        "value": "noshow"
+      },
+      "name": "text - NoShow begin Traffic Manager Profiles - Copy - Copy - Copy - Copy - Copy - Copy"
     },
     {
       "type": 1,
@@ -8157,6 +8650,236 @@
       "name": "query - Orphan VNETs"
     },
     {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "resources\r\n| where type == \"microsoft.network/virtualnetworks\"\r\n| extend subnet = properties.subnets\r\n| mv-expand subnet\r\n| where subnet.name !in (\"GatewaySubnet\",\"AzureBastionSubnet\",\"AzureFirewallSubnet\",\"gatewaysubnet\")\r\n| where subnet.properties.networkSecurityGroup == \"\"\r\n| summarize count(subnet.name)",
+        "size": 4,
+        "title": "Subnets without NSGs",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "{Subscriptions}"
+        ],
+        "visualization": "tiles",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "$gen_group",
+              "formatter": 13,
+              "formatOptions": {
+                "linkTarget": "Resource",
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "id",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "subscriptionId",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "Details",
+              "formatter": 7,
+              "formatOptions": {
+                "linkTarget": "CellDetails",
+                "linkLabel": "🔍 View Details",
+                "linkIsContextBlade": true
+              }
+            }
+          ],
+          "rowLimit": 1000,
+          "hierarchySettings": {
+            "treeType": 1,
+            "groupBy": [
+              "subscriptionId"
+            ],
+            "expandTopLevel": true,
+            "finalBy": "id"
+          }
+        },
+        "sortBy": [],
+        "tileSettings": {
+          "titleContent": {
+            "columnMatch": "count_subnet_name",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "auto"
+            }
+          },
+          "showBorder": true,
+          "sortOrderField": 2,
+          "size": "auto"
+        },
+        "graphSettings": {
+          "type": 0,
+          "topContent": {
+            "columnMatch": "vmSize",
+            "formatter": 1
+          },
+          "centerContent": {
+            "columnMatch": "Count",
+            "formatter": 1,
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        },
+        "textSettings": {
+          "style": "bignumber"
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "vnets"
+      },
+      "customWidth": "15",
+      "name": "query - Subnets without NSGs - count"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "resources\r\n| where type == \"microsoft.network/virtualnetworks\"\r\n| extend subnet = properties.subnets\r\n| mv-expand subnet\r\n| where subnet.name !in (\"GatewaySubnet\",\"AzureBastionSubnet\",\"AzureFirewallSubnet\",\"gatewaysubnet\")\r\n| where subnet.properties.networkSecurityGroup == \"\"\r\n| extend Details = pack_all()\r\n| project Resource=id, resourceGroup,subnet.name , subnet.properties.addressPrefix,location, subscriptionId,tags, Details",
+        "size": 3,
+        "title": "Orphan Subnetss (no NSG)",
+        "noDataMessage": "No orphan subnets found",
+        "showExportToExcel": true,
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "{Subscriptions}"
+        ],
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "$gen_group",
+              "formatter": 13,
+              "formatOptions": {
+                "linkTarget": "Resource",
+                "linkIsContextBlade": true,
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "subscriptionId",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "Resource",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "Details",
+              "formatter": 7,
+              "formatOptions": {
+                "linkTarget": "CellDetails",
+                "linkLabel": "🔍 View Details",
+                "linkIsContextBlade": true
+              }
+            }
+          ],
+          "rowLimit": 1000,
+          "filter": true,
+          "hierarchySettings": {
+            "treeType": 1,
+            "groupBy": [
+              "subscriptionId"
+            ],
+            "expandTopLevel": true,
+            "finalBy": "Resource"
+          },
+          "labelSettings": [
+            {
+              "columnId": "resourceGroup",
+              "label": "Resource Group"
+            },
+            {
+              "columnId": "location",
+              "label": "Location"
+            },
+            {
+              "columnId": "subscriptionId",
+              "label": "Subscription"
+            },
+            {
+              "columnId": "tags",
+              "label": "Tags"
+            }
+          ]
+        },
+        "sortBy": [],
+        "tileSettings": {
+          "titleContent": {
+            "columnMatch": "vmSize",
+            "formatter": 1,
+            "formatOptions": {
+              "showIcon": true
+            }
+          },
+          "leftContent": {
+            "columnMatch": "Count",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "auto",
+              "showIcon": true
+            },
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          },
+          "showBorder": true
+        },
+        "graphSettings": {
+          "type": 0,
+          "topContent": {
+            "columnMatch": "vmSize",
+            "formatter": 1
+          },
+          "centerContent": {
+            "columnMatch": "Count",
+            "formatter": 1,
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "vnets"
+      },
+      "name": "query - subnet list"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## NoShow - End VNETs\r\n\r\n## NoShow - Begin NSGs"
+      },
+      "conditionalVisibility": {
+        "parameterName": "noshow",
+        "comparison": "isEqualTo",
+        "value": "noshow"
+      },
+      "name": "text - NoShow begin Traffic Manager Profiles - Copy - Copy - Copy - Copy - Copy - Copy - Copy"
+    },
+    {
       "type": 1,
       "content": {
         "json": "# Unassociated NSGs"
@@ -8174,7 +8897,7 @@
         "version": "KqlItem/1.0",
         "query": "Resources\r\n| where type =~ 'microsoft.network/networksecuritygroups' and isnull(properties.networkInterfaces) and isnull(properties.subnets)\r\n| summarize count(name)",
         "size": 4,
-        "title": "NSGs",
+        "title": "Unassociated NSGs",
         "queryType": 1,
         "resourceType": "microsoft.resourcegraph/resources",
         "crossComponentResources": [
@@ -8385,6 +9108,18 @@
         "value": "nsgs"
       },
       "name": "query - Orphan nsgs"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## NoShow - End NSGs\r\n\r\n## NoShow - Begin "
+      },
+      "conditionalVisibility": {
+        "parameterName": "noshow",
+        "comparison": "isEqualTo",
+        "value": "noshow"
+      },
+      "name": "text - NoShow begin Traffic Manager Profiles - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy"
     }
   ],
   "fallbackResourceIds": [
