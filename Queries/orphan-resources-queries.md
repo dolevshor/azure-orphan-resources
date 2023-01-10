@@ -9,7 +9,7 @@ Resources
 | where type has "microsoft.compute/disks"
 | extend diskState = tostring(properties.diskState)
 | where managedBy == ""
-| where not(name endswith "-ASRReplica" or name startswith "ms-asr-")
+| where not(name endswith "-ASRReplica" or name startswith "ms-asr-" or name startswith "asrseeddisk")
 | extend Details = pack_all()
 | project id, resourceGroup, diskState, sku.name, properties.diskSizeGB, location, tags, subscriptionId, Details
 ```
