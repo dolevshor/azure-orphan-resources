@@ -190,11 +190,4 @@ resources
 | extend Details = pack_all()
 | project Resource=id, resourceGroup, location, subscriptionId, tags, Details
 ```
-                              
-#### Unassociated network security groups
-```
-Resources
-| where type =~ 'microsoft.network/networksecuritygroups' and isnull(properties.networkInterfaces) and isnull(properties.subnets)
-| project name, resourceGroup
-| project Resource=id, resourceGroup, location, subscriptionId, tags, Details
-```
+

@@ -190,14 +190,6 @@
             "linkLabel": "VNets",
             "subTarget": "vnets",
             "style": "link"
-          },
-          {
-            "id": "d7515650-09c0-444d-ae1d-626c660587be",
-            "cellValue": "selectedTab",
-            "linkTarget": "parameter",
-            "linkLabel": "NSGs",
-            "subTarget": "nsgs",
-            "style": "link"
           }
         ]
       },
@@ -2015,100 +2007,6 @@
       },
       "customWidth": "15",
       "name": "query - Subnets without NSGs"
-    },
-    {
-      "type": 3,
-      "content": {
-        "version": "KqlItem/1.0",
-        "query": "Resources\r\n| where type =~ 'microsoft.network/networksecuritygroups' and isnull(properties.networkInterfaces) and isnull(properties.subnets)\r\n| summarize count(name)",
-        "size": 4,
-        "title": "Unassociated NSGs",
-        "queryType": 1,
-        "resourceType": "microsoft.resourcegraph/resources",
-        "crossComponentResources": [
-          "{Subscriptions}"
-        ],
-        "visualization": "tiles",
-        "gridSettings": {
-          "formatters": [
-            {
-              "columnMatch": "$gen_group",
-              "formatter": 13,
-              "formatOptions": {
-                "linkTarget": "Resource",
-                "showIcon": true
-              }
-            },
-            {
-              "columnMatch": "id",
-              "formatter": 5
-            },
-            {
-              "columnMatch": "subscriptionId",
-              "formatter": 5
-            },
-            {
-              "columnMatch": "Details",
-              "formatter": 7,
-              "formatOptions": {
-                "linkTarget": "CellDetails",
-                "linkLabel": "🔍 View Details",
-                "linkIsContextBlade": true
-              }
-            }
-          ],
-          "rowLimit": 1000,
-          "hierarchySettings": {
-            "treeType": 1,
-            "groupBy": [
-              "subscriptionId"
-            ],
-            "expandTopLevel": true,
-            "finalBy": "id"
-          }
-        },
-        "sortBy": [],
-        "tileSettings": {
-          "titleContent": {
-            "columnMatch": "count_name",
-            "formatter": 12,
-            "formatOptions": {
-              "palette": "auto"
-            }
-          },
-          "showBorder": true,
-          "sortOrderField": 2,
-          "size": "auto"
-        },
-        "graphSettings": {
-          "type": 0,
-          "topContent": {
-            "columnMatch": "vmSize",
-            "formatter": 1
-          },
-          "centerContent": {
-            "columnMatch": "Count",
-            "formatter": 1,
-            "numberFormat": {
-              "unit": 17,
-              "options": {
-                "maximumSignificantDigits": 3,
-                "maximumFractionDigits": 2
-              }
-            }
-          }
-        },
-        "textSettings": {
-          "style": "bignumber"
-        }
-      },
-      "conditionalVisibility": {
-        "parameterName": "selectedTab",
-        "comparison": "isEqualTo",
-        "value": "overview"
-      },
-      "customWidth": "15",
-      "name": "query - NSG "
     },
     {
       "type": 1,
@@ -7207,7 +7105,7 @@
         "comparison": "isEqualTo",
         "value": "noshow"
       },
-      "name": "text - NoShow begin Traffic Manager Profiles - Copy"
+      "name": "text - NoShow begin Snapshots"
     },
     {
       "type": 1,
@@ -7449,7 +7347,7 @@
         "comparison": "isEqualTo",
         "value": "noshow"
       },
-      "name": "text - NoShow begin Traffic Manager Profiles - Copy - Copy"
+      "name": "text - NoShow begin VMs"
     },
     {
       "type": 1,
@@ -7691,7 +7589,7 @@
         "comparison": "isEqualTo",
         "value": "noshow"
       },
-      "name": "text - NoShow begin Traffic Manager Profiles - Copy - Copy - Copy"
+      "name": "text - NoShow begin Alerts"
     },
     {
       "type": 1,
@@ -7933,7 +7831,7 @@
         "comparison": "isEqualTo",
         "value": "noshow"
       },
-      "name": "text - NoShow begin Traffic Manager Profiles - Copy - Copy - Copy - Copy"
+      "name": "text - NoShow begin LBs"
     },
     {
       "type": 1,
@@ -8175,7 +8073,7 @@
         "comparison": "isEqualTo",
         "value": "noshow"
       },
-      "name": "text - NoShow begin Traffic Manager Profiles - Copy - Copy - Copy - Copy - Copy"
+      "name": "text - NoShow begin Certificates"
     },
     {
       "type": 1,
@@ -8417,7 +8315,7 @@
         "comparison": "isEqualTo",
         "value": "noshow"
       },
-      "name": "text - NoShow begin Traffic Manager Profiles - Copy - Copy - Copy - Copy - Copy - Copy"
+      "name": "text - NoShow begin VNETs"
     },
     {
       "type": 1,
@@ -8653,6 +8551,123 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
+        "query": "resources\r\n| where type == \"microsoft.network/virtualnetworks\"\r\n| where properties.subnets == \"[]\"\r\n| summarize count(type) by location",
+        "size": 4,
+        "title": "Count by Location",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "{Subscriptions}"
+        ],
+        "visualization": "piechart",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "$gen_group",
+              "formatter": 13,
+              "formatOptions": {
+                "linkTarget": "Resource",
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "id",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "subscriptionId",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "Details",
+              "formatter": 7,
+              "formatOptions": {
+                "linkTarget": "CellDetails",
+                "linkLabel": "🔍 View Details",
+                "linkIsContextBlade": true
+              }
+            }
+          ],
+          "rowLimit": 1000,
+          "hierarchySettings": {
+            "treeType": 1,
+            "groupBy": [
+              "subscriptionId"
+            ],
+            "expandTopLevel": true,
+            "finalBy": "id"
+          }
+        },
+        "sortBy": [],
+        "tileSettings": {
+          "titleContent": {
+            "columnMatch": "DiskType",
+            "formatter": 1
+          },
+          "leftContent": {
+            "columnMatch": "Count",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "auto"
+            },
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          },
+          "showBorder": true
+        },
+        "graphSettings": {
+          "type": 0,
+          "topContent": {
+            "columnMatch": "vmSize",
+            "formatter": 1
+          },
+          "centerContent": {
+            "columnMatch": "Count",
+            "formatter": 1,
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        },
+        "chartSettings": {
+          "showMetrics": false,
+          "showLegend": true
+        },
+        "mapSettings": {
+          "locInfo": "LatLong",
+          "sizeSettings": "Count",
+          "sizeAggregation": "Sum",
+          "legendMetric": "Count",
+          "legendAggregation": "Sum",
+          "itemColorSettings": {
+            "type": "heatmap",
+            "colorAggregation": "Sum",
+            "nodeColorField": "Count",
+            "heatmapPalette": "greenRed"
+          }
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "vnets"
+      },
+      "customWidth": "30",
+      "name": "query - Orphan Vnetss by Location"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
         "query": "resources\r\n| where type == \"microsoft.network/virtualnetworks\"\r\n| extend subnet = properties.subnets\r\n| mv-expand subnet\r\n| where subnet.name !in (\"GatewaySubnet\",\"AzureBastionSubnet\",\"AzureFirewallSubnet\",\"gatewaysubnet\")\r\n| where subnet.properties.networkSecurityGroup == \"\"\r\n| summarize count(subnet.name)",
         "size": 4,
         "title": "Subnets without NSGs",
@@ -8870,256 +8885,14 @@
     {
       "type": 1,
       "content": {
-        "json": "## NoShow - End VNETs\r\n\r\n## NoShow - Begin NSGs"
+        "json": "## NoShow - End VNETs\r\n\r\n## NoShow - Begin "
       },
       "conditionalVisibility": {
         "parameterName": "noshow",
         "comparison": "isEqualTo",
         "value": "noshow"
       },
-      "name": "text - NoShow begin Traffic Manager Profiles - Copy - Copy - Copy - Copy - Copy - Copy - Copy"
-    },
-    {
-      "type": 1,
-      "content": {
-        "json": "# Unassociated NSGs"
-      },
-      "conditionalVisibility": {
-        "parameterName": "selectedTab",
-        "comparison": "isEqualTo",
-        "value": "nsgs"
-      },
-      "name": "text - Title Orphan NSGs"
-    },
-    {
-      "type": 3,
-      "content": {
-        "version": "KqlItem/1.0",
-        "query": "Resources\r\n| where type =~ 'microsoft.network/networksecuritygroups' and isnull(properties.networkInterfaces) and isnull(properties.subnets)\r\n| summarize count(name)",
-        "size": 4,
-        "title": "Unassociated NSGs",
-        "queryType": 1,
-        "resourceType": "microsoft.resourcegraph/resources",
-        "crossComponentResources": [
-          "{Subscriptions}"
-        ],
-        "visualization": "tiles",
-        "gridSettings": {
-          "formatters": [
-            {
-              "columnMatch": "$gen_group",
-              "formatter": 13,
-              "formatOptions": {
-                "linkTarget": "Resource",
-                "showIcon": true
-              }
-            },
-            {
-              "columnMatch": "id",
-              "formatter": 5
-            },
-            {
-              "columnMatch": "subscriptionId",
-              "formatter": 5
-            },
-            {
-              "columnMatch": "Details",
-              "formatter": 7,
-              "formatOptions": {
-                "linkTarget": "CellDetails",
-                "linkLabel": "🔍 View Details",
-                "linkIsContextBlade": true
-              }
-            }
-          ],
-          "rowLimit": 1000,
-          "hierarchySettings": {
-            "treeType": 1,
-            "groupBy": [
-              "subscriptionId"
-            ],
-            "expandTopLevel": true,
-            "finalBy": "id"
-          }
-        },
-        "sortBy": [],
-        "tileSettings": {
-          "titleContent": {
-            "columnMatch": "count_name",
-            "formatter": 12,
-            "formatOptions": {
-              "palette": "auto"
-            }
-          },
-          "showBorder": true,
-          "sortOrderField": 2,
-          "size": "auto"
-        },
-        "graphSettings": {
-          "type": 0,
-          "topContent": {
-            "columnMatch": "vmSize",
-            "formatter": 1
-          },
-          "centerContent": {
-            "columnMatch": "Count",
-            "formatter": 1,
-            "numberFormat": {
-              "unit": 17,
-              "options": {
-                "maximumSignificantDigits": 3,
-                "maximumFractionDigits": 2
-              }
-            }
-          }
-        },
-        "textSettings": {
-          "style": "bignumber"
-        }
-      },
-      "conditionalVisibility": {
-        "parameterName": "selectedTab",
-        "comparison": "isEqualTo",
-        "value": "nsgs"
-      },
-      "customWidth": "15",
-      "name": "query - Orphan nsgs"
-    },
-    {
-      "type": 3,
-      "content": {
-        "version": "KqlItem/1.0",
-        "query": "Resources\r\n| where type =~ 'microsoft.network/networksecuritygroups' and isnull(properties.networkInterfaces) and isnull(properties.subnets)\r\n| extend Details = pack_all()\r\n| project Resource=id, resourceGroup, location, subscriptionId, tags, Details",
-        "size": 3,
-        "title": "Orphan NSGs (not associated)",
-        "noDataMessage": "No orphan NSGs found",
-        "showExportToExcel": true,
-        "queryType": 1,
-        "resourceType": "microsoft.resourcegraph/resources",
-        "crossComponentResources": [
-          "{Subscriptions}"
-        ],
-        "gridSettings": {
-          "formatters": [
-            {
-              "columnMatch": "$gen_group",
-              "formatter": 13,
-              "formatOptions": {
-                "linkTarget": "Resource",
-                "linkIsContextBlade": true,
-                "showIcon": true
-              }
-            },
-            {
-              "columnMatch": "subscriptionId",
-              "formatter": 5
-            },
-            {
-              "columnMatch": "Resource",
-              "formatter": 5
-            },
-            {
-              "columnMatch": "Details",
-              "formatter": 7,
-              "formatOptions": {
-                "linkTarget": "CellDetails",
-                "linkLabel": "🔍 View Details",
-                "linkIsContextBlade": true
-              }
-            }
-          ],
-          "rowLimit": 1000,
-          "filter": true,
-          "hierarchySettings": {
-            "treeType": 1,
-            "groupBy": [
-              "subscriptionId"
-            ],
-            "expandTopLevel": true,
-            "finalBy": "Resource"
-          },
-          "labelSettings": [
-            {
-              "columnId": "resourceGroup",
-              "label": "Resource Group"
-            },
-            {
-              "columnId": "location",
-              "label": "Location"
-            },
-            {
-              "columnId": "subscriptionId",
-              "label": "Subscription"
-            },
-            {
-              "columnId": "tags",
-              "label": "Tags"
-            }
-          ]
-        },
-        "sortBy": [],
-        "tileSettings": {
-          "titleContent": {
-            "columnMatch": "vmSize",
-            "formatter": 1,
-            "formatOptions": {
-              "showIcon": true
-            }
-          },
-          "leftContent": {
-            "columnMatch": "Count",
-            "formatter": 12,
-            "formatOptions": {
-              "palette": "auto",
-              "showIcon": true
-            },
-            "numberFormat": {
-              "unit": 17,
-              "options": {
-                "maximumSignificantDigits": 3,
-                "maximumFractionDigits": 2
-              }
-            }
-          },
-          "showBorder": true
-        },
-        "graphSettings": {
-          "type": 0,
-          "topContent": {
-            "columnMatch": "vmSize",
-            "formatter": 1
-          },
-          "centerContent": {
-            "columnMatch": "Count",
-            "formatter": 1,
-            "numberFormat": {
-              "unit": 17,
-              "options": {
-                "maximumSignificantDigits": 3,
-                "maximumFractionDigits": 2
-              }
-            }
-          }
-        }
-      },
-      "conditionalVisibility": {
-        "parameterName": "selectedTab",
-        "comparison": "isEqualTo",
-        "value": "nsgs"
-      },
-      "name": "query - Orphan nsgs"
-    },
-    {
-      "type": 1,
-      "content": {
-        "json": "## NoShow - End NSGs\r\n\r\n## NoShow - Begin "
-      },
-      "conditionalVisibility": {
-        "parameterName": "noshow",
-        "comparison": "isEqualTo",
-        "value": "noshow"
-      },
-      "name": "text - NoShow begin Traffic Manager Profiles - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy"
+      "name": "text - NoShow begin "
     }
   ],
   "fallbackResourceIds": [
