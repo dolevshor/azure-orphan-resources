@@ -191,3 +191,45 @@ resources
 | project Resource=id, resourceGroup, location, subscriptionId, tags, Details
 ```
 
+#### Unassigned policies
+thanks to **[Wilfried Woivré](https://woivre.com/blog/2022/11/azure-policy-find-unused-policies)**
+````
+policyresources
+| where type == "microsoft.authorization/policydefinitions"
+| extend policyType = tostring(properties.policyType)
+| where policyType == "Custom"
+| join kind=leftouter (
+    policyresources
+    | where type == "microsoft.authorization/policysetdefinitions"
+    | extend policyType = tostring(properties.policyType)
+    | extend  policyDefinitions = properties.policyDefinitions
+    | where policyType == "Custom"
+    | mv-expand policyDefinitions
+    | extend policyDefinitionId = tostring(policyDefinitions.policyDefinitionId)
+    | project associedIdToInitiative=policyDefinitionId 
+    | distinct associedIdToInitiative) on $left.id == $right.associedIdToInitiative
+| where associedIdToInitiative == ""
+| join kind=leftouter(
+    policyresources
+    | where type == "microsoft.authorization/policyassignments"
+    | extend policyDefinitionId = tostring(properties.policyDefinitionId)
+    | project associatedDefinitionId=policyDefinitionId 
+    | distinct associatedDefinitionId
+) on $left.id == $right.associatedDefinitionId
+| where associatedDefinitionId == ""
+| extend displayName = tostring(properties.displayName)
+| extend Details = pack_all()
+| project Policy=id,name, displayName, Details
+````
+
+#### Subnets without NSG
+```
+resources
+| where type == "microsoft.network/virtualnetworks"
+| extend subnet = properties.subnets
+| mv-expand subnet
+| where subnet.name !in ("GatewaySubnet","AzureBastionSubnet","AzureFirewallSubnet","gatewaysubnet")
+| where subnet.properties.networkSecurityGroup == ""
+| extend Details = pack_all()
+| project Resource=id, resourceGroup,subnet.name , subnet.properties.addressPrefix,location, subscriptionId,tags, Details
+```
