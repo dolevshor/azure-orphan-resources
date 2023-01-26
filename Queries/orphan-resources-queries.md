@@ -126,3 +126,44 @@ resources
 | extend Details = pack_all()
 | project Resource=id, resourceGroup, location, subscriptionId, tags, Details
 ```
+
+#### API Connections
+```kql
+resources
+| where type =~ 'Microsoft.Web/connections'
+| project 
+    resourceId = id
+  , apiName = name
+  , subscriptionId
+  , resourceGroup
+  , location
+| join kind = leftouter (
+    resources
+    | where type == 'microsoft.logic/workflows'
+    | extend 
+        resourceGroup
+      , location
+      , subscriptionId
+      , properties
+    | extend
+        var_json = properties["parameters"]["$connections"]["value"]
+    | mvexpand
+        var_connection = var_json
+    | where notnull(var_connection)
+    | extend
+        connectionId = extract("\"connectionId\":\"(.*)\"", 1, tostring(var_connection))
+    | project 
+        connectionId
+      , name
+)
+on $left.resourceId == $right.connectionId
+| distinct
+    resourceId
+    , apiName
+    , connectionId
+    , resourceGroup
+    , subscriptionId
+    , location
+| where connectionId == ""
+
+```
