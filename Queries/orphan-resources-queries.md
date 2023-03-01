@@ -46,7 +46,7 @@ Resources
 ```
 Resources
 | where type == "microsoft.network/publicipaddresses"
-| where properties.ipConfiguration == "" and properties.natGateway == ""
+| where properties.ipConfiguration == "" and properties.natGateway == "" and properties.publicIPPrefix == ""
 | extend Details = pack_all()
 | project Resource=id, resourceGroup, location, subscriptionId, sku.name, tags ,Details
 ```
