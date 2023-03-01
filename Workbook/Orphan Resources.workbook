@@ -366,7 +366,7 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "Resources\r\n| where type == \"microsoft.network/publicipaddresses\"\r\n| where properties.ipConfiguration == \"\" and properties.natGateway == \"\"\r\n| summarize count(type)",
+        "query": "Resources\r\n| where type == \"microsoft.network/publicipaddresses\"\r\n| where properties.ipConfiguration == \"\" and properties.natGateway == \"\" and properties.publicIPPrefix == \"\"\r\n| summarize count(type)",
         "size": 4,
         "title": "Public IPs",
         "queryType": 1,
@@ -2202,7 +2202,7 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "Resources\r\n| where type == \"microsoft.network/publicipaddresses\"\r\n| where properties.ipConfiguration == \"\" and properties.natGateway == \"\"\r\n| summarize count(type)",
+        "query": "Resources\r\n| where type == \"microsoft.network/publicipaddresses\"\r\n| where properties.ipConfiguration == \"\" and properties.natGateway == \"\" and properties.publicIPPrefix == \"\"\r\n| summarize count(type)",
         "size": 4,
         "title": "Total",
         "queryType": 1,
@@ -2296,7 +2296,7 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "Resources\r\n| where type == \"microsoft.network/publicipaddresses\"\r\n| where properties.ipConfiguration == \"\" and properties.natGateway == \"\"\r\n| summarize count(type) by tostring(sku.name)",
+        "query": "Resources\r\n| where type == \"microsoft.network/publicipaddresses\"\r\n| where properties.ipConfiguration == \"\" and properties.natGateway == \"\" and properties.publicIPPrefix == \"\"\r\n| summarize count(type) by tostring(sku.name)",
         "size": 4,
         "title": "Count by Type",
         "queryType": 1,
@@ -2413,7 +2413,7 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "Resources\r\n| where type == \"microsoft.network/publicipaddresses\"\r\n| where properties.ipConfiguration == \"\" and properties.natGateway == \"\"\r\n| summarize count(type) by AllocationMethod=tostring(properties.publicIPAllocationMethod)",
+        "query": "Resources\r\n| where type == \"microsoft.network/publicipaddresses\"\r\n| where properties.ipConfiguration == \"\" and properties.natGateway == \"\" and properties.publicIPPrefix == \"\"\r\n| summarize count(type) by AllocationMethod=tostring(properties.publicIPAllocationMethod)",
         "size": 4,
         "title": "Count by Allocation Method",
         "queryType": 1,
@@ -2530,7 +2530,7 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "Resources\r\n| where type == \"microsoft.network/publicipaddresses\"\r\n| where properties.ipConfiguration == \"\" and properties.natGateway == \"\"\r\n| summarize count(type) by location",
+        "query": "Resources\r\n| where type == \"microsoft.network/publicipaddresses\"\r\n| where properties.ipConfiguration == \"\" and properties.natGateway == \"\" and properties.publicIPPrefix == \"\"\r\n| summarize count(type) by location",
         "size": 4,
         "title": "Count by Location",
         "queryType": 1,
@@ -2647,7 +2647,7 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "Resources\r\n| where type == \"microsoft.network/publicipaddresses\"\r\n| where properties.ipConfiguration == \"\" and properties.natGateway == \"\"\r\n| extend Details = pack_all()\r\n| project Resource=id, resourceGroup, location, subscriptionId, tostring(sku.name), AllocationMethod=tostring(properties.publicIPAllocationMethod), tags, Details",
+        "query": "Resources\r\n| where type == \"microsoft.network/publicipaddresses\"\r\n| where properties.ipConfiguration == \"\" and properties.natGateway == \"\" and properties.publicIPPrefix == \"\"\r\n| extend Details = pack_all()\r\n| project Resource=id, resourceGroup, location, subscriptionId, tostring(sku.name), AllocationMethod=tostring(properties.publicIPAllocationMethod), tags, Details",
         "size": 3,
         "title": "Orphan Public IPs",
         "noDataMessage": "No oprhan Public IPs found",
