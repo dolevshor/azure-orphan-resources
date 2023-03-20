@@ -100,6 +100,27 @@ resources
 | extend Details = pack_all()
 | project subscriptionId, Resource=id, resourceGroup, location, tags, Details
 ```
+        
+### Application Gateways
+```
+resources
+| where type =~ 'Microsoft.Network/applicationGateways'
+| extend backendPoolsCount = array_length(properties.backendAddressPools),SKUName= tostring(properties.sku.name), SKUTier= tostring(properties.sku.tier),SKUCapacity=properties.sku.capacity,backendPools=properties.backendAddressPools , AppGwId = tostring(id)
+| project AppGwId, name, SKUName, SKUTier, SKUCapacity
+| join (
+    resources
+    | where type =~ 'Microsoft.Network/applicationGateways'
+    | mvexpand backendPools = properties.backendAddressPools
+    | extend backendIPCount = array_length(backendPools.properties.backendIPConfigurations)
+    | extend backendAddressesCount = array_length(backendPools.properties.backendAddresses)
+    | extend backendPoolName  = backendPools.properties.backendAddressPools.name
+    | extend AppGwId = tostring(id)
+    | summarize backendIPCount = sum(backendIPCount) ,backendAddressesCount=sum(backendAddressesCount) by AppGwId
+) on AppGwId
+| project-away AppGwId1
+| where  (backendIPCount == 0 or isempty(backendIPCount)) and (backendAddressesCount==0 or isempty(backendAddressesCount))
+| order by AppGwId asc
+```
 
 #### App Service Plans
 ```
