@@ -9,7 +9,7 @@ Resources
 | where type has "microsoft.compute/disks"
 | extend diskState = tostring(properties.diskState)
 | where managedBy == ""
-| where not(name endswith "-ASRReplica" or name startswith "ms-asr-")
+| where not(name endswith "-ASRReplica" or name startswith "ms-asr-" or name startswith "asrseeddisk-")
 | extend Details = pack_all()
 | project id, resourceGroup, diskState, sku.name, properties.diskSizeGB, location, tags, subscriptionId, Details
 ```
@@ -17,7 +17,8 @@ Resources
 > **_Note:_** Azure Site Recovery (aka: ASR) managed disks are excluded from the orphaned resource query.
 
 > <sub> 1) Enable replication process created a temporary *'Unattached'* managed disk that begins with the prefix *"ms-asr-"*.<br/>
-        2) When the replication start, a new managed disk that begin with the suffix *"-ASRReplica"* created in *'ActiveSAS'* state.</sub>
+        2) When the replication start, a new managed disk that begin with the suffix *"-ASRReplica"* created in *'ActiveSAS'* state.<br/>
+        3) When replicated on-premises VMware VMs and physicall servers to managed disks in Azure, these logs are used to create recovery points on Azure-managed disks that have prefix of *"asrseeddisk-"*.</sub>
 
 #### Network Interfaces
 ```
@@ -45,7 +46,7 @@ Resources
 ```
 Resources
 | where type == "microsoft.network/publicipaddresses"
-| where properties.ipConfiguration == "" and properties.natGateway == ""
+| where properties.ipConfiguration == "" and properties.natGateway == "" and properties.publicIPPrefix == ""
 | extend Details = pack_all()
 | project Resource=id, resourceGroup, location, subscriptionId, sku.name, tags ,Details
 ```
