@@ -158,13 +158,5 @@ resources
       , name
 )
 on $left.resourceId == $right.connectionId
-| distinct
-    resourceId
-    , apiName
-    , connectionId
-    , resourceGroup
-    , subscriptionId
-    , location
 | where connectionId == ""
-
 ```
