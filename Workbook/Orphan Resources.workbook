@@ -1220,7 +1220,7 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "resources\r\n| where type =~ \"microsoft.web/certificates\"\r\n| extend expiresOn = todatetime(properties.expirationDate)\r\n| where expiresOn >= ago(360d)\r\n| summarize count(type)",
+        "query": "resources\r\n| where type =~ \"microsoft.web/certificates\"\r\n| extend expiresOn = todatetime(properties.expirationDate)\r\n| where expiresOn <= now()\r\n| summarize count(type)",
         "size": 4,
         "title": "Expired Certificates",
         "queryType": 1,
@@ -6192,7 +6192,7 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "resources\r\n| where type =~ \"microsoft.web/certificates\"\r\n| extend expiresOn = todatetime(properties.expirationDate)\r\n| where expiresOn >= ago(360d)\r\n| summarize count(type)",
+        "query": "resources\r\n| where type =~ \"microsoft.web/certificates\"\r\n| extend expiresOn = todatetime(properties.expirationDate)\r\n| where expiresOn <= now()\r\n| summarize count(type)",
         "size": 4,
         "title": "Total",
         "queryType": 1,
@@ -6286,7 +6286,7 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "resources\r\n| where type =~ \"microsoft.web/certificates\"\r\n| extend expiresOn = todatetime(properties.expirationDate)\r\n| where expiresOn >= ago(360d)\r\n| extend Details = pack_all()\r\n| project Resource=id, resourceGroup, location, subscriptionId, tags, Details",
+        "query": "resources\r\n| where type =~ \"microsoft.web/certificates\"\r\n| extend expiresOn = todatetime(properties.expirationDate)\r\n| where expiresOn <= now()\r\n| extend Details = pack_all()\r\n| project Resource=id, resourceGroup, location, subscriptionId, tags, Details",
         "size": 3,
         "title": "Expired Certificates",
         "noDataMessage": "No expired certificates found",
