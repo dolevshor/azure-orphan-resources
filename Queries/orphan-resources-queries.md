@@ -144,13 +144,7 @@ resources
 resources
 | where type == 'microsoft.web/certificates'
 | extend expiresOn = todatetime(properties.expirationDate)
-| where expiresOn <= ago(-30d)
+| where expiresOn <= now()
 | extend Details = pack_all()
-| project
-    Resource = id
-    , resourceGroup
-    , location
-    , subscriptionId
-    , tags
-    , Details
+| project Resource=id, resourceGroup, location, subscriptionId, tags, Details
 ```
