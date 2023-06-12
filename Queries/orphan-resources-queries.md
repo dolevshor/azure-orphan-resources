@@ -4,8 +4,8 @@ Here you can find all the orphan resources queries that build this Workbook.
 
 #### Disks
 
-```
-Resources
+```kql
+resources
 | where type has "microsoft.compute/disks"
 | extend diskState = tostring(properties.diskState)
 | where managedBy == ""
@@ -21,8 +21,9 @@ Resources
         3) When replicated on-premises VMware VMs and physicall servers to managed disks in Azure, these logs are used to create recovery points on Azure-managed disks that have prefix of *"asrseeddisk-"*.</sub>
 
 #### Network Interfaces
-```
-Resources
+
+```kql
+resources
 | where type has "microsoft.network/networkinterfaces"
 | where isnull(properties.privateEndpoint)
 | where isnull(properties.privateLinkService)
@@ -43,8 +44,9 @@ Resources
 
 
 #### Public IPs
-```
-Resources
+
+```kql
+resources
 | where type == "microsoft.network/publicipaddresses"
 | where properties.ipConfiguration == "" and properties.natGateway == "" and properties.publicIPPrefix == ""
 | extend Details = pack_all()
@@ -52,7 +54,8 @@ Resources
 ```
 
 #### Resource Groups
-```
+
+```kql
 ResourceContainers
  | where type == "microsoft.resources/subscriptions/resourcegroups"
  | extend rgAndSub = strcat(resourceGroup, "--", subscriptionId)
@@ -67,15 +70,17 @@ ResourceContainers
 ```
 
 #### Network Security Groups (NSGs)
-```
-Resources
+
+```kql
+resources
 | where type == "microsoft.network/networksecuritygroups" and isnull(properties.networkInterfaces) and isnull(properties.subnets)
 | extend Details = pack_all()
 | project subscriptionId, Resource=id, resourceGroup, location, tags, Details
 ```
 
 #### Availability Set
-```
+
+```kql
 Resources
 | where type =~ 'Microsoft.Compute/availabilitySets'
 | where properties.virtualMachines == "[]"
@@ -84,7 +89,8 @@ Resources
 ```
 
 #### Route Tables
-```
+
+```kql
 resources
 | where type == "microsoft.network/routetables"
 | where isnull(properties.subnets)
@@ -93,7 +99,8 @@ resources
 ```
 
 #### Load Balancers
-```
+
+```kql
 resources
 | where type == "microsoft.network/loadbalancers"
 | where properties.backendAddressPools == "[]"
@@ -102,7 +109,8 @@ resources
 ```
 
 #### App Service Plans
-```
+
+```kql
 resources
 | where type =~ "microsoft.web/serverfarms"
 | where properties.numberOfSites == 0
@@ -111,7 +119,8 @@ resources
 ```
         
 #### Front Door WAF Policy
-```
+
+```kql
 resources
 | where type == "microsoft.network/frontdoorwebapplicationfirewallpolicies"
 | where properties.frontendEndpointLinks== "[]" and properties.securityPolicyLinks == "[]"
@@ -120,7 +129,8 @@ resources
 ```
         
 #### Traffic Manager Profiles
-```
+
+```kql
 resources
 | where type == "microsoft.network/trafficmanagerprofiles"
 | where properties.endpoints == "[]"
@@ -129,6 +139,7 @@ resources
 ```
 
 #### Certificates
+
 ```kql
 resources
 | where type == 'microsoft.web/certificates'
