@@ -127,3 +127,19 @@ resources
 | extend Details = pack_all()
 | project Resource=id, resourceGroup, location, subscriptionId, tags, Details
 ```
+
+#### Certificates
+```kql
+resources
+| where type == 'microsoft.web/certificates'
+| extend expiresOn = todatetime(properties.expirationDate)
+| where expiresOn <= ago(-30d)
+| extend Details = pack_all()
+| project
+    Resource = id
+    , resourceGroup
+    , location
+    , subscriptionId
+    , tags
+    , Details
+```
