@@ -2801,7 +2801,7 @@
     {
       "type": 1,
       "content": {
-        "json": "# Orphan Reource Groups"
+        "json": "# Orphan Resource Groups"
       },
       "conditionalVisibility": {
         "parameterName": "selectedTab",
