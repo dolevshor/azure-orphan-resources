@@ -1,0 +1,30 @@
+name: Build
+
+on:
+  push:
+    paths:
+      - ".github/workflows/ci.yml"
+      - "Workbook/Orphan Resources.workbook"
+      - "Workbook/Orphan Resources.bicep"
+
+jobs:
+  build_and_test:
+    name: Build and Publish
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Code checkout
+        uses: actions/checkout@v3
+
+      - name: Run Bicep Build action
+        uses: Azure/bicep-build-action@v1.0.1
+        with:
+          bicepFilePath:  "./Workbook/Orphan Resources.bicep"
+          outputFilePath: "./Workbook/Orphan Resources.json"
+
+      - name: Add and Commit resulting JSON file
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: 'Add compiled Orphan Resources.json ARM template'
+          add: '*.json'
+          default_author: github_actor
