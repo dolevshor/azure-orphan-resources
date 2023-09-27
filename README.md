@@ -1,30 +1,46 @@
-# Azure Orphaned Resources
+# Azure Orphaned Resources v2.0
+
 The _'Azure Orphaned Resources Workbook'_ centralize orphaned resources in Azure environments.
 
-The main purposes of this Workbook are:
-- Save money
-- Prevent mistakes and misconfiguration
+The purpose of this workbook is to provide an overview of your orphaned resources, enabling you to enhance eficiency by:
+- Saving money
+- Prevent misconfiguration
 - Simplify operational
 
-![image](https://user-images.githubusercontent.com/69309933/172849159-64580b88-cd71-4053-8768-089e8c3d4564.png)
+![image](https://github.com/dolevshor/azure-orphan-resources/assets/69309933/a9832d0a-ac34-4797-80d9-b639d5e58606)
 
-![image](https://user-images.githubusercontent.com/69309933/172850655-01e28054-45d3-4680-a297-afa1689cca26.png)
+![image](https://github.com/dolevshor/azure-orphan-resources/assets/69309933/ecb354eb-b63c-439a-a3d1-cf832e194278)
+
+![image](https://github.com/dolevshor/azure-orphan-resources/assets/69309933/996ccac4-c7d9-4511-ab6e-a5d9361c3fb0)
+
 
 > All the information presented in this Workbook is based on Azure Resource Graph queries.
 > <img src="https://user-images.githubusercontent.com/69309933/172938464-38b08c8e-0d4d-493b-aa8f-954189556d7a.png" width="20" height="20">
 
-Type of orphaned resources covered:
-- Disks
-- Network Interfaces
-- Public IPs
-- Resource Groups
-- Network Security Groups (NSGs)
-- Availability Set
-- Route Tables
-- Load Balancers
-- App Service Plans
-- Front Door WAF Policy
-- Traffic Manager Profiles
+Types of resources the workbook covers:
+
+- Compute
+  - App Service Plans
+  - Availability Set
+- Storage
+  - Disks
+- Networking
+  - Public IPs
+  - Network Interfaces
+  - Network Security Groups
+  - Route Tables
+  - Load Balancers
+  - Front Door WAF Policy
+  - Traffic Manager Profiles
+  - Application Gateways
+  - Virtual Networks
+  - Subnets
+  - NAT Gateways
+  - IP Groups
+- Others
+  - Resource Groups
+  - API Connections
+  - Certificates
 
 ## How to use it?
 Importing this Workbook to your Azure environment is quite simple.
@@ -78,7 +94,7 @@ Start using the Workbook and review your orphaned resources.<br/>
 
 (Optional) You can filter by specific subscription:
 
-![image](https://user-images.githubusercontent.com/69309933/172848889-f25c8fce-ce12-4d0a-b426-a0fc64e40e17.png)
+![image](https://github.com/dolevshor/azure-orphan-resources/assets/69309933/f4b11592-d101-4db1-a0d0-f962ad738c0d)
 
 
 
