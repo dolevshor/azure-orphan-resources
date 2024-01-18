@@ -73,6 +73,25 @@ Resources
         2) When the replication start, a new managed disk that begin with the suffix *"-ASRReplica"* created in *'ActiveSAS'* state.<br/>
         3) When replicated on-premises VMware VMs and physicall servers to managed disks in Azure, these logs are used to create recovery points on Azure-managed disks that have prefix of *"asrseeddisk-"*.</sub>
 
+## Database
+
+#### SQL elastic pool
+
+SQL elastic pool without databases
+
+```kql
+resources
+| where type =~ 'microsoft.sql/servers/elasticpools'
+| project elasticPoolId = tolower(id), Resource = id, resourceGroup, location, subscriptionId, tags, properties, Details = pack_all()
+| join kind=leftouter (resources
+| where type =~ 'Microsoft.Sql/servers/databases'
+| project id, properties
+| extend elasticPoolId = tolower(properties.elasticPoolId)) on elasticPoolId
+| summarize databaseCount = countif(id != '') by Resource, resourceGroup, location, subscriptionId, tostring(tags), tostring(Details)
+| where databaseCount == 0
+| project-away databaseCount
+```
+
 ## Networking
 
 #### Public IPs

@@ -75,6 +75,14 @@
             "style": "link"
           },
           {
+            "id": "e3719777-f61e-4c1b-9daa-da4106ed0056",
+            "cellValue": "mainTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Database",
+            "subTarget": "database",
+            "style": "link"
+          },
+          {
             "id": "fe44dca2-c58c-419a-9dbf-899697e07bef",
             "cellValue": "mainTab",
             "linkTarget": "parameter",
@@ -399,6 +407,95 @@
                   },
                   "customWidth": "15",
                   "name": "query - Overview - Disks Count"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources\r\n| where type =~ 'microsoft.sql/servers/elasticpools'\r\n| project elasticPoolId = tolower(id), Resource = id, type\r\n| extend Details = pack_all()\r\n| join kind=leftouter (resources\r\n| where type =~ 'Microsoft.Sql/servers/databases'\r\n| project id, properties\r\n| extend elasticPoolId = tolower(properties.elasticPoolId)) on elasticPoolId\r\n| summarize databaseCount = countif(id != '') by Resource, type\r\n| where databaseCount == 0\r\n| project-away databaseCount\r\n| summarize count(type)",
+                    "size": 4,
+                    "title": "SQL Elastic Pools 💲",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "tiles",
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "$gen_group",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "showIcon": true
+                          }
+                        },
+                        {
+                          "columnMatch": "id",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "subscriptionId",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "Details",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "CellDetails",
+                            "linkLabel": "🔍 View Details",
+                            "linkIsContextBlade": true
+                          }
+                        }
+                      ],
+                      "rowLimit": 1000,
+                      "hierarchySettings": {
+                        "treeType": 1,
+                        "groupBy": [
+                          "subscriptionId"
+                        ],
+                        "expandTopLevel": true,
+                        "finalBy": "id"
+                      }
+                    },
+                    "sortBy": [],
+                    "tileSettings": {
+                      "titleContent": {
+                        "columnMatch": "count_type",
+                        "formatter": 12,
+                        "formatOptions": {
+                          "palette": "auto"
+                        }
+                      },
+                      "showBorder": true,
+                      "sortOrderField": 2,
+                      "size": "auto"
+                    },
+                    "graphSettings": {
+                      "type": 0,
+                      "topContent": {
+                        "columnMatch": "vmSize",
+                        "formatter": 1
+                      },
+                      "centerContent": {
+                        "columnMatch": "Count",
+                        "formatter": 1,
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      }
+                    },
+                    "textSettings": {
+                      "style": "bignumber"
+                    }
+                  },
+                  "customWidth": "15",
+                  "name": "query - Overview - SQL Elastic Pool Count"
                 },
                 {
                   "type": 3,
@@ -3476,6 +3573,464 @@
         "value": "storage"
       },
       "name": "group - Storage"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 11,
+            "content": {
+              "version": "LinkItem/1.0",
+              "style": "tabs",
+              "links": [
+                {
+                  "id": "b2a47b9d-1023-418a-8ffc-67a693c0d5a6",
+                  "cellValue": "databaseTab",
+                  "linkTarget": "parameter",
+                  "linkLabel": "SQL elastic pools 💲",
+                  "subTarget": "elasticpools",
+                  "style": "link",
+                  "linkIsContextBlade": true
+                }
+              ]
+            },
+            "name": "links - Database Tabs"
+          },
+          {
+            "type": 12,
+            "content": {
+              "version": "NotebookGroup/1.0",
+              "groupType": "editable",
+              "items": [
+                {
+                  "type": 1,
+                  "content": {
+                    "json": "# Orphaned SQL elastic pools"
+                  },
+                  "name": "text - Title - SQL elastic pools"
+                },
+                {
+                  "type": 1,
+                  "content": {
+                    "json": "[SQL elastic pools](https://learn.microsoft.com/en-us/azure/azure-sql/database/elastic-pool-overview) without databases.",
+                    "style": "upsell"
+                  },
+                  "name": "text - Title - Info"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources\r\n| where type =~ 'microsoft.sql/servers/elasticpools'\r\n| project elasticPoolId = tolower(id), Resource = id, type\r\n| extend Details = pack_all()\r\n| join kind=leftouter (resources\r\n| where type =~ 'Microsoft.Sql/servers/databases'\r\n| project id, properties\r\n| extend elasticPoolId = tolower(properties.elasticPoolId)) on elasticPoolId\r\n| summarize databaseCount = countif(id != '') by Resource, type\r\n| where databaseCount == 0\r\n| project-away databaseCount\r\n| summarize count(type)",
+                    "size": 4,
+                    "title": "Total",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "tiles",
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "$gen_group",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "showIcon": true
+                          }
+                        },
+                        {
+                          "columnMatch": "id",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "subscriptionId",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "Details",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "CellDetails",
+                            "linkLabel": "🔍 View Details",
+                            "linkIsContextBlade": true
+                          }
+                        }
+                      ],
+                      "rowLimit": 1000,
+                      "hierarchySettings": {
+                        "treeType": 1,
+                        "groupBy": [
+                          "subscriptionId"
+                        ],
+                        "expandTopLevel": true,
+                        "finalBy": "id"
+                      }
+                    },
+                    "sortBy": [],
+                    "tileSettings": {
+                      "titleContent": {
+                        "columnMatch": "count_type",
+                        "formatter": 12,
+                        "formatOptions": {
+                          "palette": "auto"
+                        }
+                      },
+                      "showBorder": true,
+                      "sortOrderField": 2,
+                      "size": "auto"
+                    },
+                    "graphSettings": {
+                      "type": 0,
+                      "centerContent": {
+                        "columnMatch": "Count",
+                        "formatter": 1,
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      }
+                    },
+                    "textSettings": {
+                      "style": "bignumber"
+                    }
+                  },
+                  "customWidth": "15",
+                  "name": "query - Total SQL elastic pool Count"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources\r\n| where type =~ 'microsoft.sql/servers/elasticpools'\r\n| project elasticPoolId = tolower(id), Resource = id, type, location\r\n| extend Details = pack_all()\r\n| join kind=leftouter (resources\r\n| where type =~ 'Microsoft.Sql/servers/databases'\r\n| project id, properties\r\n| extend elasticPoolId = tolower(properties.elasticPoolId)) on elasticPoolId\r\n| summarize databaseCount = countif(id != '') by Resource, type, location\r\n| where databaseCount == 0\r\n| project-away databaseCount\r\n| summarize Count=count(type) by location",
+                    "size": 4,
+                    "title": "Count by Location",
+                    "noDataMessage": "No results.",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "$gen_group",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "showIcon": true
+                          }
+                        },
+                        {
+                          "columnMatch": "id",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "subscriptionId",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "Details",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "CellDetails",
+                            "linkLabel": "🔍 View Details",
+                            "linkIsContextBlade": true
+                          }
+                        }
+                      ],
+                      "rowLimit": 1000,
+                      "hierarchySettings": {
+                        "treeType": 1,
+                        "groupBy": [
+                          "subscriptionId"
+                        ],
+                        "expandTopLevel": true,
+                        "finalBy": "id"
+                      }
+                    },
+                    "sortBy": [],
+                    "tileSettings": {
+                      "titleContent": {
+                        "columnMatch": "SQLElasticPoolType",
+                        "formatter": 1
+                      },
+                      "leftContent": {
+                        "columnMatch": "Count",
+                        "formatter": 12,
+                        "formatOptions": {
+                          "palette": "auto"
+                        },
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      },
+                      "showBorder": true
+                    },
+                    "graphSettings": {
+                      "type": 0,
+                      "centerContent": {
+                        "columnMatch": "Count",
+                        "formatter": 1,
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      }
+                    },
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    },
+                    "mapSettings": {
+                      "locInfo": "LatLong",
+                      "sizeSettings": "Count",
+                      "sizeAggregation": "Sum",
+                      "legendMetric": "Count",
+                      "legendAggregation": "Sum",
+                      "itemColorSettings": {
+                        "type": "heatmap",
+                        "colorAggregation": "Sum",
+                        "nodeColorField": "Count",
+                        "heatmapPalette": "greenRed"
+                      }
+                    }
+                  },
+                  "customWidth": "30",
+                  "name": "query - SQL elastic pools by Location"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources\r\n| where type =~ 'microsoft.sql/servers/elasticpools'\r\n| project elasticPoolId = tolower(id), Resource = id, type, skuName = sku.name\r\n| extend Details = pack_all()\r\n| join kind=leftouter (resources\r\n| where type =~ 'Microsoft.Sql/servers/databases'\r\n| project id, properties\r\n| extend elasticPoolId = tolower(properties.elasticPoolId)) on elasticPoolId\r\n| summarize databaseCount = countif(id != '') by Resource, type, tostring(skuName)\r\n| where databaseCount == 0\r\n| project-away databaseCount\r\n| summarize Count=count(type) by skuName",
+                    "size": 4,
+                    "title": "Count by SQL Elastic Pool Type",
+                    "noDataMessage": "No results.",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "$gen_group",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "showIcon": true
+                          }
+                        },
+                        {
+                          "columnMatch": "id",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "subscriptionId",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "Details",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "CellDetails",
+                            "linkLabel": "🔍 View Details",
+                            "linkIsContextBlade": true
+                          }
+                        }
+                      ],
+                      "rowLimit": 1000,
+                      "hierarchySettings": {
+                        "treeType": 1,
+                        "groupBy": [
+                          "subscriptionId"
+                        ],
+                        "expandTopLevel": true,
+                        "finalBy": "id"
+                      }
+                    },
+                    "sortBy": [],
+                    "tileSettings": {
+                      "titleContent": {
+                        "columnMatch": "SQLElasticPoolType",
+                        "formatter": 1
+                      },
+                      "leftContent": {
+                        "columnMatch": "Count",
+                        "formatter": 12,
+                        "formatOptions": {
+                          "palette": "auto"
+                        },
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      },
+                      "showBorder": true
+                    },
+                    "graphSettings": {
+                      "type": 0,
+                      "centerContent": {
+                        "columnMatch": "Count",
+                        "formatter": 1,
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      }
+                    },
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    },
+                    "mapSettings": {
+                      "locInfo": "LatLong",
+                      "sizeSettings": "Count",
+                      "sizeAggregation": "Sum",
+                      "legendMetric": "Count",
+                      "legendAggregation": "Sum",
+                      "itemColorSettings": {
+                        "type": "heatmap",
+                        "colorAggregation": "Sum",
+                        "nodeColorField": "Count",
+                        "heatmapPalette": "greenRed"
+                      }
+                    }
+                  },
+                  "customWidth": "30",
+                  "name": "query - SQL elastic pools by SQLElasticPoolType"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources\r\n| where type =~ 'microsoft.sql/servers/elasticpools'\r\n| project elasticPoolId = tolower(id), Resource = id, resourceGroup, location, subscriptionId, tags, properties, Details = pack_all()\r\n| join kind=leftouter (resources\r\n| where type =~ 'Microsoft.Sql/servers/databases'\r\n| project id, properties\r\n| extend elasticPoolId = tolower(properties.elasticPoolId)) on elasticPoolId\r\n| summarize databaseCount = countif(id != '') by Resource, resourceGroup, location, subscriptionId, tostring(tags), tostring(Details)\r\n| where databaseCount == 0\r\n| project-away databaseCount",
+                    "size": 3,
+                    "title": "Orphaned SQL elastic pools",
+                    "noDataMessage": "No orphaned SQL elastic pools found.",
+                    "showExportToExcel": true,
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "$gen_group",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "showIcon": true
+                          }
+                        },
+                        {
+                          "columnMatch": "Subscription",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "showIcon": true
+                          }
+                        },
+                        {
+                          "columnMatch": "id",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "sku_name",
+                          "formatter": 1
+                        },
+                        {
+                          "columnMatch": "location",
+                          "formatter": 17
+                        },
+                        {
+                          "columnMatch": "subscriptionId",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "Details",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "CellDetails",
+                            "linkLabel": "🔍 View Details",
+                            "linkIsContextBlade": true
+                          }
+                        }
+                      ],
+                      "rowLimit": 1000,
+                      "filter": true,
+                      "hierarchySettings": {
+                        "treeType": 1,
+                        "groupBy": [
+                          "subscriptionId"
+                        ],
+                        "expandTopLevel": true,
+                        "finalBy": "id"
+                      },
+                      "labelSettings": [
+                        {
+                          "columnId": "resourceGroup",
+                          "label": "Resource Group"
+                        },
+                        {
+                          "columnId": "location",
+                          "label": "Location"
+                        },
+                        {
+                          "columnId": "subscriptionId",
+                          "label": "Subscription"
+                        },
+                        {
+                          "columnId": "tags",
+                          "label": "Tags"
+                        }
+                      ]
+                    },
+                    "sortBy": []
+                  },
+                  "name": "query - SQL elastic pools"
+                }
+              ]
+            },
+            "conditionalVisibility": {
+              "parameterName": "databaseTab",
+              "comparison": "isEqualTo",
+              "value": "elasticpools"
+            },
+            "name": "group - Database - SQL elastic pools"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "mainTab",
+        "comparison": "isEqualTo",
+        "value": "database"
+      },
+      "name": "group - Database"
     },
     {
       "type": 12,
