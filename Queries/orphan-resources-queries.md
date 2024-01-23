@@ -7,6 +7,8 @@ Here you can find all the orphan resources queries that build this Workbook.
   - [Availability Set](#availability-set)
 - [Storage](#storage)
   - [Disks](#disks)
+- [Database](#database)
+  - [SQL elastic pool](#sql-elastic-pool)
 - [Networking](#networking)
   - [Public IPs](#public-ips)
   - [Network Interfaces](#network-interfaces)
@@ -77,7 +79,7 @@ Resources
 
 #### SQL elastic pool
 
-SQL elastic pool without databases
+SQL elastic pool without databases.
 
 ```kql
 resources
