@@ -24,6 +24,8 @@ Types of resources the workbook covers:
   - Availability Set
 - Storage
   - Disks
+- Database
+  - SQL Elastic Pools
 - Networking
   - Public IPs
   - Network Interfaces
