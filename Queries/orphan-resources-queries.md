@@ -22,6 +22,7 @@ Here you can find all the orphan resources queries that build this Workbook.
   - [Subnets](#subnets)
   - [NAT Gateways](#nat-gateways)
   - [IP Groups](#ip-groups)
+  - [Private DNS zones](#private-dns-zones)
 - [Others](#others)
   - [Resource Groups](#resource-groups)
   - [API Connections](#api-connections)
@@ -264,6 +265,18 @@ resources
 | where properties.firewalls == "[]" and properties.firewallPolicies == "[]"
 | extend Details = pack_all()
 | project subscriptionId, Resource=id, resourceGroup, location, tags, Details
+```
+
+#### Private DNS zones
+
+Private DNS zones without Virtual Network Links.
+
+```kql
+resources
+| where type == "microsoft.network/privatednszones"
+| where properties.numberOfVirtualNetworkLinks == 0
+| extend Details = pack_all()
+| project subscriptionId, Resource=id, resourceGroup, location, NumberOfRecordSets=properties.numberOfRecordSets, tags, Details
 ```
 
 ## Others
