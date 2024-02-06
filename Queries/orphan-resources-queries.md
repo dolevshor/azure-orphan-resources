@@ -23,6 +23,7 @@ Here you can find all the orphan resources queries that build this Workbook.
   - [NAT Gateways](#nat-gateways)
   - [IP Groups](#ip-groups)
   - [Private DNS zones](#private-dns-zones)
+  - [Private Endpoints](#private-endpoints)
 - [Others](#others)
   - [Resource Groups](#resource-groups)
   - [API Connections](#api-connections)
@@ -277,6 +278,20 @@ resources
 | where properties.numberOfVirtualNetworkLinks == 0
 | extend Details = pack_all()
 | project subscriptionId, Resource=id, resourceGroup, location, NumberOfRecordSets=properties.numberOfRecordSets, tags, Details
+```
+
+#### Private Endpoints
+
+Private Endpoints that are not connected to any resource.
+
+```kql
+resources
+| where type =~ "microsoft.network/privateendpoints"
+| extend Details = pack_all()
+| extend plsc = iff(array_length(properties.privateLinkServiceConnections) > 0, properties.privateLinkServiceConnections, properties.manualPrivateLinkServiceConnections)
+| extend plscStatus = plsc[0].properties.privateLinkServiceConnectionState.status
+| where plscStatus =~ "Disconnected"
+| project Resource=id, resourceGroup, location, subscriptionId, tags, Details
 ```
 
 ## Others
