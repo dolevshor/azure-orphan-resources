@@ -40,6 +40,7 @@ Types of resources the workbook covers:
   - NAT Gateways
   - IP Groups
   - Private DNS zones
+  - Private Endpoints
 - Others
   - Resource Groups
   - API Connections
