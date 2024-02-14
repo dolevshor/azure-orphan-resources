@@ -227,7 +227,7 @@
                       "style": "bignumber"
                     }
                   },
-                  "customWidth": "15",
+                  "customWidth": "16.5",
                   "name": "query - Overview - App Service Plans Count"
                 },
                 {
@@ -316,7 +316,7 @@
                       "style": "bignumber"
                     }
                   },
-                  "customWidth": "15",
+                  "customWidth": "16.5",
                   "name": "query - Overview - Availability Sets Count"
                 },
                 {
@@ -405,7 +405,7 @@
                       "style": "bignumber"
                     }
                   },
-                  "customWidth": "15",
+                  "customWidth": "16.5",
                   "name": "query - Overview - Disks Count"
                 },
                 {
@@ -494,7 +494,7 @@
                       "style": "bignumber"
                     }
                   },
-                  "customWidth": "15",
+                  "customWidth": "16.5",
                   "name": "query - Overview - SQL elastic pools Count"
                 },
                 {
@@ -583,7 +583,7 @@
                       "style": "bignumber"
                     }
                   },
-                  "customWidth": "15",
+                  "customWidth": "16.5",
                   "name": "query - Overview - Public IPs Count"
                 },
                 {
@@ -672,7 +672,7 @@
                       "style": "bignumber"
                     }
                   },
-                  "customWidth": "15",
+                  "customWidth": "16.5",
                   "name": "query - Overview - Network Interfaces Count"
                 },
                 {
@@ -761,7 +761,7 @@
                       "style": "bignumber"
                     }
                   },
-                  "customWidth": "15",
+                  "customWidth": "16.5",
                   "name": "query - Overview - Network Security Group Count"
                 },
                 {
@@ -850,7 +850,7 @@
                       "style": "bignumber"
                     }
                   },
-                  "customWidth": "15",
+                  "customWidth": "16.5",
                   "name": "query - Overview - Route Tables Count"
                 },
                 {
@@ -939,7 +939,7 @@
                       "style": "bignumber"
                     }
                   },
-                  "customWidth": "15",
+                  "customWidth": "16.5",
                   "name": "query - Overview - Load Balancers Count"
                 },
                 {
@@ -1028,7 +1028,7 @@
                       "style": "bignumber"
                     }
                   },
-                  "customWidth": "15",
+                  "customWidth": "16.5",
                   "name": "query - Overview - Front Door WAF Policy Count"
                 },
                 {
@@ -1117,7 +1117,7 @@
                       "style": "bignumber"
                     }
                   },
-                  "customWidth": "15",
+                  "customWidth": "16.5",
                   "name": "query - Overview - Traffic Manager Profiles Count"
                 },
                 {
@@ -1206,7 +1206,7 @@
                       "style": "bignumber"
                     }
                   },
-                  "customWidth": "15",
+                  "customWidth": "16.5",
                   "name": "query - Overview - Application Gateway Count"
                 },
                 {
@@ -1295,14 +1295,14 @@
                       "style": "bignumber"
                     }
                   },
-                  "customWidth": "15",
+                  "customWidth": "16.5",
                   "name": "query - Overview - Virtual Networks Count"
                 },
                 {
                   "type": 3,
                   "content": {
                     "version": "KqlItem/1.0",
-                    "query": "resources\r\n| where type =~ \"microsoft.network/virtualnetworks\"\r\n| extend subnet = properties.subnets\r\n| mv-expand subnet\r\n| where isnull(subnet.properties.ipConfigurations)\r\n| summarize count(subnet)",
+                    "query": "resources\r\n| where type =~ \"microsoft.network/virtualnetworks\"\r\n| extend subnet = properties.subnets\r\n| mv-expand subnet\r\n| extend ipConfigurations = subnet.properties.ipConfigurations\r\n| extend delegations = subnet.properties.delegations\r\n| where isnull(ipConfigurations) and delegations == \"[]\"\r\n| summarize count(subnet)",
                     "size": 4,
                     "title": "Subnets",
                     "queryType": 1,
@@ -1384,7 +1384,7 @@
                       "style": "bignumber"
                     }
                   },
-                  "customWidth": "15",
+                  "customWidth": "16.5",
                   "name": "query - Overview - Subnets Count"
                 },
                 {
@@ -1473,7 +1473,7 @@
                       "style": "bignumber"
                     }
                   },
-                  "customWidth": "15",
+                  "customWidth": "16.5",
                   "name": "query - Overview - NAT Gateways Count"
                 },
                 {
@@ -1562,7 +1562,7 @@
                       "style": "bignumber"
                     }
                   },
-                  "customWidth": "15",
+                  "customWidth": "16.5",
                   "name": "query - Overview - IP Groups Count"
                 },
                 {
@@ -1651,7 +1651,7 @@
                       "style": "bignumber"
                     }
                   },
-                  "customWidth": "15",
+                  "customWidth": "16.5",
                   "name": "query - Overview - Private DNS zones Count"
                 },
                 {
@@ -1740,7 +1740,7 @@
                       "style": "bignumber"
                     }
                   },
-                  "customWidth": "15",
+                  "customWidth": "16.5",
                   "name": "query - Overview - Private Endpoints Count"
                 },
                 {
@@ -1829,7 +1829,7 @@
                       "style": "bignumber"
                     }
                   },
-                  "customWidth": "15",
+                  "customWidth": "16.5",
                   "name": "query - Overview - Resource Groups Count"
                 },
                 {
@@ -1918,7 +1918,7 @@
                       "style": "bignumber"
                     }
                   },
-                  "customWidth": "15",
+                  "customWidth": "16.5",
                   "name": "query - Overview - API Connections Count"
                 },
                 {
@@ -2007,7 +2007,7 @@
                       "style": "bignumber"
                     }
                   },
-                  "customWidth": "15",
+                  "customWidth": "16.5",
                   "name": "query - Overview - Certificates Count"
                 }
               ]
@@ -8433,7 +8433,7 @@
                         "type": 3,
                         "content": {
                           "version": "KqlItem/1.0",
-                          "query": "resources\r\n| where type =~ \"microsoft.network/virtualnetworks\"\r\n| extend subnet = properties.subnets\r\n| mv-expand subnet\r\n| where isnull(subnet.properties.ipConfigurations)\r\n| summarize count(subnet)",
+                          "query": "resources\r\n| where type =~ \"microsoft.network/virtualnetworks\"\r\n| extend subnet = properties.subnets\r\n| mv-expand subnet\r\n| extend ipConfigurations = subnet.properties.ipConfigurations\r\n| extend delegations = subnet.properties.delegations\r\n| where isnull(ipConfigurations) and delegations == \"[]\"\r\n| summarize count(subnet)",
                           "size": 4,
                           "title": "Total",
                           "queryType": 1,
@@ -8527,7 +8527,7 @@
                         "type": 3,
                         "content": {
                           "version": "KqlItem/1.0",
-                          "query": "resources\r\n| where type =~ \"microsoft.network/virtualnetworks\"\r\n| extend subnet = properties.subnets\r\n| mv-expand subnet\r\n| where isnull(subnet.properties.ipConfigurations)\r\n| summarize count(subnet) by location",
+                          "query": "resources\r\n| where type =~ \"microsoft.network/virtualnetworks\"\r\n| extend subnet = properties.subnets\r\n| mv-expand subnet\r\n| extend ipConfigurations = subnet.properties.ipConfigurations\r\n| extend delegations = subnet.properties.delegations\r\n| where isnull(ipConfigurations) and delegations == \"[]\"\r\n| summarize count(subnet) by location",
                           "size": 4,
                           "title": "Count by Location",
                           "queryType": 1,
@@ -8661,7 +8661,7 @@
                         "type": 3,
                         "content": {
                           "version": "KqlItem/1.0",
-                          "query": "resources\r\n| where type =~ \"microsoft.network/virtualnetworks\"\r\n| extend subnet = properties.subnets\r\n| mv-expand subnet\r\n| where isnull(subnet.properties.ipConfigurations)\r\n| summarize count(subnet) by resourceGroup",
+                          "query": "resources\r\n| where type =~ \"microsoft.network/virtualnetworks\"\r\n| extend subnet = properties.subnets\r\n| mv-expand subnet\r\n| extend ipConfigurations = subnet.properties.ipConfigurations\r\n| extend delegations = subnet.properties.delegations\r\n| where isnull(ipConfigurations) and delegations == \"[]\"\r\n| summarize count(subnet) by resourceGroup",
                           "size": 4,
                           "title": "Count by Resource Group",
                           "queryType": 1,
@@ -8795,7 +8795,7 @@
                         "type": 3,
                         "content": {
                           "version": "KqlItem/1.0",
-                          "query": "resources\r\n| where type =~ \"microsoft.network/virtualnetworks\"\r\n| extend subnet = properties.subnets\r\n| mv-expand subnet\r\n| extend Details = pack_all()\r\n| where isnull(subnet.properties.ipConfigurations)\r\n| project subscriptionId, Resource=subnet.id, VNetName=name, SubnetName=tostring(subnet.name) ,resourceGroup, location, Details",
+                          "query": "resources\r\n| where type =~ \"microsoft.network/virtualnetworks\"\r\n| extend subnet = properties.subnets\r\n| mv-expand subnet\r\n| extend ipConfigurations = subnet.properties.ipConfigurations\r\n| extend delegations = subnet.properties.delegations\r\n| where isnull(ipConfigurations) and delegations == \"[]\"\r\n| extend Details = pack_all()\r\n| project subscriptionId, Resource=subnet.id, VNetName=name, SubnetName=tostring(subnet.name) ,resourceGroup, location, Details",
                           "size": 3,
                           "title": "Orphaned Subnets",
                           "noDataMessage": "No orphaned Subnets found",
@@ -8817,15 +8817,6 @@
                                 }
                               },
                               {
-                                "columnMatch": "Subscription",
-                                "formatter": 13,
-                                "formatOptions": {
-                                  "linkTarget": "Resource",
-                                  "linkIsContextBlade": true,
-                                  "showIcon": true
-                                }
-                              },
-                              {
                                 "columnMatch": "subscriptionId",
                                 "formatter": 5
                               },
@@ -8838,12 +8829,29 @@
                                 "formatter": 17
                               },
                               {
+                                "columnMatch": "networkSecurityGroup",
+                                "formatter": 13,
+                                "formatOptions": {
+                                  "linkTarget": "Resource",
+                                  "showIcon": true
+                                }
+                              },
+                              {
                                 "columnMatch": "Details",
                                 "formatter": 7,
                                 "formatOptions": {
                                   "linkTarget": "CellDetails",
                                   "linkLabel": "🔍 View Details",
                                   "linkIsContextBlade": true
+                                }
+                              },
+                              {
+                                "columnMatch": "Subscription",
+                                "formatter": 13,
+                                "formatOptions": {
+                                  "linkTarget": "Resource",
+                                  "linkIsContextBlade": true,
+                                  "showIcon": true
                                 }
                               }
                             ],
