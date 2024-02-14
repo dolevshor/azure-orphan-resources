@@ -287,11 +287,19 @@ Private Endpoints that are not connected to any resource.
 ```kql
 resources
 | where type =~ "microsoft.network/privateendpoints"
+| extend connection = iff(array_length(properties.manualPrivateLinkServiceConnections) > 0, properties.manualPrivateLinkServiceConnections[0], properties.privateLinkServiceConnections[0])
+| extend subnetId = properties.subnet.id
+| extend subnetIdSplit = split(subnetId, "/")
+| extend vnetId = strcat_array(array_slice(subnetIdSplit,0,8), "/")
+| extend serviceId = tostring(connection.properties.privateLinkServiceId)
+| extend serviceIdSplit = split(serviceId, "/")
+| extend serviceName = tostring(serviceIdSplit[8])
+| extend serviceTypeEnum = iff(isnotnull(serviceIdSplit[6]), tolower(strcat(serviceIdSplit[6], "/", serviceIdSplit[7])), "microsoft.network/privatelinkservices")
+| extend stateEnum = tostring(connection.properties.privateLinkServiceConnectionState.status)
+| extend groupIds = tostring(connection.properties.groupIds[0])
+| where stateEnum == "Disconnected"
 | extend Details = pack_all()
-| extend plsc = iff(array_length(properties.privateLinkServiceConnections) > 0, properties.privateLinkServiceConnections, properties.manualPrivateLinkServiceConnections)
-| extend plscStatus = plsc[0].properties.privateLinkServiceConnectionState.status
-| where plscStatus =~ "Disconnected"
-| project Resource=id, resourceGroup, location, subscriptionId, tags, Details
+| project subscriptionId, Resource=id, resourceGroup, location, serviceName, serviceTypeEnum, groupIds, vnetId, subnetId, tags, Details
 ```
 
 ## Others
