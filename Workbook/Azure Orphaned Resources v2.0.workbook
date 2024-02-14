@@ -1658,7 +1658,7 @@
                   "type": 3,
                   "content": {
                     "version": "KqlItem/1.0",
-                    "query": "resources\r\n| where type =~ \"microsoft.network/privateendpoints\"\r\n| extend plsc = iff(array_length(properties.privateLinkServiceConnections) > 0, properties.privateLinkServiceConnections, properties.manualPrivateLinkServiceConnections)\r\n| extend plscStatus = plsc[0].properties.privateLinkServiceConnectionState.status\r\n| where plscStatus =~ \"Disconnected\"\r\n| summarize count(type)",
+                    "query": "resources\r\n| where type =~ \"microsoft.network/privateendpoints\"\r\n| extend connection = iff(array_length(properties.manualPrivateLinkServiceConnections) > 0, properties.manualPrivateLinkServiceConnections[0], properties.privateLinkServiceConnections[0])\r\n| extend stateEnum = tostring(connection.properties.privateLinkServiceConnectionState.status)\r\n| where stateEnum == \"Disconnected\"\r\n| summarize count(type)",
                     "size": 4,
                     "title": "Private Endpoints 💲",
                     "queryType": 1,
@@ -4501,7 +4501,7 @@
                   "style": "link"
                 },
                 {
-                  "id": "dcd93b64-4685-462a-9235-710b1d761a42",
+                  "id": "30275d35-8385-4327-bb0e-4497057f63f0",
                   "cellValue": "networkingTab",
                   "linkTarget": "parameter",
                   "linkLabel": "Private Endpoints 💲",
@@ -10445,7 +10445,7 @@
                 {
                   "type": 1,
                   "content": {
-                    "json": "[Private Endpoints](https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-overview) that are not connected to any resource",
+                    "json": "[Private Endpoints](https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-overview) that are not connected to any resource.",
                     "style": "upsell"
                   },
                   "name": "text - Title - Info"
@@ -10454,7 +10454,7 @@
                   "type": 3,
                   "content": {
                     "version": "KqlItem/1.0",
-                    "query": "resources\r\n| where type =~ \"microsoft.network/privateendpoints\"\r\n| extend plsc = iff(array_length(properties.privateLinkServiceConnections) > 0, properties.privateLinkServiceConnections, properties.manualPrivateLinkServiceConnections)\r\n| extend plscStatus = plsc[0].properties.privateLinkServiceConnectionState.status\r\n| where plscStatus =~ \"Disconnected\"\r\n| summarize count(type)",
+                    "query": "resources\r\n| where type =~ \"microsoft.network/privateendpoints\"\r\n| extend connection = iff(array_length(properties.manualPrivateLinkServiceConnections) > 0, properties.manualPrivateLinkServiceConnections[0], properties.privateLinkServiceConnections[0])\r\n| extend stateEnum = tostring(connection.properties.privateLinkServiceConnectionState.status)\r\n| where stateEnum == \"Disconnected\"\r\n| summarize count(type)",
                     "size": 4,
                     "title": "Total",
                     "queryType": 1,
@@ -10547,7 +10547,7 @@
                   "type": 3,
                   "content": {
                     "version": "KqlItem/1.0",
-                    "query": "resources\r\n| where type =~ \"microsoft.network/privateendpoints\"\r\n| extend plsc = iff(array_length(properties.privateLinkServiceConnections) > 0, properties.privateLinkServiceConnections, properties.manualPrivateLinkServiceConnections)\r\n| extend plscStatus = plsc[0].properties.privateLinkServiceConnectionState.status\r\n| where plscStatus =~ \"Disconnected\"\r\n| summarize count(type) by location",
+                    "query": "resources\r\n| where type =~ \"microsoft.network/privateendpoints\"\r\n| extend connection = iff(array_length(properties.manualPrivateLinkServiceConnections) > 0, properties.manualPrivateLinkServiceConnections[0], properties.privateLinkServiceConnections[0])\r\n| extend stateEnum = tostring(connection.properties.privateLinkServiceConnectionState.status)\r\n| where stateEnum == \"Disconnected\"\r\n| summarize count(type) by location",
                     "size": 4,
                     "title": "Count by Location",
                     "noDataMessage": "No results.",
@@ -10675,14 +10675,284 @@
                       }
                     }
                   },
-                  "customWidth": "30",
+                  "customWidth": "25",
                   "name": "query - Private Endpoints by Location"
                 },
                 {
                   "type": 3,
                   "content": {
                     "version": "KqlItem/1.0",
-                    "query": "resources\r\n| where type =~ \"microsoft.network/privateendpoints\"\r\n| extend Details = pack_all()\r\n| extend plsc = iff(array_length(properties.privateLinkServiceConnections) > 0, properties.privateLinkServiceConnections, properties.manualPrivateLinkServiceConnections)\r\n| extend plscStatus = plsc[0].properties.privateLinkServiceConnectionState.status\r\n| where plscStatus =~ \"Disconnected\"\r\n| project Resource=id, resourceGroup, location, subscriptionId, tags, Details",
+                    "query": "resources\r\n| where type =~ \"microsoft.network/privateendpoints\"\r\n| extend connection = iff(array_length(properties.manualPrivateLinkServiceConnections) > 0, properties.manualPrivateLinkServiceConnections[0], properties.privateLinkServiceConnections[0])\r\n| extend serviceId = tostring(connection.properties.privateLinkServiceId)\r\n| extend serviceIdSplit = split(serviceId, \"/\")\r\n| extend serviceName = tostring(serviceIdSplit[8])\r\n| extend serviceTypeEnum = iff(isnotnull(serviceIdSplit[6]), tolower(strcat(serviceIdSplit[6], \"/\", serviceIdSplit[7])), \"microsoft.network/privatelinkservices\")\r\n| extend stateEnum = tostring(connection.properties.privateLinkServiceConnectionState.status)\r\n| where stateEnum == \"Disconnected\"\r\n| summarize count(type) by serviceTypeEnum",
+                    "size": 4,
+                    "title": "Count by Resource type",
+                    "noDataMessage": "No results.",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "$gen_group",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "showIcon": true
+                          }
+                        },
+                        {
+                          "columnMatch": "id",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "subscriptionId",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "Details",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "CellDetails",
+                            "linkLabel": "🔍 View Details",
+                            "linkIsContextBlade": true
+                          }
+                        }
+                      ],
+                      "rowLimit": 1000,
+                      "hierarchySettings": {
+                        "treeType": 1,
+                        "groupBy": [
+                          "subscriptionId"
+                        ],
+                        "expandTopLevel": true,
+                        "finalBy": "id"
+                      },
+                      "labelSettings": [
+                        {
+                          "columnId": "subscriptionId",
+                          "label": "Subscription"
+                        },
+                        {
+                          "columnId": "Resource",
+                          "label": "Resource Name"
+                        },
+                        {
+                          "columnId": "resourceGroup",
+                          "label": "Resource Group"
+                        },
+                        {
+                          "columnId": "location",
+                          "label": "Location"
+                        },
+                        {
+                          "columnId": "tags",
+                          "label": "Tags"
+                        }
+                      ]
+                    },
+                    "sortBy": [],
+                    "tileSettings": {
+                      "titleContent": {
+                        "columnMatch": "DiskType",
+                        "formatter": 1
+                      },
+                      "leftContent": {
+                        "columnMatch": "Count",
+                        "formatter": 12,
+                        "formatOptions": {
+                          "palette": "auto"
+                        },
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      },
+                      "showBorder": true
+                    },
+                    "graphSettings": {
+                      "type": 0,
+                      "topContent": {
+                        "columnMatch": "vmSize",
+                        "formatter": 1
+                      },
+                      "centerContent": {
+                        "columnMatch": "Count",
+                        "formatter": 1,
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      }
+                    },
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    },
+                    "mapSettings": {
+                      "locInfo": "LatLong",
+                      "sizeSettings": "Count",
+                      "sizeAggregation": "Sum",
+                      "legendMetric": "Count",
+                      "legendAggregation": "Sum",
+                      "itemColorSettings": {
+                        "type": "heatmap",
+                        "colorAggregation": "Sum",
+                        "nodeColorField": "Count",
+                        "heatmapPalette": "greenRed"
+                      }
+                    }
+                  },
+                  "customWidth": "25",
+                  "name": "query - Private Endpoints by Resource type"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources\r\n| where type =~ \"microsoft.network/privateendpoints\"\r\n| extend connection = iff(array_length(properties.manualPrivateLinkServiceConnections) > 0, properties.manualPrivateLinkServiceConnections[0], properties.privateLinkServiceConnections[0])\r\n| extend stateEnum = tostring(connection.properties.privateLinkServiceConnectionState.status)\r\n| extend groupIds = tostring(connection.properties.groupIds[0])\r\n| where stateEnum == \"Disconnected\"\r\n| summarize count(type) by groupIds",
+                    "size": 4,
+                    "title": "Count by Target sub-resource",
+                    "noDataMessage": "No results.",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "$gen_group",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "showIcon": true
+                          }
+                        },
+                        {
+                          "columnMatch": "id",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "subscriptionId",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "Details",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "CellDetails",
+                            "linkLabel": "🔍 View Details",
+                            "linkIsContextBlade": true
+                          }
+                        }
+                      ],
+                      "rowLimit": 1000,
+                      "hierarchySettings": {
+                        "treeType": 1,
+                        "groupBy": [
+                          "subscriptionId"
+                        ],
+                        "expandTopLevel": true,
+                        "finalBy": "id"
+                      },
+                      "labelSettings": [
+                        {
+                          "columnId": "subscriptionId",
+                          "label": "Subscription"
+                        },
+                        {
+                          "columnId": "Resource",
+                          "label": "Resource Name"
+                        },
+                        {
+                          "columnId": "resourceGroup",
+                          "label": "Resource Group"
+                        },
+                        {
+                          "columnId": "location",
+                          "label": "Location"
+                        },
+                        {
+                          "columnId": "tags",
+                          "label": "Tags"
+                        }
+                      ]
+                    },
+                    "sortBy": [],
+                    "tileSettings": {
+                      "titleContent": {
+                        "columnMatch": "DiskType",
+                        "formatter": 1
+                      },
+                      "leftContent": {
+                        "columnMatch": "Count",
+                        "formatter": 12,
+                        "formatOptions": {
+                          "palette": "auto"
+                        },
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      },
+                      "showBorder": true
+                    },
+                    "graphSettings": {
+                      "type": 0,
+                      "topContent": {
+                        "columnMatch": "vmSize",
+                        "formatter": 1
+                      },
+                      "centerContent": {
+                        "columnMatch": "Count",
+                        "formatter": 1,
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      }
+                    },
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    },
+                    "mapSettings": {
+                      "locInfo": "LatLong",
+                      "sizeSettings": "Count",
+                      "sizeAggregation": "Sum",
+                      "legendMetric": "Count",
+                      "legendAggregation": "Sum",
+                      "itemColorSettings": {
+                        "type": "heatmap",
+                        "colorAggregation": "Sum",
+                        "nodeColorField": "Count",
+                        "heatmapPalette": "greenRed"
+                      }
+                    }
+                  },
+                  "customWidth": "25",
+                  "name": "query - Private Endpoints by Target sub-resource"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources\r\n| where type =~ \"microsoft.network/privateendpoints\"\r\n| extend connection = iff(array_length(properties.manualPrivateLinkServiceConnections) > 0, properties.manualPrivateLinkServiceConnections[0], properties.privateLinkServiceConnections[0])\r\n| extend subnetId = properties.subnet.id\r\n| extend subnetIdSplit = split(subnetId, \"/\")\r\n| extend vnetId = strcat_array(array_slice(subnetIdSplit,0,8), \"/\")\r\n| extend serviceId = tostring(connection.properties.privateLinkServiceId)\r\n| extend serviceIdSplit = split(serviceId, \"/\")\r\n| extend serviceName = tostring(serviceIdSplit[8])\r\n| extend serviceTypeEnum = iff(isnotnull(serviceIdSplit[6]), tolower(strcat(serviceIdSplit[6], \"/\", serviceIdSplit[7])), \"microsoft.network/privatelinkservices\")\r\n| extend stateEnum = tostring(connection.properties.privateLinkServiceConnectionState.status)\r\n| extend groupIds = tostring(connection.properties.groupIds[0])\r\n| where stateEnum == \"Disconnected\"\r\n| extend Details = pack_all()\r\n| project subscriptionId, Resource=id, resourceGroup, location, serviceName, serviceTypeEnum, groupIds, vnetId, subnetId, tags, Details",
                     "size": 3,
                     "title": "Orphaned Private Endpoints",
                     "noDataMessage": "No orphaned Private Endpoints found.",
@@ -10716,8 +10986,23 @@
                           "formatter": 17
                         },
                         {
-                          "columnMatch": "NumberOfRecordSets",
-                          "formatter": 1
+                          "columnMatch": "vnetId",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "subTarget": "Privateendpoints",
+                            "linkIsContextBlade": true,
+                            "showIcon": true
+                          }
+                        },
+                        {
+                          "columnMatch": "subnetId",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "linkIsContextBlade": true,
+                            "showIcon": false
+                          }
                         },
                         {
                           "columnMatch": "Details",
@@ -10727,6 +11012,18 @@
                             "linkLabel": "🔍 View Details",
                             "linkIsContextBlade": true
                           }
+                        },
+                        {
+                          "columnMatch": "subnet",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "showIcon": true
+                          }
+                        },
+                        {
+                          "columnMatch": "NumberOfRecordSets",
+                          "formatter": 1
                         },
                         {
                           "columnMatch": "Subscription",
@@ -10754,6 +11051,10 @@
                       },
                       "labelSettings": [
                         {
+                          "columnId": "subscriptionId",
+                          "label": "Subscription"
+                        },
+                        {
                           "columnId": "Resource",
                           "label": "Resource Name"
                         },
@@ -10766,8 +11067,24 @@
                           "label": "Location"
                         },
                         {
-                          "columnId": "subscriptionId",
-                          "label": "Subscription"
+                          "columnId": "serviceName",
+                          "label": "Private link resource"
+                        },
+                        {
+                          "columnId": "serviceTypeEnum",
+                          "label": "Resource type"
+                        },
+                        {
+                          "columnId": "groupIds",
+                          "label": "Target sub-resource"
+                        },
+                        {
+                          "columnId": "vnetId",
+                          "label": "Virtual Network"
+                        },
+                        {
+                          "columnId": "subnetId",
+                          "label": "Subnet"
                         },
                         {
                           "columnId": "tags",
@@ -10829,7 +11146,7 @@
               "comparison": "isEqualTo",
               "value": "privateendpoints"
             },
-            "name": "group - Networking - Private Endpoints Group"
+            "name": "group - Networking - Private Endpoint"
           }
         ]
       },
