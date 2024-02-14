@@ -7,11 +7,12 @@ The purpose of this workbook is to provide an overview of your orphaned resource
 - Prevent misconfiguration
 - Simplify operational
 
-![image](https://github.com/dolevshor/azure-orphan-resources/assets/69309933/a9832d0a-ac34-4797-80d9-b639d5e58606)
+![image](https://github.com/dolevshor/azure-orphan-resources/assets/69309933/06432310-dc0a-405e-82c8-9112705c3def)
 
-![image](https://github.com/dolevshor/azure-orphan-resources/assets/69309933/ecb354eb-b63c-439a-a3d1-cf832e194278)
+![image](https://github.com/dolevshor/azure-orphan-resources/assets/69309933/262a6e00-9e29-40c9-9c36-96b6aff9ddb7)
 
-![image](https://github.com/dolevshor/azure-orphan-resources/assets/69309933/996ccac4-c7d9-4511-ab6e-a5d9361c3fb0)
+![image](https://github.com/dolevshor/azure-orphan-resources/assets/69309933/7ac9c44c-108b-494b-8a94-d55f25611123)
+
 
 
 > All the information presented in this Workbook is based on Azure Resource Graph queries.
