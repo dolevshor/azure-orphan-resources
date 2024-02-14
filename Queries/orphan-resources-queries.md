@@ -232,15 +232,17 @@ resources
 
 #### Subnets
 
-Subnets without Connected Devices. (Empty Subnets)
+Subnets without Connected Devices or Delegation. (Empty Subnets)
 
 ```kql
 resources
 | where type =~ "microsoft.network/virtualnetworks"
 | extend subnet = properties.subnets
 | mv-expand subnet
+| extend ipConfigurations = subnet.properties.ipConfigurations
+| extend delegations = subnet.properties.delegations
+| where isnull(ipConfigurations) and delegations == "[]"
 | extend Details = pack_all()
-| where isnull(subnet.properties.ipConfigurations)
 | project subscriptionId, Resource=subnet.id, VNetName=name, SubnetName=tostring(subnet.name) ,resourceGroup, location, Details
 ```
 
