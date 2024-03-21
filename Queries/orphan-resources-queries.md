@@ -6,7 +6,7 @@ Here you can find all the orphan resources queries that build this Workbook.
   - [App Service Plans](#app-service-plans)
   - [Availability Set](#availability-set)
 - [Storage](#storage)
-  - [Disks](#disks)
+  - [Managed Disks](#managed-disks)
 - [Database](#database)
   - [SQL elastic pool](#sql-elastic-pool)
 - [Networking](#networking)
@@ -24,6 +24,7 @@ Here you can find all the orphan resources queries that build this Workbook.
   - [IP Groups](#ip-groups)
   - [Private DNS zones](#private-dns-zones)
   - [Private Endpoints](#private-endpoints)
+  - [Virtual Network Gateways](#virtual-network-gateways)
 - [Others](#others)
   - [Resource Groups](#resource-groups)
   - [API Connections](#api-connections)
@@ -33,7 +34,7 @@ Here you can find all the orphan resources queries that build this Workbook.
 
 #### App Service Plans
 
-App Service plans without hosting Apps.
+[App Service plans](https://learn.microsoft.com/en-us/azure/app-service/overview-hosting-plans) without hosting Apps.
 
 ```kql
 resources
@@ -45,7 +46,7 @@ resources
 
 #### Availability Set
 
-Availability Sets that not associated to any Virtual Machine (VM) or Virtual Machine Scale Set (VMSS).
+[Availability Sets](https://learn.microsoft.com/en-us/azure/virtual-machines/availability-set-overview) that not associated to any Virtual Machine (VM) or Virtual Machine Scale Set (VMSS).
 
 ```kql
 Resources
@@ -57,9 +58,9 @@ Resources
 
 ## Storage
 
-#### Disks
+#### Managed Disks
 
-Managed Disks with 'Unattached' state and not related to Azure Site Recovery.
+[Managed Disks](https://learn.microsoft.com/en-us/azure/virtual-machines/managed-disks-overview) with 'Unattached' state and not related to Azure Site Recovery.
 
 ```kql
 Resources
@@ -81,7 +82,7 @@ Resources
 
 #### SQL elastic pool
 
-SQL elastic pool without databases.
+[SQL elastic pool](https://learn.microsoft.com/en-us/azure/azure-sql/database/elastic-pool-overview) without databases.
 
 ```kql
 resources
@@ -100,7 +101,7 @@ resources
 
 #### Public IPs
 
-Public IPs that are not attached to any resource (VM, NAT Gateway, Load Balancer, Application Gateway, Public IP Prefix, etc.).
+[Public IPs](https://learn.microsoft.com/en-us/azure/virtual-network/ip-services/public-ip-addresses) that are not attached to any resource (VM, NAT Gateway, Load Balancer, Application Gateway, Public IP Prefix, etc.).
 
 ```kql
 Resources
@@ -112,7 +113,7 @@ Resources
 
 #### Network Interfaces
 
-Network Interfaces that are not attached to any resource.
+[Network Interfaces](https://learn.microsoft.com/en-us/azure/virtual-network/ip-services/private-ip-addresses) that are not attached to any resource.
 
 ```kql
 Resources
@@ -136,7 +137,7 @@ Resources
 
 #### Network Security Groups
 
-Network Security Group (NSGs) that are not attached to any network interface or subnet.
+[Network Security Group](https://learn.microsoft.com/en-us/azure/virtual-network/ip-services/private-ip-addresses) (NSGs)] that are not attached to any network interface or subnet.
 
 ```kql
 Resources
@@ -147,7 +148,7 @@ Resources
 
 #### Route Tables
 
-Route Tables that not attached to any subnet.
+[Route Tables](https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-udr-overview) that not attached to any subnet.
 
 ```kql
 resources
@@ -159,7 +160,7 @@ resources
 
 #### Load Balancers
 
-Load Balancers with empty backend address pools.
+[Load Balancers](https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-overview) with empty backend address pools.
 
 ```kql
 resources
@@ -171,7 +172,7 @@ resources
 
 #### Front Door WAF Policy
 
-Front Door WAF Policy without associations. (Frontend Endpoint Links, Security Policy Links)
+[Front Door WAF Policy](https://learn.microsoft.com/en-us/azure/web-application-firewall/afds/afds-overview) without associations. (Frontend Endpoint Links, Security Policy Links)
 
 ```kql
 resources
@@ -183,7 +184,7 @@ resources
 
 #### Traffic Manager Profiles
 
-Traffic Manager without endpoints.
+[Traffic Manager](https://learn.microsoft.com/en-us/azure/traffic-manager/traffic-manager-overview) without endpoints.
 
 ```kql
 resources
@@ -195,7 +196,7 @@ resources
 
 #### Application Gateways
 
-Application Gateways without backend targets. (in backend pools)
+[Application Gateways](https://learn.microsoft.com/azure/application-gateway/overview) without backend targets. (in backend pools)
 
 ```kql
 resources
@@ -220,7 +221,7 @@ resources
 
 #### Virtual Networks
 
-Virtual Networks (VNETs) without subnets.
+[Virtual Networks](https://learn.microsoft.com/azure/virtual-network/virtual-networks-overview) (VNETs) without subnets.
 
 ```kql
 resources
@@ -248,7 +249,7 @@ resources
 
 #### NAT Gateways
 
-NAT Gateways that not attached to any subnet.
+[NAT Gateways](https://learn.microsoft.com/azure/nat-gateway/nat-overview) that not attached to any subnet.
 
 ```kql
 resources
@@ -260,7 +261,7 @@ resources
 
 #### IP Groups
 
-IP Groups that not attached to any Azure Firewall.
+[IP Groups](https://learn.microsoft.com/azure/firewall/ip-groups) that not attached to any Azure Firewall.
 
 ```kql
 resources
@@ -272,7 +273,7 @@ resources
 
 #### Private DNS zones
 
-Private DNS zones without Virtual Network Links.
+[Private DNS zones](https://learn.microsoft.com/azure/dns/private-dns-privatednszone) without [Virtual Network Links](https://learn.microsoft.com/en-us/azure/dns/private-dns-virtual-network-links).
 
 ```kql
 resources
@@ -284,7 +285,7 @@ resources
 
 #### Private Endpoints
 
-Private Endpoints that are not connected to any resource.
+[Private Endpoints](https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-overview) that are not connected to any resource.
 
 ```kql
 resources
@@ -304,11 +305,34 @@ resources
 | project subscriptionId, Resource=id, resourceGroup, location, serviceName, serviceTypeEnum, groupIds, vnetId, subnetId, tags, Details
 ```
 
+#### Virtual Network Gateways
+
+[Virtual Network Gateways](https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-about-vpngateways) without Point-to-site configuration or Connections.
+
+```kql
+resources
+| where type =~ "microsoft.network/virtualnetworkgateways"
+| extend Details = pack_all()
+| extend SKU = tostring(properties.sku.name)
+| extend Tier = tostring(properties.sku.tier)
+| extend GatewayType = tostring(properties.gatewayType)
+| extend vpnClientConfiguration = properties.vpnClientConfiguration
+| extend Resource = id
+| join kind=leftouter (
+    resources
+    | where type =~ "microsoft.network/connections"
+    | mv-expand Resource = pack_array(properties.virtualNetworkGateway1.id, properties.virtualNetworkGateway2.id) to typeof(string)
+    | project Resource, connectionId = id, ConnectionProperties=properties
+    ) on Resource                  
+| where isempty(vpnClientConfiguration) and isempty(connectionId)
+| project subscriptionId, Resource, resourceGroup, location, GatewayType, SKU, Tier, tags, Details
+```
+
 ## Others
 
 #### Resource Groups
 
-Resource Groups without resources (including hidden types resources).
+[Resource Groups](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/overview) without resources (including hidden types resources).
 
 ```kql
 ResourceContainers
@@ -326,7 +350,7 @@ ResourceContainers
 
 #### API Connections
 
-API Connections that not related to any Logic App.
+[API Connections](https://learn.microsoft.com/en-us/entra/external-id/api-connectors-overview) that not related to any Logic App.
 
 ```kql
 resources
