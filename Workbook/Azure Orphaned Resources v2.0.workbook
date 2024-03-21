@@ -325,7 +325,7 @@
                     "version": "KqlItem/1.0",
                     "query": "Resources\r\n| where type has \"microsoft.compute/disks\"\r\n| extend diskState = tostring(properties.diskState)\r\n| where managedBy == \"\"\r\n| where not(name endswith \"-ASRReplica\" or name startswith \"ms-asr-\" or name startswith \"asrseeddisk-\")\r\n| summarize count(type)",
                     "size": 4,
-                    "title": "Disks 💲",
+                    "title": "Managed Disks 💲",
                     "queryType": 1,
                     "resourceType": "microsoft.resourcegraph/resources",
                     "crossComponentResources": [
@@ -1747,6 +1747,95 @@
                   "type": 3,
                   "content": {
                     "version": "KqlItem/1.0",
+                    "query": "resources\r\n| where type =~ \"microsoft.network/virtualnetworkgateways\"\r\n| extend vpnClientConfiguration = properties.vpnClientConfiguration\r\n| extend Resource = id\r\n| join kind=leftouter (\r\n    resources\r\n    | where type =~ \"microsoft.network/connections\"\r\n    | mv-expand Resource = pack_array(properties.virtualNetworkGateway1.id, properties.virtualNetworkGateway2.id) to typeof(string)\r\n    | project Resource, connectionId = id, ConnectionProperties=properties\r\n    ) on Resource                  \r\n| where isempty(vpnClientConfiguration) and isempty(connectionId)\r\n| summarize count(type)",
+                    "size": 4,
+                    "title": "Virtual Network Gateways 💲",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "tiles",
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "$gen_group",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "showIcon": true
+                          }
+                        },
+                        {
+                          "columnMatch": "id",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "subscriptionId",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "Details",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "CellDetails",
+                            "linkLabel": "🔍 View Details",
+                            "linkIsContextBlade": true
+                          }
+                        }
+                      ],
+                      "rowLimit": 1000,
+                      "hierarchySettings": {
+                        "treeType": 1,
+                        "groupBy": [
+                          "subscriptionId"
+                        ],
+                        "expandTopLevel": true,
+                        "finalBy": "id"
+                      }
+                    },
+                    "sortBy": [],
+                    "tileSettings": {
+                      "titleContent": {
+                        "columnMatch": "count_type",
+                        "formatter": 12,
+                        "formatOptions": {
+                          "palette": "auto"
+                        }
+                      },
+                      "showBorder": true,
+                      "sortOrderField": 2,
+                      "size": "auto"
+                    },
+                    "graphSettings": {
+                      "type": 0,
+                      "topContent": {
+                        "columnMatch": "vmSize",
+                        "formatter": 1
+                      },
+                      "centerContent": {
+                        "columnMatch": "Count",
+                        "formatter": 1,
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      }
+                    },
+                    "textSettings": {
+                      "style": "bignumber"
+                    }
+                  },
+                  "customWidth": "16.5",
+                  "name": "query - Overview - Virtual Network Gateway"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
                     "query": "ResourceContainers\r\n| where type == \"microsoft.resources/subscriptions/resourcegroups\"\r\n| extend rgAndSub = strcat(resourceGroup, \"--\", subscriptionId)\r\n| join kind=leftouter (\r\n    Resources\r\n    | extend rgAndSub = strcat(resourceGroup, \"--\", subscriptionId)\r\n    | summarize count() by rgAndSub\r\n) on rgAndSub\r\n| where isnull(count_)\r\n| summarize count(type)",
                     "size": 4,
                     "title": "Resource Groups",
@@ -2617,15 +2706,6 @@
                           }
                         },
                         {
-                          "columnMatch": "Subscription",
-                          "formatter": 13,
-                          "formatOptions": {
-                            "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
-                            "showIcon": true
-                          }
-                        },
-                        {
                           "columnMatch": "Resource",
                           "formatter": 5
                         },
@@ -2655,6 +2735,15 @@
                           }
                         },
                         {
+                          "columnMatch": "Subscription",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "linkIsContextBlade": true,
+                            "showIcon": true
+                          }
+                        },
+                        {
                           "columnMatch": "Sku",
                           "formatter": 1
                         }
@@ -2671,6 +2760,10 @@
                       },
                       "labelSettings": [
                         {
+                          "columnId": "Resource",
+                          "label": "Resource"
+                        },
+                        {
                           "columnId": "resourceGroup",
                           "label": "Resource Group"
                         },
@@ -2683,8 +2776,20 @@
                           "label": "Subscription"
                         },
                         {
+                          "columnId": "SKU",
+                          "label": "Sku"
+                        },
+                        {
+                          "columnId": "Tier",
+                          "label": "Tier"
+                        },
+                        {
                           "columnId": "tags",
                           "label": "Tags"
+                        },
+                        {
+                          "columnId": "Details",
+                          "label": "Details"
                         }
                       ]
                     },
@@ -3142,7 +3247,7 @@
                   "id": "b2a47b9d-1023-418a-8ffc-67a693c0d5a6",
                   "cellValue": "storageTab",
                   "linkTarget": "parameter",
-                  "linkLabel": "Disks 💲",
+                  "linkLabel": "Managed Disks 💲",
                   "subTarget": "disks",
                   "style": "link",
                   "linkIsContextBlade": true
@@ -3160,7 +3265,7 @@
                 {
                   "type": 1,
                   "content": {
-                    "json": "# Orphaned Disks"
+                    "json": "# Orphaned Managed Disks"
                   },
                   "name": "text - Title - Disks"
                 },
@@ -3586,8 +3691,8 @@
                     "version": "KqlItem/1.0",
                     "query": "Resources\r\n| where type has \"microsoft.compute/disks\"\r\n| extend diskState = tostring(properties.diskState)\r\n| where managedBy == \"\" or diskState == 'Unattached'\r\n| where not(name endswith \"-ASRReplica\" or name startswith \"ms-asr-\" or name startswith \"asrseeddisk-\")\r\n| extend Details = pack_all()\r\n| project id, resourceGroup, location, sku.name, properties.diskSizeGB, properties.timeCreated, tags, subscriptionId, Details\r\n",
                     "size": 3,
-                    "title": "Orphaned Disks",
-                    "noDataMessage": "No orphaned Disks found.",
+                    "title": "Orphaned Managed Disks",
+                    "noDataMessage": "No orphaned Managed Disks found.",
                     "showExportToExcel": true,
                     "queryType": 1,
                     "resourceType": "microsoft.resourcegraph/resources",
@@ -3659,6 +3764,10 @@
                       },
                       "labelSettings": [
                         {
+                          "columnId": "id",
+                          "label": "Resource"
+                        },
+                        {
                           "columnId": "resourceGroup",
                           "label": "Resource Group"
                         },
@@ -3685,6 +3794,10 @@
                         {
                           "columnId": "subscriptionId",
                           "label": "Subscription"
+                        },
+                        {
+                          "columnId": "Details",
+                          "label": "Details"
                         }
                       ]
                     },
@@ -3733,7 +3846,7 @@
                       }
                     }
                   },
-                  "name": "query - Disks"
+                  "name": "query - Managed Disks"
                 }
               ]
             },
@@ -3742,7 +3855,7 @@
               "comparison": "isEqualTo",
               "value": "disks"
             },
-            "name": "group - Storage - Disks"
+            "name": "group - Storage - Manaded Disks"
           }
         ]
       },
@@ -4324,7 +4437,41 @@
                         ],
                         "expandTopLevel": true,
                         "finalBy": "Resource"
-                      }
+                      },
+                      "labelSettings": [
+                        {
+                          "columnId": "Resource",
+                          "label": "Resource"
+                        },
+                        {
+                          "columnId": "resourceGroup",
+                          "label": "Resource Group"
+                        },
+                        {
+                          "columnId": "location",
+                          "label": "Location"
+                        },
+                        {
+                          "columnId": "Type",
+                          "label": "Type"
+                        },
+                        {
+                          "columnId": "Tier",
+                          "label": "Tier"
+                        },
+                        {
+                          "columnId": "subscriptionId",
+                          "label": "Subscription"
+                        },
+                        {
+                          "columnId": "Tags",
+                          "label": "Tags"
+                        },
+                        {
+                          "columnId": "Details",
+                          "label": "Details"
+                        }
+                      ]
                     },
                     "sortBy": [],
                     "tileSettings": {
@@ -4506,6 +4653,14 @@
                   "linkTarget": "parameter",
                   "linkLabel": "Private Endpoints 💲",
                   "subTarget": "privateendpoints",
+                  "style": "link"
+                },
+                {
+                  "id": "2b5c6c87-9f7e-4afa-894e-e2e0804dd473",
+                  "cellValue": "networkingTab",
+                  "linkTarget": "parameter",
+                  "linkLabel": "Virtual Network Gateways 💲",
+                  "subTarget": "vngs",
                   "style": "link"
                 }
               ]
@@ -4987,15 +5142,6 @@
                           }
                         },
                         {
-                          "columnMatch": "Subscription",
-                          "formatter": 13,
-                          "formatOptions": {
-                            "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
-                            "showIcon": true
-                          }
-                        },
-                        {
                           "columnMatch": "Resource",
                           "formatter": 5
                         },
@@ -5023,6 +5169,15 @@
                             "linkLabel": "🔍 View Details",
                             "linkIsContextBlade": true
                           }
+                        },
+                        {
+                          "columnMatch": "Subscription",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "linkIsContextBlade": true,
+                            "showIcon": true
+                          }
                         }
                       ],
                       "rowLimit": 1000,
@@ -5044,7 +5199,7 @@
                       "labelSettings": [
                         {
                           "columnId": "Resource",
-                          "label": "Public IP Name"
+                          "label": "Resource"
                         },
                         {
                           "columnId": "resourceGroup",
@@ -5069,6 +5224,10 @@
                         {
                           "columnId": "tags",
                           "label": "Tags"
+                        },
+                        {
+                          "columnId": "Details",
+                          "label": "Details"
                         }
                       ]
                     },
@@ -5382,15 +5541,6 @@
                           }
                         },
                         {
-                          "columnMatch": "Subscription",
-                          "formatter": 13,
-                          "formatOptions": {
-                            "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
-                            "showIcon": true
-                          }
-                        },
-                        {
                           "columnMatch": "Resource",
                           "formatter": 5
                         },
@@ -5409,6 +5559,15 @@
                             "linkTarget": "CellDetails",
                             "linkLabel": "🔍 View Details",
                             "linkIsContextBlade": true
+                          }
+                        },
+                        {
+                          "columnMatch": "Subscription",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "linkIsContextBlade": true,
+                            "showIcon": true
                           }
                         }
                       ],
@@ -5430,6 +5589,10 @@
                       ],
                       "labelSettings": [
                         {
+                          "columnId": "Resource",
+                          "label": "Resource"
+                        },
+                        {
                           "columnId": "resourceGroup",
                           "label": "Resource Group"
                         },
@@ -5444,6 +5607,10 @@
                         {
                           "columnId": "subscriptionId",
                           "label": "Subscription"
+                        },
+                        {
+                          "columnId": "Details",
+                          "label": "Details"
                         }
                       ]
                     },
@@ -5804,7 +5971,7 @@
                         },
                         {
                           "columnId": "Resource",
-                          "label": "Resource Name"
+                          "label": "Resource"
                         },
                         {
                           "columnId": "resourceGroup",
@@ -5817,6 +5984,10 @@
                         {
                           "columnId": "tags",
                           "label": "Tags"
+                        },
+                        {
+                          "columnId": "Details",
+                          "label": "Details"
                         }
                       ]
                     },
@@ -6147,15 +6318,6 @@
                           }
                         },
                         {
-                          "columnMatch": "Subscription",
-                          "formatter": 13,
-                          "formatOptions": {
-                            "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
-                            "showIcon": true
-                          }
-                        },
-                        {
                           "columnMatch": "subscriptionId",
                           "formatter": 5
                         },
@@ -6174,6 +6336,15 @@
                             "linkTarget": "CellDetails",
                             "linkLabel": "🔍 View Details",
                             "linkIsContextBlade": true
+                          }
+                        },
+                        {
+                          "columnMatch": "Subscription",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "linkIsContextBlade": true,
+                            "showIcon": true
                           }
                         }
                       ],
@@ -6194,7 +6365,7 @@
                         },
                         {
                           "columnId": "Resource",
-                          "label": "Resource Name"
+                          "label": "Resource"
                         },
                         {
                           "columnId": "resourceGroup",
@@ -6207,6 +6378,10 @@
                         {
                           "columnId": "tags",
                           "label": "Tags"
+                        },
+                        {
+                          "columnId": "Details",
+                          "label": "Details"
                         }
                       ]
                     },
@@ -6672,15 +6847,6 @@
                           }
                         },
                         {
-                          "columnMatch": "Subscription",
-                          "formatter": 13,
-                          "formatOptions": {
-                            "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
-                            "showIcon": true
-                          }
-                        },
-                        {
                           "columnMatch": "subscriptionId",
                           "formatter": 5
                         },
@@ -6704,6 +6870,15 @@
                             "linkLabel": "🔍 View Details",
                             "linkIsContextBlade": true
                           }
+                        },
+                        {
+                          "columnMatch": "Subscription",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "linkIsContextBlade": true,
+                            "showIcon": true
+                          }
                         }
                       ],
                       "rowLimit": 1000,
@@ -6723,7 +6898,7 @@
                         },
                         {
                           "columnId": "Resource",
-                          "label": "Resource Name"
+                          "label": "Resource"
                         },
                         {
                           "columnId": "resourceGroup",
@@ -6740,6 +6915,10 @@
                         {
                           "columnId": "tags",
                           "label": "Tags"
+                        },
+                        {
+                          "columnId": "Details",
+                          "label": "Details"
                         }
                       ]
                     },
@@ -7070,15 +7249,6 @@
                           }
                         },
                         {
-                          "columnMatch": "Subscription",
-                          "formatter": 13,
-                          "formatOptions": {
-                            "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
-                            "showIcon": true
-                          }
-                        },
-                        {
                           "columnMatch": "Resource",
                           "formatter": 5
                         },
@@ -7102,6 +7272,15 @@
                             "linkLabel": "🔍 View Details",
                             "linkIsContextBlade": true
                           }
+                        },
+                        {
+                          "columnMatch": "Subscription",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "linkIsContextBlade": true,
+                            "showIcon": true
+                          }
                         }
                       ],
                       "rowLimit": 1000,
@@ -7116,6 +7295,10 @@
                       },
                       "labelSettings": [
                         {
+                          "columnId": "Resource",
+                          "label": "Resource"
+                        },
+                        {
                           "columnId": "resourceGroup",
                           "label": "Resource Group"
                         },
@@ -7128,8 +7311,16 @@
                           "label": "Subscription"
                         },
                         {
+                          "columnId": "SKU",
+                          "label": "Sku"
+                        },
+                        {
                           "columnId": "tags",
                           "label": "Tags"
+                        },
+                        {
+                          "columnId": "Details",
+                          "label": "Details"
                         }
                       ]
                     },
@@ -7325,15 +7516,6 @@
                           }
                         },
                         {
-                          "columnMatch": "Subscription",
-                          "formatter": 13,
-                          "formatOptions": {
-                            "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
-                            "showIcon": true
-                          }
-                        },
-                        {
                           "columnMatch": "Resource",
                           "formatter": 5
                         },
@@ -7353,6 +7535,15 @@
                             "linkLabel": "🔍 View Details",
                             "linkIsContextBlade": true
                           }
+                        },
+                        {
+                          "columnMatch": "Subscription",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "linkIsContextBlade": true,
+                            "showIcon": true
+                          }
                         }
                       ],
                       "rowLimit": 1000,
@@ -7366,6 +7557,10 @@
                         "finalBy": "Resource"
                       },
                       "labelSettings": [
+                        {
+                          "columnId": "Resource",
+                          "label": "Resource"
+                        },
                         {
                           "columnId": "resourceGroup",
                           "label": "Resource Group"
@@ -7381,6 +7576,10 @@
                         {
                           "columnId": "tags",
                           "label": "Tags"
+                        },
+                        {
+                          "columnId": "Details",
+                          "label": "Details"
                         }
                       ]
                     },
@@ -7850,6 +8049,10 @@
                           }
                         },
                         {
+                          "columnMatch": "Resource",
+                          "formatter": 5
+                        },
+                        {
                           "columnMatch": "Group",
                           "formatter": 13,
                           "formatOptions": {
@@ -7857,10 +8060,6 @@
                             "linkIsContextBlade": true,
                             "showIcon": true
                           }
-                        },
-                        {
-                          "columnMatch": "Resource",
-                          "formatter": 5
                         },
                         {
                           "columnMatch": "location",
@@ -7904,6 +8103,10 @@
                       },
                       "labelSettings": [
                         {
+                          "columnId": "Resource",
+                          "label": "Resource"
+                        },
+                        {
                           "columnId": "resourceGroup",
                           "label": "Resource Group"
                         },
@@ -7912,8 +8115,12 @@
                           "label": "Location"
                         },
                         {
+                          "columnId": "subscriptionId",
+                          "label": "Subscription"
+                        },
+                        {
                           "columnId": "SKUTier",
-                          "label": "SKU"
+                          "label": "Sku"
                         },
                         {
                           "columnId": "SKUCapacity",
@@ -7922,6 +8129,10 @@
                         {
                           "columnId": "tags",
                           "label": "Tags"
+                        },
+                        {
+                          "columnId": "Details",
+                          "label": "Details"
                         }
                       ]
                     },
@@ -8289,15 +8500,6 @@
                                 }
                               },
                               {
-                                "columnMatch": "Subscription",
-                                "formatter": 13,
-                                "formatOptions": {
-                                  "linkTarget": "Resource",
-                                  "linkIsContextBlade": true,
-                                  "showIcon": true
-                                }
-                              },
-                              {
                                 "columnMatch": "subscriptionId",
                                 "formatter": 5
                               },
@@ -8316,6 +8518,15 @@
                                   "linkTarget": "CellDetails",
                                   "linkLabel": "🔍 View Details",
                                   "linkIsContextBlade": true
+                                }
+                              },
+                              {
+                                "columnMatch": "Subscription",
+                                "formatter": 13,
+                                "formatOptions": {
+                                  "linkTarget": "Resource",
+                                  "linkIsContextBlade": true,
+                                  "showIcon": true
                                 }
                               }
                             ],
@@ -8336,7 +8547,7 @@
                               },
                               {
                                 "columnId": "Resource",
-                                "label": "Resource Name"
+                                "label": "Resource"
                               },
                               {
                                 "columnId": "resourceGroup",
@@ -8349,6 +8560,10 @@
                               {
                                 "columnId": "tags",
                                 "label": "Tags"
+                              },
+                              {
+                                "columnId": "Details",
+                                "label": "Details"
                               }
                             ]
                           },
@@ -8424,7 +8639,7 @@
                       {
                         "type": 1,
                         "content": {
-                          "json": "Subnets without Connected Devices. (Empty Subnets)",
+                          "json": "Subnets without Connected Devices or Delegation. (Empty Subnets)",
                           "style": "upsell"
                         },
                         "name": "text - Title - Info"
@@ -8829,20 +9044,20 @@
                                 "formatter": 17
                               },
                               {
-                                "columnMatch": "networkSecurityGroup",
-                                "formatter": 13,
-                                "formatOptions": {
-                                  "linkTarget": "Resource",
-                                  "showIcon": true
-                                }
-                              },
-                              {
                                 "columnMatch": "Details",
                                 "formatter": 7,
                                 "formatOptions": {
                                   "linkTarget": "CellDetails",
                                   "linkLabel": "🔍 View Details",
                                   "linkIsContextBlade": true
+                                }
+                              },
+                              {
+                                "columnMatch": "networkSecurityGroup",
+                                "formatter": 13,
+                                "formatOptions": {
+                                  "linkTarget": "Resource",
+                                  "showIcon": true
                                 }
                               },
                               {
@@ -8872,7 +9087,7 @@
                               },
                               {
                                 "columnId": "Resource",
-                                "label": "Resource Name"
+                                "label": "Resource"
                               },
                               {
                                 "columnId": "VNetName",
@@ -8889,6 +9104,10 @@
                               {
                                 "columnId": "location",
                                 "label": "Location"
+                              },
+                              {
+                                "columnId": "Details",
+                                "label": "Details"
                               }
                             ]
                           },
@@ -9502,15 +9721,6 @@
                           }
                         },
                         {
-                          "columnMatch": "Subscription",
-                          "formatter": 13,
-                          "formatOptions": {
-                            "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
-                            "showIcon": true
-                          }
-                        },
-                        {
                           "columnMatch": "subscriptionId",
                           "formatter": 5
                         },
@@ -9538,6 +9748,15 @@
                             "linkLabel": "🔍 View Details",
                             "linkIsContextBlade": true
                           }
+                        },
+                        {
+                          "columnMatch": "Subscription",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "linkIsContextBlade": true,
+                            "showIcon": true
+                          }
                         }
                       ],
                       "rowLimit": 1000,
@@ -9557,7 +9776,7 @@
                         },
                         {
                           "columnId": "Resource",
-                          "label": "Resource Name"
+                          "label": "Resource"
                         },
                         {
                           "columnId": "resourceGroup",
@@ -9569,7 +9788,7 @@
                         },
                         {
                           "columnId": "sku_name",
-                          "label": "SKU"
+                          "label": "Sku"
                         },
                         {
                           "columnId": "sku_tier",
@@ -9578,6 +9797,10 @@
                         {
                           "columnId": "tags",
                           "label": "Tags"
+                        },
+                        {
+                          "columnId": "Details",
+                          "label": "Details"
                         }
                       ]
                     },
@@ -9912,15 +10135,6 @@
                           }
                         },
                         {
-                          "columnMatch": "Subscription",
-                          "formatter": 13,
-                          "formatOptions": {
-                            "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
-                            "showIcon": true
-                          }
-                        },
-                        {
                           "columnMatch": "subscriptionId",
                           "formatter": 5
                         },
@@ -9933,10 +10147,6 @@
                           "formatter": 17
                         },
                         {
-                          "columnMatch": "sku_name",
-                          "formatter": 1
-                        },
-                        {
                           "columnMatch": "Details",
                           "formatter": 7,
                           "formatOptions": {
@@ -9944,6 +10154,19 @@
                             "linkLabel": "🔍 View Details",
                             "linkIsContextBlade": true
                           }
+                        },
+                        {
+                          "columnMatch": "Subscription",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "linkIsContextBlade": true,
+                            "showIcon": true
+                          }
+                        },
+                        {
+                          "columnMatch": "sku_name",
+                          "formatter": 1
                         }
                       ],
                       "rowLimit": 1000,
@@ -9963,7 +10186,7 @@
                         },
                         {
                           "columnId": "Resource",
-                          "label": "Resource Name"
+                          "label": "Resource"
                         },
                         {
                           "columnId": "resourceGroup",
@@ -9976,6 +10199,10 @@
                         {
                           "columnId": "tags",
                           "label": "Tags"
+                        },
+                        {
+                          "columnId": "Details",
+                          "label": "Details"
                         }
                       ]
                     },
@@ -10365,7 +10592,7 @@
                         },
                         {
                           "columnId": "Resource",
-                          "label": "Resource Name"
+                          "label": "Resource"
                         },
                         {
                           "columnId": "resourceGroup",
@@ -10376,8 +10603,16 @@
                           "label": "Location"
                         },
                         {
+                          "columnId": "NumberOfRecordSets",
+                          "label": "Number of Records"
+                        },
+                        {
                           "columnId": "tags",
                           "label": "Tags"
+                        },
+                        {
+                          "columnId": "Details",
+                          "label": "Details"
                         }
                       ]
                     },
@@ -11064,7 +11299,7 @@
                         },
                         {
                           "columnId": "Resource",
-                          "label": "Resource Name"
+                          "label": "Resource"
                         },
                         {
                           "columnId": "resourceGroup",
@@ -11097,6 +11332,10 @@
                         {
                           "columnId": "tags",
                           "label": "Tags"
+                        },
+                        {
+                          "columnId": "Details",
+                          "label": "Details"
                         }
                       ]
                     },
@@ -11155,6 +11394,864 @@
               "value": "privateendpoints"
             },
             "name": "group - Networking - Private Endpoint"
+          },
+          {
+            "type": 12,
+            "content": {
+              "version": "NotebookGroup/1.0",
+              "groupType": "editable",
+              "items": [
+                {
+                  "type": 1,
+                  "content": {
+                    "json": "# Virtual Network Gateways"
+                  },
+                  "name": "text - Title - Virtual Network Gateways"
+                },
+                {
+                  "type": 1,
+                  "content": {
+                    "json": "[Virtual Network Gateways](https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-about-vpngateways) without Point-to-site configuration or Connections.",
+                    "style": "upsell"
+                  },
+                  "name": "text - Title - Info - Virtual Network Gateways"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources\r\n| where type =~ \"microsoft.network/virtualnetworkgateways\"\r\n| extend vpnClientConfiguration = properties.vpnClientConfiguration\r\n| extend Resource = id\r\n| join kind=leftouter (\r\n    resources\r\n    | where type =~ \"microsoft.network/connections\"\r\n    | mv-expand Resource = pack_array(properties.virtualNetworkGateway1.id, properties.virtualNetworkGateway2.id) to typeof(string)\r\n    | project Resource, connectionId = id, ConnectionProperties=properties\r\n    ) on Resource                  \r\n| where isempty(vpnClientConfiguration) and isempty(connectionId)\r\n| summarize count(type)",
+                    "size": 4,
+                    "title": "Total",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "tiles",
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "$gen_group",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "showIcon": true
+                          }
+                        },
+                        {
+                          "columnMatch": "id",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "subscriptionId",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "Details",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "CellDetails",
+                            "linkLabel": "🔍 View Details",
+                            "linkIsContextBlade": true
+                          }
+                        }
+                      ],
+                      "rowLimit": 1000,
+                      "hierarchySettings": {
+                        "treeType": 1,
+                        "groupBy": [
+                          "subscriptionId"
+                        ],
+                        "expandTopLevel": true,
+                        "finalBy": "id"
+                      }
+                    },
+                    "sortBy": [],
+                    "tileSettings": {
+                      "titleContent": {
+                        "columnMatch": "count_type",
+                        "formatter": 12,
+                        "formatOptions": {
+                          "palette": "auto",
+                          "compositeBarSettings": {
+                            "labelText": "",
+                            "columnSettings": []
+                          }
+                        }
+                      },
+                      "showBorder": true,
+                      "sortOrderField": 1,
+                      "size": "auto"
+                    },
+                    "graphSettings": {
+                      "type": 0,
+                      "topContent": {
+                        "columnMatch": "vmSize",
+                        "formatter": 1
+                      },
+                      "centerContent": {
+                        "columnMatch": "Count",
+                        "formatter": 1,
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      }
+                    },
+                    "textSettings": {
+                      "style": "bignumber"
+                    }
+                  },
+                  "customWidth": "15",
+                  "name": "query - Virtual Network Gateways"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources\r\n| where type =~ \"microsoft.network/virtualnetworkgateways\"\r\n| extend vpnClientConfiguration = properties.vpnClientConfiguration\r\n| extend Resource = id\r\n| join kind=leftouter (\r\n    resources\r\n    | where type =~ \"microsoft.network/connections\"\r\n    | mv-expand Resource = pack_array(properties.virtualNetworkGateway1.id, properties.virtualNetworkGateway2.id) to typeof(string)\r\n    | project Resource, connectionId = id, ConnectionProperties=properties\r\n    ) on Resource                  \r\n| where isempty(vpnClientConfiguration) and isempty(connectionId)\r\n| summarize count(type) by location",
+                    "size": 4,
+                    "title": "Count by Location",
+                    "noDataMessage": "No results.",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "$gen_group",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "showIcon": true
+                          }
+                        },
+                        {
+                          "columnMatch": "id",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "subscriptionId",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "Details",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "CellDetails",
+                            "linkLabel": "🔍 View Details",
+                            "linkIsContextBlade": true
+                          }
+                        }
+                      ],
+                      "rowLimit": 1000,
+                      "hierarchySettings": {
+                        "treeType": 1,
+                        "groupBy": [
+                          "subscriptionId"
+                        ],
+                        "expandTopLevel": true,
+                        "finalBy": "id"
+                      },
+                      "labelSettings": [
+                        {
+                          "columnId": "subscriptionId",
+                          "label": "Subscription"
+                        },
+                        {
+                          "columnId": "Resource",
+                          "label": "Resource Name"
+                        },
+                        {
+                          "columnId": "resourceGroup",
+                          "label": "Resource Group"
+                        },
+                        {
+                          "columnId": "location",
+                          "label": "Location"
+                        },
+                        {
+                          "columnId": "tags",
+                          "label": "Tags"
+                        }
+                      ]
+                    },
+                    "sortBy": [],
+                    "tileSettings": {
+                      "titleContent": {
+                        "columnMatch": "DiskType",
+                        "formatter": 1
+                      },
+                      "leftContent": {
+                        "columnMatch": "Count",
+                        "formatter": 12,
+                        "formatOptions": {
+                          "palette": "auto"
+                        },
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      },
+                      "showBorder": true
+                    },
+                    "graphSettings": {
+                      "type": 0,
+                      "topContent": {
+                        "columnMatch": "vmSize",
+                        "formatter": 1
+                      },
+                      "centerContent": {
+                        "columnMatch": "Count",
+                        "formatter": 1,
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      }
+                    },
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    },
+                    "mapSettings": {
+                      "locInfo": "LatLong",
+                      "sizeSettings": "Count",
+                      "sizeAggregation": "Sum",
+                      "legendMetric": "Count",
+                      "legendAggregation": "Sum",
+                      "itemColorSettings": {
+                        "type": "heatmap",
+                        "colorAggregation": "Sum",
+                        "nodeColorField": "Count",
+                        "heatmapPalette": "greenRed"
+                      }
+                    }
+                  },
+                  "customWidth": "20",
+                  "name": "query - Virtual Network Gateways by Location"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources\r\n| where type =~ \"microsoft.network/virtualnetworkgateways\"\r\n| extend GatewayType = tostring(properties.gatewayType)\r\n| extend vpnClientConfiguration = properties.vpnClientConfiguration\r\n| extend Resource = id\r\n| join kind=leftouter (\r\n    resources\r\n    | where type =~ \"microsoft.network/connections\"\r\n    | mv-expand Resource = pack_array(properties.virtualNetworkGateway1.id, properties.virtualNetworkGateway2.id) to typeof(string)\r\n    | project Resource, connectionId = id, ConnectionProperties=properties\r\n    ) on Resource                  \r\n| where isempty(vpnClientConfiguration) and isempty(connectionId)\r\n| summarize count(type) by GatewayType",
+                    "size": 4,
+                    "title": "Count by Gateway Type",
+                    "noDataMessage": "No results.",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "$gen_group",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "showIcon": true
+                          }
+                        },
+                        {
+                          "columnMatch": "id",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "subscriptionId",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "Details",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "CellDetails",
+                            "linkLabel": "🔍 View Details",
+                            "linkIsContextBlade": true
+                          }
+                        }
+                      ],
+                      "rowLimit": 1000,
+                      "hierarchySettings": {
+                        "treeType": 1,
+                        "groupBy": [
+                          "subscriptionId"
+                        ],
+                        "expandTopLevel": true,
+                        "finalBy": "id"
+                      },
+                      "labelSettings": [
+                        {
+                          "columnId": "subscriptionId",
+                          "label": "Subscription"
+                        },
+                        {
+                          "columnId": "Resource",
+                          "label": "Resource Name"
+                        },
+                        {
+                          "columnId": "resourceGroup",
+                          "label": "Resource Group"
+                        },
+                        {
+                          "columnId": "location",
+                          "label": "Location"
+                        },
+                        {
+                          "columnId": "tags",
+                          "label": "Tags"
+                        }
+                      ]
+                    },
+                    "sortBy": [],
+                    "tileSettings": {
+                      "titleContent": {
+                        "columnMatch": "DiskType",
+                        "formatter": 1
+                      },
+                      "leftContent": {
+                        "columnMatch": "Count",
+                        "formatter": 12,
+                        "formatOptions": {
+                          "palette": "auto"
+                        },
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      },
+                      "showBorder": true
+                    },
+                    "graphSettings": {
+                      "type": 0,
+                      "topContent": {
+                        "columnMatch": "vmSize",
+                        "formatter": 1
+                      },
+                      "centerContent": {
+                        "columnMatch": "Count",
+                        "formatter": 1,
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      }
+                    },
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    },
+                    "mapSettings": {
+                      "locInfo": "LatLong",
+                      "sizeSettings": "Count",
+                      "sizeAggregation": "Sum",
+                      "legendMetric": "Count",
+                      "legendAggregation": "Sum",
+                      "itemColorSettings": {
+                        "type": "heatmap",
+                        "colorAggregation": "Sum",
+                        "nodeColorField": "Count",
+                        "heatmapPalette": "greenRed"
+                      }
+                    }
+                  },
+                  "customWidth": "20",
+                  "name": "query - Virtual Network Gateways by Gateway Type"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources\r\n| where type =~ \"microsoft.network/virtualnetworkgateways\"\r\n| extend SKU = tostring(properties.sku.name)\r\n| extend vpnClientConfiguration = properties.vpnClientConfiguration\r\n| extend Resource = id\r\n| join kind=leftouter (\r\n    resources\r\n    | where type =~ \"microsoft.network/connections\"\r\n    | mv-expand Resource = pack_array(properties.virtualNetworkGateway1.id, properties.virtualNetworkGateway2.id) to typeof(string)\r\n    | project Resource, connectionId = id, ConnectionProperties=properties\r\n    ) on Resource                  \r\n| where isempty(vpnClientConfiguration) and isempty(connectionId)\r\n| summarize count(type) by SKU",
+                    "size": 4,
+                    "title": "Count by Sku",
+                    "noDataMessage": "No results.",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "$gen_group",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "showIcon": true
+                          }
+                        },
+                        {
+                          "columnMatch": "id",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "subscriptionId",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "Details",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "CellDetails",
+                            "linkLabel": "🔍 View Details",
+                            "linkIsContextBlade": true
+                          }
+                        }
+                      ],
+                      "rowLimit": 1000,
+                      "hierarchySettings": {
+                        "treeType": 1,
+                        "groupBy": [
+                          "subscriptionId"
+                        ],
+                        "expandTopLevel": true,
+                        "finalBy": "id"
+                      },
+                      "labelSettings": [
+                        {
+                          "columnId": "subscriptionId",
+                          "label": "Subscription"
+                        },
+                        {
+                          "columnId": "Resource",
+                          "label": "Resource Name"
+                        },
+                        {
+                          "columnId": "resourceGroup",
+                          "label": "Resource Group"
+                        },
+                        {
+                          "columnId": "location",
+                          "label": "Location"
+                        },
+                        {
+                          "columnId": "tags",
+                          "label": "Tags"
+                        }
+                      ]
+                    },
+                    "sortBy": [],
+                    "tileSettings": {
+                      "titleContent": {
+                        "columnMatch": "DiskType",
+                        "formatter": 1
+                      },
+                      "leftContent": {
+                        "columnMatch": "Count",
+                        "formatter": 12,
+                        "formatOptions": {
+                          "palette": "auto"
+                        },
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      },
+                      "showBorder": true
+                    },
+                    "graphSettings": {
+                      "type": 0,
+                      "topContent": {
+                        "columnMatch": "vmSize",
+                        "formatter": 1
+                      },
+                      "centerContent": {
+                        "columnMatch": "Count",
+                        "formatter": 1,
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      }
+                    },
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    },
+                    "mapSettings": {
+                      "locInfo": "LatLong",
+                      "sizeSettings": "Count",
+                      "sizeAggregation": "Sum",
+                      "legendMetric": "Count",
+                      "legendAggregation": "Sum",
+                      "itemColorSettings": {
+                        "type": "heatmap",
+                        "colorAggregation": "Sum",
+                        "nodeColorField": "Count",
+                        "heatmapPalette": "greenRed"
+                      }
+                    }
+                  },
+                  "customWidth": "20",
+                  "name": "query - Virtual Network Gateways by Sku"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources\r\n| where type =~ \"microsoft.network/virtualnetworkgateways\"\r\n| extend Tier = tostring(properties.sku.tier)\r\n| extend vpnClientConfiguration = properties.vpnClientConfiguration\r\n| extend Resource = id\r\n| join kind=leftouter (\r\n    resources\r\n    | where type =~ \"microsoft.network/connections\"\r\n    | mv-expand Resource = pack_array(properties.virtualNetworkGateway1.id, properties.virtualNetworkGateway2.id) to typeof(string)\r\n    | project Resource, connectionId = id, ConnectionProperties=properties\r\n    ) on Resource                  \r\n| where isempty(vpnClientConfiguration) and isempty(connectionId)\r\n| summarize count(type) by Tier",
+                    "size": 4,
+                    "title": "Count by Tier",
+                    "noDataMessage": "No results.",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "$gen_group",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "showIcon": true
+                          }
+                        },
+                        {
+                          "columnMatch": "id",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "subscriptionId",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "Details",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "CellDetails",
+                            "linkLabel": "🔍 View Details",
+                            "linkIsContextBlade": true
+                          }
+                        }
+                      ],
+                      "rowLimit": 1000,
+                      "hierarchySettings": {
+                        "treeType": 1,
+                        "groupBy": [
+                          "subscriptionId"
+                        ],
+                        "expandTopLevel": true,
+                        "finalBy": "id"
+                      },
+                      "labelSettings": [
+                        {
+                          "columnId": "subscriptionId",
+                          "label": "Subscription"
+                        },
+                        {
+                          "columnId": "Resource",
+                          "label": "Resource Name"
+                        },
+                        {
+                          "columnId": "resourceGroup",
+                          "label": "Resource Group"
+                        },
+                        {
+                          "columnId": "location",
+                          "label": "Location"
+                        },
+                        {
+                          "columnId": "tags",
+                          "label": "Tags"
+                        }
+                      ]
+                    },
+                    "sortBy": [],
+                    "tileSettings": {
+                      "titleContent": {
+                        "columnMatch": "DiskType",
+                        "formatter": 1
+                      },
+                      "leftContent": {
+                        "columnMatch": "Count",
+                        "formatter": 12,
+                        "formatOptions": {
+                          "palette": "auto"
+                        },
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      },
+                      "showBorder": true
+                    },
+                    "graphSettings": {
+                      "type": 0,
+                      "topContent": {
+                        "columnMatch": "vmSize",
+                        "formatter": 1
+                      },
+                      "centerContent": {
+                        "columnMatch": "Count",
+                        "formatter": 1,
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      }
+                    },
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    },
+                    "mapSettings": {
+                      "locInfo": "LatLong",
+                      "sizeSettings": "Count",
+                      "sizeAggregation": "Sum",
+                      "legendMetric": "Count",
+                      "legendAggregation": "Sum",
+                      "itemColorSettings": {
+                        "type": "heatmap",
+                        "colorAggregation": "Sum",
+                        "nodeColorField": "Count",
+                        "heatmapPalette": "greenRed"
+                      }
+                    }
+                  },
+                  "customWidth": "20",
+                  "name": "query - Virtual Network Gateways by Tier"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources\r\n| where type =~ \"microsoft.network/virtualnetworkgateways\"\r\n| extend Details = pack_all()\r\n| extend SKU = tostring(properties.sku.name)\r\n| extend Tier = tostring(properties.sku.tier)\r\n| extend GatewayType = tostring(properties.gatewayType)\r\n| extend vpnClientConfiguration = properties.vpnClientConfiguration\r\n| extend Resource = id\r\n| join kind=leftouter (\r\n    resources\r\n    | where type =~ \"microsoft.network/connections\"\r\n    | mv-expand Resource = pack_array(properties.virtualNetworkGateway1.id, properties.virtualNetworkGateway2.id) to typeof(string)\r\n    | project Resource, connectionId = id, ConnectionProperties=properties\r\n    ) on Resource                  \r\n| where isempty(vpnClientConfiguration) and isempty(connectionId)\r\n| project subscriptionId, Resource, resourceGroup, location, GatewayType, SKU, Tier, tags, Details",
+                    "size": 3,
+                    "title": "Orphaned Virtual Network Gateways",
+                    "noDataMessage": "No orphaned Virtual Network Gateways found.",
+                    "showExportToExcel": true,
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "$gen_group",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "linkIsContextBlade": true,
+                            "showIcon": true
+                          }
+                        },
+                        {
+                          "columnMatch": "subscriptionId",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "Resource",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "location",
+                          "formatter": 17
+                        },
+                        {
+                          "columnMatch": "SKU",
+                          "formatter": 1
+                        },
+                        {
+                          "columnMatch": "Tier",
+                          "formatter": 1
+                        },
+                        {
+                          "columnMatch": "Details",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "CellDetails",
+                            "linkLabel": "🔍 View Details",
+                            "linkIsContextBlade": true
+                          }
+                        },
+                        {
+                          "columnMatch": "vnetId",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "subTarget": "Privateendpoints",
+                            "linkIsContextBlade": true,
+                            "showIcon": true
+                          }
+                        },
+                        {
+                          "columnMatch": "subnetId",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "linkIsContextBlade": true,
+                            "showIcon": false
+                          }
+                        },
+                        {
+                          "columnMatch": "subnet",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "showIcon": true
+                          }
+                        },
+                        {
+                          "columnMatch": "NumberOfRecordSets",
+                          "formatter": 1
+                        },
+                        {
+                          "columnMatch": "Subscription",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "linkIsContextBlade": true,
+                            "showIcon": true
+                          }
+                        },
+                        {
+                          "columnMatch": "sku_name",
+                          "formatter": 1
+                        }
+                      ],
+                      "rowLimit": 1000,
+                      "filter": true,
+                      "hierarchySettings": {
+                        "treeType": 1,
+                        "groupBy": [
+                          "subscriptionId"
+                        ],
+                        "expandTopLevel": true,
+                        "finalBy": "Resource"
+                      },
+                      "labelSettings": [
+                        {
+                          "columnId": "subscriptionId",
+                          "label": "Subscription"
+                        },
+                        {
+                          "columnId": "Resource",
+                          "label": "Resource"
+                        },
+                        {
+                          "columnId": "resourceGroup",
+                          "label": "Resource Group"
+                        },
+                        {
+                          "columnId": "location",
+                          "label": "Location"
+                        },
+                        {
+                          "columnId": "GatewayType",
+                          "label": "Gateway Type"
+                        },
+                        {
+                          "columnId": "SKU",
+                          "label": "Sku"
+                        },
+                        {
+                          "columnId": "Tier",
+                          "label": "Tier"
+                        },
+                        {
+                          "columnId": "tags",
+                          "label": "Tags"
+                        },
+                        {
+                          "columnId": "Details",
+                          "label": "Details"
+                        }
+                      ]
+                    },
+                    "sortBy": [],
+                    "tileSettings": {
+                      "titleContent": {
+                        "columnMatch": "vmSize",
+                        "formatter": 1,
+                        "formatOptions": {
+                          "showIcon": true
+                        }
+                      },
+                      "leftContent": {
+                        "columnMatch": "Count",
+                        "formatter": 12,
+                        "formatOptions": {
+                          "palette": "auto",
+                          "showIcon": true
+                        },
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      },
+                      "showBorder": true
+                    },
+                    "graphSettings": {
+                      "type": 0,
+                      "topContent": {
+                        "columnMatch": "vmSize",
+                        "formatter": 1
+                      },
+                      "centerContent": {
+                        "columnMatch": "Count",
+                        "formatter": 1,
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "name": "query - Virtual Network Gateways"
+                }
+              ]
+            },
+            "conditionalVisibility": {
+              "parameterName": "networkingTab",
+              "comparison": "isEqualTo",
+              "value": "vngs"
+            },
+            "name": "group - Networking - Virtual Network Gateways"
           }
         ]
       },
@@ -11454,15 +12551,6 @@
                           }
                         },
                         {
-                          "columnMatch": "Subscription",
-                          "formatter": 13,
-                          "formatOptions": {
-                            "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
-                            "showIcon": true
-                          }
-                        },
-                        {
                           "columnMatch": "subscriptionId",
                           "formatter": 5
                         },
@@ -11481,6 +12569,15 @@
                             "linkTarget": "CellDetails",
                             "linkLabel": "🔍 View Details",
                             "linkIsContextBlade": true
+                          }
+                        },
+                        {
+                          "columnMatch": "Subscription",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "linkIsContextBlade": true,
+                            "showIcon": true
                           }
                         }
                       ],
@@ -11501,7 +12598,7 @@
                         },
                         {
                           "columnId": "Resource",
-                          "label": "Resource Group Name"
+                          "label": "Resource Group"
                         },
                         {
                           "columnId": "location",
@@ -11510,6 +12607,10 @@
                         {
                           "columnId": "tags",
                           "label": "Tags"
+                        },
+                        {
+                          "columnId": "Details",
+                          "label": "Details"
                         }
                       ]
                     },
@@ -11864,6 +12965,10 @@
                       },
                       "labelSettings": [
                         {
+                          "columnId": "resourceId",
+                          "label": "Resource"
+                        },
+                        {
                           "columnId": "resourceGroup",
                           "label": "Resource Group"
                         },
@@ -11878,6 +12983,10 @@
                         {
                           "columnId": "tags",
                           "label": "Tags"
+                        },
+                        {
+                          "columnId": "Details",
+                          "label": "Details"
                         }
                       ]
                     },
