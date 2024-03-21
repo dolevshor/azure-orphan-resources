@@ -7,7 +7,7 @@ The purpose of this workbook is to provide an overview of your orphaned resource
 - Prevent misconfiguration
 - Simplify operational
 
-![image](https://github.com/dolevshor/azure-orphan-resources/assets/69309933/06432310-dc0a-405e-82c8-9112705c3def)
+![image](https://github.com/dolevshor/azure-orphan-resources/assets/69309933/f1a54972-0265-495e-9dd5-81589a7ac41a)
 
 ![image](https://github.com/dolevshor/azure-orphan-resources/assets/69309933/262a6e00-9e29-40c9-9c36-96b6aff9ddb7)
 
@@ -18,30 +18,34 @@ The purpose of this workbook is to provide an overview of your orphaned resource
 > All the information presented in this Workbook is based on Azure Resource Graph queries.
 > <img src="https://user-images.githubusercontent.com/69309933/172938464-38b08c8e-0d4d-493b-aa8f-954189556d7a.png" width="20" height="20">
 
-Types of resources the workbook covers:
+> [!Tip]
+> 💲 This is a sign that the resource costs money
+
+The workbook includes the following kinds of resources:
 
 - Compute
-  - App Service Plans
+  - App Service Plans 💲
   - Availability Set
 - Storage
-  - Disks
+  - Managed Disks 💲
 - Database
-  - SQL Elastic Pools
+  - SQL Elastic Pools 💲
 - Networking
-  - Public IPs
+  - Public IPs 💲
   - Network Interfaces
   - Network Security Groups
   - Route Tables
-  - Load Balancers
+  - Load Balancers 💲
   - Front Door WAF Policy
   - Traffic Manager Profiles
-  - Application Gateways
+  - Application Gateways 💲
   - Virtual Networks
   - Subnets
-  - NAT Gateways
+  - NAT Gateways 💲
   - IP Groups
-  - Private DNS zones
-  - Private Endpoints
+  - Private DNS zones 💲
+  - Private Endpoints 💲
+  - Virtual Network Gateways 💲
 - Others
   - Resource Groups
   - API Connections
