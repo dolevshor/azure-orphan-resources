@@ -25,6 +25,7 @@ Here you can find all the orphan resources queries that build this Workbook.
   - [Private DNS zones](#private-dns-zones)
   - [Private Endpoints](#private-endpoints)
   - [Virtual Network Gateways](#virtual-network-gateways)
+- - [DDoS Protection](#ddos-protections)
 - [Others](#others)
   - [Resource Groups](#resource-groups)
   - [API Connections](#api-connections)
@@ -326,6 +327,18 @@ resources
     ) on Resource                  
 | where isempty(vpnClientConfiguration) and isempty(connectionId)
 | project subscriptionId, Resource, resourceGroup, location, GatewayType, SKU, Tier, tags, Details
+```
+
+#### DDoS Protections
+
+[DDoS protection](https://learn.microsoft.com/en-us/azure/ddos-protection/ddos-protection-overview) without protected resources. (=without Virtual Networks accosiated)
+
+```kql
+resources
+| where type == "microsoft.network/ddosprotectionplans"
+| where isnull(properties.virtualNetworks)
+| extend Details = pack_all()
+| project subscriptionId, Resource=id, resourceGroup, location, tags, Details
 ```
 
 ## Others
