@@ -46,6 +46,7 @@ The workbook includes the following kinds of resources:
   - Private DNS zones 💲
   - Private Endpoints 💲
   - Virtual Network Gateways 💲
+  - DDoS Protections 💲
 - Others
   - Resource Groups
   - API Connections
