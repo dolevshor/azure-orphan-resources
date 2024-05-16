@@ -47,15 +47,20 @@ resources
 
 #### Availability Set
 
-[Availability Sets](https://learn.microsoft.com/en-us/azure/virtual-machines/availability-set-overview) that not associated to any Virtual Machine (VM) or Virtual Machine Scale Set (VMSS).
+[Availability Sets](https://learn.microsoft.com/en-us/azure/virtual-machines/availability-set-overview) that not associated to any Virtual Machine (VM) or Virtual Machine Scale Set (VMSS) and not related to Azure Site Recovery.
 
 ```kql
 Resources
 | where type =~ 'Microsoft.Compute/availabilitySets'
 | where properties.virtualMachines == "[]"
+| where not(name endswith "-asr")
 | extend Details = pack_all()
 | project subscriptionId, Resource=id, resourceGroup, location, tags, Details
 ```
+
+> **_Note:_** Azure Site Recovery (aka: ASR) Availability Set are excluded from the orphaned resource query.
+
+> <sub> 1) Enable replication process for VM with Availability Set created additional Availability Set that end with the suffix *"-asr"*.<br/>
 
 ## Storage
 
