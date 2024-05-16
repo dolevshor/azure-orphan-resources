@@ -235,7 +235,7 @@
                   "type": 3,
                   "content": {
                     "version": "KqlItem/1.0",
-                    "query": "Resources\r\n| where type =~ 'Microsoft.Compute/availabilitySets'\r\n| where properties.virtualMachines == \"[]\"\r\n| summarize count(type)",
+                    "query": "Resources\r\n| where type =~ 'Microsoft.Compute/availabilitySets'\r\n| where properties.virtualMachines == \"[]\"\r\n| where not(name endswith \"-asr\")\r\n| summarize count(type)",
                     "size": 4,
                     "title": "Availability Sets",
                     "queryType": 1,
@@ -2791,7 +2791,7 @@
                           "formatter": 13,
                           "formatOptions": {
                             "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
+                            "linkIsContextBlade": false,
                             "showIcon": true
                           }
                         },
@@ -2955,7 +2955,7 @@
                 {
                   "type": 1,
                   "content": {
-                    "json": "[Availability Sets](https://learn.microsoft.com/en-us/azure/virtual-machines/availability-set-overview) that not associated to any Virtual Machine (VM) or Virtual Machine Scale Set (VMSS).",
+                    "json": "[Availability Sets](https://learn.microsoft.com/en-us/azure/virtual-machines/availability-set-overview) that not associated to any Virtual Machine (VM) or Virtual Machine Scale Set (VMSS) and not related to Azure Site Recovery.",
                     "style": "upsell"
                   },
                   "name": "text - Title - Info"
@@ -2964,7 +2964,7 @@
                   "type": 3,
                   "content": {
                     "version": "KqlItem/1.0",
-                    "query": "Resources\r\n| where type =~ 'Microsoft.Compute/availabilitySets'\r\n| where properties.virtualMachines == \"[]\"\r\n| summarize count(type)\r\n",
+                    "query": "Resources\r\n| where type =~ 'Microsoft.Compute/availabilitySets'\r\n| where properties.virtualMachines == \"[]\"\r\n| where not(name endswith \"-asr\")\r\n| summarize count(type)\r\n",
                     "size": 4,
                     "title": "Total",
                     "queryType": 1,
@@ -3053,7 +3053,7 @@
                   "type": 3,
                   "content": {
                     "version": "KqlItem/1.0",
-                    "query": "Resources\r\n| where type =~ 'Microsoft.Compute/availabilitySets'\r\n| where properties.virtualMachines == \"[]\"\r\n| summarize count(type) by location",
+                    "query": "Resources\r\n| where type =~ 'Microsoft.Compute/availabilitySets'\r\n| where properties.virtualMachines == \"[]\"\r\n| where not(name endswith \"-asr\")\r\n| summarize count(type) by location",
                     "size": 4,
                     "title": "Count by Location",
                     "noDataMessage": "No results.",
@@ -3166,7 +3166,7 @@
                   "type": 3,
                   "content": {
                     "version": "KqlItem/1.0",
-                    "query": "Resources\r\n| where type =~ 'Microsoft.Compute/availabilitySets'\r\n| where properties.virtualMachines == \"[]\"\r\n| extend Details = pack_all()\r\n| project subscriptionId, Resource=id, resourceGroup, location, tags, Details",
+                    "query": "Resources\r\n| where type =~ 'Microsoft.Compute/availabilitySets'\r\n| where properties.virtualMachines == \"[]\"\r\n| where not(name endswith \"-asr\")\r\n| extend Details = pack_all()\r\n| project subscriptionId, Resource=id, resourceGroup, location, tags, Details",
                     "size": 3,
                     "title": "Orphaned Availability Set",
                     "noDataMessage": "No orphaned Availability Set found.",
@@ -3183,16 +3183,7 @@
                           "formatter": 13,
                           "formatOptions": {
                             "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
-                            "showIcon": true
-                          }
-                        },
-                        {
-                          "columnMatch": "Subscription",
-                          "formatter": 13,
-                          "formatOptions": {
-                            "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
+                            "linkIsContextBlade": false,
                             "showIcon": true
                           }
                         },
@@ -3215,6 +3206,15 @@
                             "linkTarget": "CellDetails",
                             "linkLabel": "🔍 View Details",
                             "linkIsContextBlade": true
+                          }
+                        },
+                        {
+                          "columnMatch": "Subscription",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "linkIsContextBlade": true,
+                            "showIcon": true
                           }
                         }
                       ],
@@ -3796,7 +3796,7 @@
                           "formatter": 13,
                           "formatOptions": {
                             "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
+                            "subTarget": "",
                             "showIcon": true
                           }
                         },
@@ -4451,7 +4451,7 @@
                           "formatter": 13,
                           "formatOptions": {
                             "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
+                            "linkIsContextBlade": false,
                             "showIcon": true
                           }
                         },
@@ -5235,7 +5235,7 @@
                           "formatter": 13,
                           "formatOptions": {
                             "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
+                            "linkIsContextBlade": false,
                             "showIcon": true
                           }
                         },
@@ -5634,7 +5634,7 @@
                           "formatter": 13,
                           "formatOptions": {
                             "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
+                            "linkIsContextBlade": false,
                             "showIcon": true
                           }
                         },
@@ -6017,7 +6017,7 @@
                           "formatter": 13,
                           "formatOptions": {
                             "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
+                            "linkIsContextBlade": false,
                             "showIcon": true
                           }
                         },
@@ -6411,7 +6411,7 @@
                           "formatter": 13,
                           "formatOptions": {
                             "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
+                            "linkIsContextBlade": false,
                             "showIcon": true
                           }
                         },
@@ -6940,7 +6940,7 @@
                           "formatter": 13,
                           "formatOptions": {
                             "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
+                            "linkIsContextBlade": false,
                             "showIcon": true
                           }
                         },
@@ -7342,7 +7342,7 @@
                           "formatter": 13,
                           "formatOptions": {
                             "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
+                            "linkIsContextBlade": false,
                             "showIcon": true
                           }
                         },
@@ -7609,7 +7609,7 @@
                           "formatter": 13,
                           "formatOptions": {
                             "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
+                            "linkIsContextBlade": false,
                             "showIcon": true
                           }
                         },
@@ -8142,7 +8142,7 @@
                           "formatter": 13,
                           "formatOptions": {
                             "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
+                            "linkIsContextBlade": false,
                             "showIcon": true
                           }
                         },
@@ -8593,7 +8593,7 @@
                                 "formatter": 13,
                                 "formatOptions": {
                                   "linkTarget": "Resource",
-                                  "linkIsContextBlade": true,
+                                  "linkIsContextBlade": false,
                                   "showIcon": true
                                 }
                               },
@@ -9125,7 +9125,7 @@
                                 "formatter": 13,
                                 "formatOptions": {
                                   "linkTarget": "Resource",
-                                  "linkIsContextBlade": true,
+                                  "linkIsContextBlade": false,
                                   "showIcon": true
                                 }
                               },
@@ -9814,7 +9814,7 @@
                           "formatter": 13,
                           "formatOptions": {
                             "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
+                            "linkIsContextBlade": false,
                             "showIcon": true
                           }
                         },
@@ -10228,7 +10228,7 @@
                           "formatter": 13,
                           "formatOptions": {
                             "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
+                            "linkIsContextBlade": false,
                             "showIcon": true
                           }
                         },
@@ -10630,7 +10630,7 @@
                           "formatter": 13,
                           "formatOptions": {
                             "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
+                            "linkIsContextBlade": false,
                             "showIcon": true
                           }
                         },
@@ -11310,7 +11310,7 @@
                           "formatter": 13,
                           "formatOptions": {
                             "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
+                            "linkIsContextBlade": false,
                             "showIcon": true
                           }
                         },
@@ -12168,7 +12168,7 @@
                           "formatter": 13,
                           "formatOptions": {
                             "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
+                            "linkIsContextBlade": false,
                             "showIcon": true
                           }
                         },
@@ -12621,12 +12621,16 @@
                           "formatter": 13,
                           "formatOptions": {
                             "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
+                            "linkIsContextBlade": false,
                             "showIcon": true
                           }
                         },
                         {
                           "columnMatch": "subscriptionId",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "Resource",
                           "formatter": 5
                         },
                         {
@@ -12641,10 +12645,6 @@
                             "linkLabel": "🔍 View Details",
                             "linkIsContextBlade": true
                           }
-                        },
-                        {
-                          "columnMatch": "Resource",
-                          "formatter": 5
                         },
                         {
                           "columnMatch": "SKU",
@@ -13077,7 +13077,7 @@
                           "formatter": 13,
                           "formatOptions": {
                             "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
+                            "linkIsContextBlade": false,
                             "showIcon": true
                           }
                         },
@@ -13445,7 +13445,7 @@
                           "formatter": 13,
                           "formatOptions": {
                             "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
+                            "linkIsContextBlade": false,
                             "showIcon": true
                           }
                         },
@@ -13822,7 +13822,7 @@
                           "formatter": 13,
                           "formatOptions": {
                             "linkTarget": "Resource",
-                            "linkIsContextBlade": true,
+                            "linkIsContextBlade": false,
                             "showIcon": true
                           }
                         },
