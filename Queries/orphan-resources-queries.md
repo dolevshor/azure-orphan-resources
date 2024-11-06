@@ -42,7 +42,7 @@ resources
 | where type =~ "microsoft.web/serverfarms"
 | where properties.numberOfSites == 0
 | extend Details = pack_all()
-| project Resource=id, resourceGroup, location, subscriptionId, Sku=sku.name, Tier=sku.tier, tags ,Details
+| project subscriptionId, Resource=id, resourceGroup, location, Sku=sku.name, Tier=sku.tier, tags ,Details
 ```
 
 #### Availability Set
@@ -72,10 +72,10 @@ Resources
 Resources
 | where type has "microsoft.compute/disks"
 | extend diskState = tostring(properties.diskState)
-| where managedBy == ""
+| where managedBy == "" or diskState == 'Unattached'
 | where not(name endswith "-ASRReplica" or name startswith "ms-asr-" or name startswith "asrseeddisk-")
 | extend Details = pack_all()
-| project id, resourceGroup, diskState, sku.name, properties.diskSizeGB, location, tags, subscriptionId, Details
+| project subscriptionId, Resource=id, resourceGroup, location, diskType=sku.name, diskSizeGB=properties.diskSizeGB, timeCreated=properties.timeCreated, tags, Details
 ```
 
 > **_Note:_** Azure Site Recovery (aka: ASR) managed disks are excluded from the orphaned resource query.
@@ -114,7 +114,7 @@ Resources
 | where type == "microsoft.network/publicipaddresses"
 | where properties.ipConfiguration == "" and properties.natGateway == "" and properties.publicIPPrefix == ""
 | extend Details = pack_all()
-| project Resource=id, resourceGroup, location, subscriptionId, sku.name, tags ,Details
+| project subscriptionId, Resource=id, resourceGroup, location, Type=tostring(sku.name), AllocationMethod=tostring(properties.publicIPAllocationMethod), tags, Details
 ```
 
 #### Network Interfaces
@@ -129,7 +129,7 @@ Resources
 | where properties.hostedWorkloads == "[]"
 | where properties !has 'virtualmachine'
 | extend Details = pack_all()
-| project Resource=id, resourceGroup, location, tags, subscriptionId, Details
+| project subscriptionId, Resource=id, resourceGroup, location, kind, tags, Details
 ```
 
 > **_Note:_** Azure Netapp Volumes are excluded from the orphaned resource query.
@@ -173,7 +173,7 @@ resources
 | where type == "microsoft.network/loadbalancers"
 | where properties.backendAddressPools == "[]"
 | extend Details = pack_all()
-| project subscriptionId, Resource=id, resourceGroup, location, tags, Details
+| project subscriptionId, Resource=id, resourceGroup, location, Type=tostring(sku.name), tags, Details
 ```
 
 #### Front Door WAF Policy
@@ -197,7 +197,7 @@ resources
 | where type == "microsoft.network/trafficmanagerprofiles"
 | where properties.endpoints == "[]"
 | extend Details = pack_all()
-| project Resource=id, resourceGroup, location, subscriptionId, tags, Details
+| project subscriptionId, Resource=id, resourceGroup, location, tags, Details
 ```
 
 #### Application Gateways
@@ -222,7 +222,7 @@ resources
 | project-away AppGwId1
 | where  (backendIPCount == 0 or isempty(backendIPCount)) and (backendAddressesCount==0 or isempty(backendAddressesCount))
 | extend Details = pack_all()
-| project Resource=AppGwId, resourceGroup, location, subscriptionId, SKUTier, SKUCapacity, tags, Details
+| project subscriptionId, Resource=AppGwId, resourceGroup, location, SKUTier, SKUCapacity, tags, Details
 ```
 
 #### Virtual Networks
@@ -248,9 +248,11 @@ resources
 | mv-expand subnet
 | extend ipConfigurations = subnet.properties.ipConfigurations
 | extend delegations = subnet.properties.delegations
-| where isnull(ipConfigurations) and delegations == "[]"
+| extend applicationGatewayIPConfigurations = subnet.properties.applicationGatewayIPConfigurations
+| where isnull(ipConfigurations) and delegations == "[]" and isnull(applicationGatewayIPConfigurations) 
+| extend SubnetName = subnet.name, SubnetId = subnet.id
 | extend Details = pack_all()
-| project subscriptionId, Resource=subnet.id, VNetName=name, SubnetName=tostring(subnet.name) ,resourceGroup, location, Details
+| project subscriptionId, SubnetName, vNetId=id, SubnetId ,resourceGroup, location, vNetName=name, Details
 ```
 
 #### NAT Gateways
@@ -262,7 +264,7 @@ resources
 | where type == "microsoft.network/natgateways"
 | where isnull(properties.subnets)
 | extend Details = pack_all()
-| project subscriptionId, Resource=id, resourceGroup, location, tostring(sku.name), tostring(sku.tier), tags, Details
+| project subscriptionId, Resource=id, resourceGroup, location, Sku=tostring(sku.name), Tier=tostring(sku.tier), tags, Details
 ```
 
 #### IP Groups
@@ -298,8 +300,10 @@ resources
 | where type =~ "microsoft.network/privateendpoints"
 | extend connection = iff(array_length(properties.manualPrivateLinkServiceConnections) > 0, properties.manualPrivateLinkServiceConnections[0], properties.privateLinkServiceConnections[0])
 | extend subnetId = properties.subnet.id
+| extend subnetName = tostring(split(subnetId, "/")[-1])
 | extend subnetIdSplit = split(subnetId, "/")
 | extend vnetId = strcat_array(array_slice(subnetIdSplit,0,8), "/")
+| extend vnetName = tostring(split(vnetId, "/")[-1])
 | extend serviceId = tostring(connection.properties.privateLinkServiceId)
 | extend serviceIdSplit = split(serviceId, "/")
 | extend serviceName = tostring(serviceIdSplit[8])
@@ -308,7 +312,7 @@ resources
 | extend groupIds = tostring(connection.properties.groupIds[0])
 | where stateEnum == "Disconnected"
 | extend Details = pack_all()
-| project subscriptionId, Resource=id, resourceGroup, location, serviceName, serviceTypeEnum, groupIds, vnetId, subnetId, tags, Details
+| project subscriptionId, Resource=id, resourceGroup, location, serviceName, serviceTypeEnum, groupIds, vnetId, vnetName, subnetId, subnetName, tags, Details
 ```
 
 #### Virtual Network Gateways
@@ -363,7 +367,7 @@ ResourceContainers
  ) on rgAndSub
  | where isnull(count_)
  | extend Details = pack_all()
- | project subscriptionId, Resource=id, location, tags ,Details
+ | project subscriptionId, Resource=id, resourceGroup, location, tags ,Details
 ```
 
 #### API Connections
@@ -373,7 +377,7 @@ ResourceContainers
 ```kql
 resources
 | where type =~ 'Microsoft.Web/connections'
-| project resourceId = id , apiName = name, subscriptionId, resourceGroup, tags, location
+| project subscriptionId, Resource = id , apiName = name, resourceGroup, tags, location
 | join kind = leftouter (
     resources
     | where type == 'microsoft.logic/workflows'
@@ -384,10 +388,10 @@ resources
     | extend connectionId = extract("connectionId\":\"(.*?)\"", 1, tostring(var_connection))
     | project connectionId, name
     )
-    on $left.resourceId == $right.connectionId
+    on $left.Resource == $right.connectionId
 | where connectionId == ""
 | extend Details = pack_all()
-| project resourceId, resourceGroup, location, subscriptionId, tags, Details
+| project subscriptionId, Resource, resourceGroup, location, tags, Details
 ```
 
 #### Certificates
@@ -400,5 +404,5 @@ resources
 | extend expiresOn = todatetime(properties.expirationDate)
 | where expiresOn <= now()
 | extend Details = pack_all()
-| project Resource=id, resourceGroup, location, subscriptionId, tags, Details
+| project subscriptionId, Resource=id, resourceGroup, location, Details
 ```
