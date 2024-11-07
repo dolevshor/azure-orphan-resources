@@ -1,4 +1,4 @@
-# Azure Orphaned Resources v2.0
+# Azure Orphaned Resources v3.0
 
 The _'Azure Orphaned Resources Workbook'_ centralize orphaned resources in Azure environments.
 
@@ -7,16 +7,17 @@ The purpose of this workbook is to provide an overview of your orphaned resource
 - Prevent misconfiguration
 - Simplify operational
 
-![image](https://github.com/dolevshor/azure-orphan-resources/assets/69309933/f1a54972-0265-495e-9dd5-81589a7ac41a)
+![image](https://github.com/user-attachments/assets/76ce2f92-91ff-4afc-b5c0-2246e5567a1f)
 
-![image](https://github.com/dolevshor/azure-orphan-resources/assets/69309933/262a6e00-9e29-40c9-9c36-96b6aff9ddb7)
+![image](https://github.com/user-attachments/assets/2d48f8c7-753f-465b-81d4-0a9c0700a645)
 
-![image](https://github.com/dolevshor/azure-orphan-resources/assets/69309933/7ac9c44c-108b-494b-8a94-d55f25611123)
-
+![image](https://github.com/user-attachments/assets/c8fb8aa4-f3ac-4053-9fd2-dc36ea3b082f)
 
 
 > All the information presented in this Workbook is based on Azure Resource Graph queries.
 > <img src="https://user-images.githubusercontent.com/69309933/172938464-38b08c8e-0d4d-493b-aa8f-954189556d7a.png" width="20" height="20">
+
+## Resources covered
 
 > [!Tip]
 > 💲 This is a sign that the resource costs money
@@ -52,6 +53,37 @@ The workbook includes the following kinds of resources:
   - API Connections
   - Certificates
 
+## Resource Deletion
+
+To enable the option to delete resource(s), you need first to enable it on the filter pane.
+
+![image](https://github.com/user-attachments/assets/51b96c7b-f1dc-439a-bd80-017a195afaff)
+
+Enable the deletion option will add the _'⛔ Delete Selected Resource(s)'_ button.
+
+![image](https://github.com/user-attachments/assets/fdb548bb-2787-4535-9197-4670b342a340)
+
+To delete resource(s), select the resource(s) from the table _(1)_ and click the _'⛔ Delete Selected Resource(s)'_ button _(2)_.
+
+![image](https://github.com/user-attachments/assets/2ac4ea63-f13b-43eb-8828-183bf630658a)
+
+
+- A Context pane will open with the resource(s) details to approve the deletion.
+
+![image](https://github.com/user-attachments/assets/64e7e3bc-86e8-4577-8ad7-9060ae5d4cd6)
+
+> In the _View request details_ you can see the _Delete_ ARM Actions to delete the selected resource(s).
+
+![image](https://github.com/user-attachments/assets/133127ed-a6c6-4f10-b78f-66888c9d18f2)
+
+
+> [!Important]
+> **Recommended steps before deletion** 
+> - Review the resource(s) information thoroughly before continuing with the deletion. 
+> - Ensure that the resource(s) is not currently in use.
+
+> To delete a resource, you must have _Contributor_ permissions for the Resource Group(s) where the resource(s) are located. 
+
 ## How to use it?
 Importing this Workbook to your Azure environment is quite simple.
 
@@ -83,28 +115,31 @@ Follow this steps to use the Workbook:
 
 - Click in the ‘Save’ button on the toolbar
 
-<img src="https://user-images.githubusercontent.com/69309933/172807909-b4527207-343e-4861-af4e-35e1104029d1.png" width="700">  
+![image](https://github.com/user-attachments/assets/4cadec5a-405a-4717-874c-2435a7a55655) 
 
 - Select a name and where to save the Workbook:
-  - Title: _'Orphaned Resources'_
+  - Title: _'Azure Orphaned Resources'_
   - Subscription: <_Subscription Name_>
   - Resource group: <_Resource Group Name_>
   - Location: <_Region_>
 - Click _'Save'_
-  
-<img src="https://user-images.githubusercontent.com/69309933/172808030-3d7171c9-8b23-4f69-ab8b-7150b1459ea8.png" width="700">  
+
+![image](https://github.com/user-attachments/assets/d35a45b1-108b-4557-b454-5ffd3ea87cb7)
 
 The Workbook is ready to use!
 - Click on _'Workbooks'_
-- Click on _'Orphaned Resources'_ Workbook.
+- Click on _'Azure Orphaned Resources'_ Workbook.
 
-<img src="https://user-images.githubusercontent.com/69309933/172808358-ed2fede8-42a4-42bd-9c68-3ac4d645f812.png" width="700">  
+![image](https://github.com/user-attachments/assets/788285e8-9fdc-4401-8b59-04cf9a452c47)
 
 Start using the Workbook and review your orphaned resources.<br/>
 
-(Optional) You can filter by specific subscription:
+(Optional) You can filter by:
 
-![image](https://github.com/dolevshor/azure-orphan-resources/assets/69309933/f4b11592-d101-4db1-a0d0-f962ad738c0d)
+- Subscription(s)
+- Resource Group(s)
+
+![image](https://github.com/user-attachments/assets/61fe85c8-0a23-4636-aff5-ee89bef36dbc)
 
 
 
