@@ -7,6 +7,8 @@ The purpose of this workbook is to provide an overview of your orphaned resource
 - Prevent misconfiguration
 - Simplify operational
 
+![image](https://github.com/user-attachments/assets/c86a1bf5-bc4b-4475-ab09-59b164f5eecb)
+
 ![image](https://github.com/user-attachments/assets/76ce2f92-91ff-4afc-b5c0-2246e5567a1f)
 
 ![image](https://github.com/user-attachments/assets/2d48f8c7-753f-465b-81d4-0a9c0700a645)
