@@ -79,8 +79,7 @@
               "additionalResourceOptions": [],
               "showDefault": false
             },
-            "queryType": 8,
-            "value": "true"
+            "queryType": 8
           }
         ],
         "style": "pills",
@@ -259,7 +258,7 @@
                   "type": 3,
                   "content": {
                     "version": "KqlItem/1.0",
-                    "query": "Resources\r\n| where type =~ \"microsoft.compute/disks\"\r\n| where resourceGroup in~ ({ResourceGroup:value})\r\n| extend diskState = tostring(properties.diskState)\r\n| where managedBy == \"\"\r\n| where not(name endswith \"-ASRReplica\" or name startswith \"ms-asr-\" or name startswith \"asrseeddisk-\")\r\n| summarize count_ = count() by type\r\n| extend count_ = iff(count_ == 0, 0, count_)\r\n| union (datatable(type:string, count_:long) [\"microsoft.compute/disks\", 0])\r\n| summarize total_count = max(count_) by type",
+                    "query": "Resources\r\n| where type =~ \"microsoft.compute/disks\"\r\n| where resourceGroup in~ ({ResourceGroup:value})\r\n| extend diskState = tostring(properties.diskState)\r\n| where (managedBy == \"\" and diskState != 'ActiveSAS') or (diskState == 'Unattached' and diskState != 'ActiveSAS')\r\n| where not(name endswith \"-ASRReplica\" or name startswith \"ms-asr-\" or name startswith \"asrseeddisk-\")\r\n| where (tags !contains \"kubernetes.io-created-for-pvc\") and tags !contains \"ASR-ReplicaDisk\" and tags !contains \"asrseeddisk\" and tags !contains \"RSVaultBackup\"\r\n| summarize count_ = count() by type\r\n| extend count_ = iff(count_ == 0, 0, count_)\r\n| union (datatable(type:string, count_:long) [\"microsoft.compute/disks\", 0])\r\n| summarize total_count = max(count_) by type",
                     "size": 3,
                     "title": "  💲",
                     "queryType": 1,
@@ -1619,7 +1618,7 @@
                   "type": 3,
                   "content": {
                     "version": "KqlItem/1.0",
-                    "query": "Resources\r\n| where type =~ \"microsoft.compute/disks\"\r\n| where resourceGroup in~ ({ResourceGroup:value})\r\n| extend diskState = tostring(properties.diskState)\r\n| where managedBy == \"\"\r\n| where not(name endswith \"-ASRReplica\" or name startswith \"ms-asr-\" or name startswith \"asrseeddisk-\")\r\n| summarize count_ = count() by type\r\n| extend count_ = iff(count_ == 0, 0, count_)\r\n| union (datatable(type:string, count_:long) [\"microsoft.compute/disks\", 0])\r\n| summarize total_count = max(count_) by type",
+                    "query": "Resources\r\n| where type =~ \"microsoft.compute/disks\"\r\n| where resourceGroup in~ ({ResourceGroup:value})\r\n| extend diskState = tostring(properties.diskState)\r\n| where (managedBy == \"\" and diskState != 'ActiveSAS') or (diskState == 'Unattached' and diskState != 'ActiveSAS')\r\n| where not(name endswith \"-ASRReplica\" or name startswith \"ms-asr-\" or name startswith \"asrseeddisk-\")\r\n| where (tags !contains \"kubernetes.io-created-for-pvc\") and tags !contains \"ASR-ReplicaDisk\" and tags !contains \"asrseeddisk\" and tags !contains \"RSVaultBackup\"\r\n| summarize count_ = count() by type\r\n| extend count_ = iff(count_ == 0, 0, count_)\r\n| union (datatable(type:string, count_:long) [\"microsoft.compute/disks\", 0])\r\n| summarize total_count = max(count_) by type",
                     "size": 4,
                     "title": "Total",
                     "queryType": 1,
@@ -1654,7 +1653,7 @@
                   "type": 3,
                   "content": {
                     "version": "KqlItem/1.0",
-                    "query": "Resources\r\n| where type =~ \"microsoft.compute/disks\"\r\n| where resourceGroup in~ ({ResourceGroup:value})\r\n| extend diskState = tostring(properties.diskState)\r\n| where managedBy == \"\"\r\n| where not(name endswith \"-ASRReplica\" or name startswith \"ms-asr-\" or name startswith \"asrseeddisk-\")\r\n| extend SizeGB = tolong(properties.diskSizeGB)\r\n| summarize ['Total Disk Size (GB)']=sum(SizeGB)",
+                    "query": "Resources\r\n| where type =~ \"microsoft.compute/disks\"\r\n| where resourceGroup in~ ({ResourceGroup:value})\r\n| extend diskState = tostring(properties.diskState)\r\n| where (managedBy == \"\" and diskState != 'ActiveSAS') or (diskState == 'Unattached' and diskState != 'ActiveSAS')\r\n| where not(name endswith \"-ASRReplica\" or name startswith \"ms-asr-\" or name startswith \"asrseeddisk-\")\r\n| where (tags !contains \"kubernetes.io-created-for-pvc\") and tags !contains \"ASR-ReplicaDisk\" and tags !contains \"asrseeddisk\" and tags !contains \"RSVaultBackup\"\r\n| extend SizeGB = tolong(properties.diskSizeGB)\r\n| summarize ['Total Disk Size (GB)']=sum(SizeGB)",
                     "size": 4,
                     "title": "Total Disk Size (GB)",
                     "queryType": 1,
@@ -1685,7 +1684,7 @@
                   "type": 3,
                   "content": {
                     "version": "KqlItem/1.0",
-                    "query": "Resources\r\n| where type =~ \"microsoft.compute/disks\"\r\n| where resourceGroup in~ ({ResourceGroup:value})\r\n| extend diskState = tostring(properties.diskState)\r\n| where managedBy == \"\"\r\n| where not(name endswith \"-ASRReplica\" or name startswith \"ms-asr-\" or name startswith \"asrseeddisk-\")\r\n| summarize Count=count(type) by location",
+                    "query": "Resources\r\n| where type =~ \"microsoft.compute/disks\"\r\n| where resourceGroup in~ ({ResourceGroup:value})\r\n| extend diskState = tostring(properties.diskState)\r\n| where (managedBy == \"\" and diskState != 'ActiveSAS') or (diskState == 'Unattached' and diskState != 'ActiveSAS')\r\n| where not(name endswith \"-ASRReplica\" or name startswith \"ms-asr-\" or name startswith \"asrseeddisk-\")\r\n| where (tags !contains \"kubernetes.io-created-for-pvc\") and tags !contains \"ASR-ReplicaDisk\" and tags !contains \"asrseeddisk\" and tags !contains \"RSVaultBackup\"\r\n| summarize Count=count(type) by location",
                     "size": 4,
                     "title": "Count by Location",
                     "queryType": 1,
@@ -1706,7 +1705,7 @@
                   "type": 3,
                   "content": {
                     "version": "KqlItem/1.0",
-                    "query": "Resources\r\n| where type =~ \"microsoft.compute/disks\"\r\n| where resourceGroup in~ ({ResourceGroup:value})\r\n| extend diskState = tostring(properties.diskState)\r\n| where managedBy == \"\"\r\n| where not(name endswith \"-ASRReplica\" or name startswith \"ms-asr-\" or name startswith \"asrseeddisk-\")\r\n| summarize Count=count(type) by DiskType=tostring(sku.name)",
+                    "query": "Resources\r\n| where type =~ \"microsoft.compute/disks\"\r\n| where resourceGroup in~ ({ResourceGroup:value})\r\n| extend diskState = tostring(properties.diskState)\r\n| where (managedBy == \"\" and diskState != 'ActiveSAS') or (diskState == 'Unattached' and diskState != 'ActiveSAS')\r\n| where not(name endswith \"-ASRReplica\" or name startswith \"ms-asr-\" or name startswith \"asrseeddisk-\")\r\n| where (tags !contains \"kubernetes.io-created-for-pvc\") and tags !contains \"ASR-ReplicaDisk\" and tags !contains \"asrseeddisk\" and tags !contains \"RSVaultBackup\"\r\n| summarize Count=count(type) by DiskType=tostring(sku.name)",
                     "size": 4,
                     "title": "Count by Disk Type",
                     "queryType": 1,
@@ -1727,7 +1726,7 @@
                   "type": 3,
                   "content": {
                     "version": "KqlItem/1.0",
-                    "query": "Resources\r\n| where type =~ \"microsoft.compute/disks\"\r\n| where resourceGroup in~ ({ResourceGroup:value})\r\n| extend diskState = tostring(properties.diskState)\r\n| where managedBy == \"\" or diskState == 'Unattached'\r\n| where not(name endswith \"-ASRReplica\" or name startswith \"ms-asr-\" or name startswith \"asrseeddisk-\")\r\n| extend Details = pack_all()\r\n| project subscriptionId, Resource=id, resourceGroup, location, diskType=sku.name, diskSizeGB=properties.diskSizeGB, timeCreated=properties.timeCreated, tags, Details\r\n",
+                    "query": "Resources\r\n| where type =~ \"microsoft.compute/disks\"\r\n| where resourceGroup in~ ({ResourceGroup:value})\r\n| extend diskState = tostring(properties.diskState)\r\n| where (managedBy == \"\" and diskState != 'ActiveSAS') or (diskState == 'Unattached' and diskState != 'ActiveSAS')\r\n| where not(name endswith \"-ASRReplica\" or name startswith \"ms-asr-\" or name startswith \"asrseeddisk-\")\r\n| where (tags !contains \"kubernetes.io-created-for-pvc\") and tags !contains \"ASR-ReplicaDisk\" and tags !contains \"asrseeddisk\" and tags !contains \"RSVaultBackup\"\r\n| extend Details = pack_all()\r\n| project subscriptionId, Resource=id, resourceGroup, location, diskType=sku.name, diskSizeGB=properties.diskSizeGB, timeCreated=properties.timeCreated, tags, Details\r\n",
                     "size": 3,
                     "title": "Orphaned Managed Disks",
                     "noDataMessage": "No orphaned Managed Disks found.",
