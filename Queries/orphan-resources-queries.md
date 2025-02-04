@@ -72,8 +72,9 @@ Resources
 Resources
 | where type has "microsoft.compute/disks"
 | extend diskState = tostring(properties.diskState)
-| where managedBy == "" or diskState == 'Unattached'
+| where (managedBy == "" and diskState != 'ActiveSAS') or (diskState == 'Unattached' and diskState != 'ActiveSAS')
 | where not(name endswith "-ASRReplica" or name startswith "ms-asr-" or name startswith "asrseeddisk-")
+| where (tags !contains "kubernetes.io-created-for-pvc") and tags !contains "ASR-ReplicaDisk" and tags !contains "asrseeddisk" and tags !contains "RSVaultBackup"
 | extend Details = pack_all()
 | project subscriptionId, Resource=id, resourceGroup, location, diskType=sku.name, diskSizeGB=properties.diskSizeGB, timeCreated=properties.timeCreated, tags, Details
 ```
@@ -83,6 +84,8 @@ Resources
 > <sub> 1) Enable replication process created a temporary *'Unattached'* managed disk that begins with the prefix *"ms-asr-"*.<br/>
         2) When the replication start, a new managed disk that begin with the suffix *"-ASRReplica"* created in *'ActiveSAS'* state.<br/>
         3) When replicated on-premises VMware VMs and physicall servers to managed disks in Azure, these logs are used to create recovery points on Azure-managed disks that have prefix of *"asrseeddisk-"*.</sub>
+
+> **_Note:_** AKS Persistent Volume Claim (aka: PVC) managed disks are excluded from the orphaned resource query.
 
 ## Database
 
