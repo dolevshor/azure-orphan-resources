@@ -79,7 +79,8 @@
               "additionalResourceOptions": [],
               "showDefault": false
             },
-            "queryType": 8
+            "queryType": 8,
+            "value": "true"
           }
         ],
         "style": "pills",
@@ -7078,8 +7079,13 @@
                     "exportMultipleValues": true,
                     "exportedParameters": [
                       {
-                        "fieldName": "resourceGroup",
+                        "fieldName": "Resource",
                         "parameterName": "resources",
+                        "parameterType": 5
+                      },
+                      {
+                        "fieldName": "resourceGroup",
+                        "parameterName": "resourcegroups",
                         "parameterType": 5
                       }
                     ],
@@ -7196,7 +7202,7 @@
                                 "httpMethod": "DELETE",
                                 "applyToMultipleResourcesParameter": "resources",
                                 "title": "Delete Resource(s)",
-                                "description": "# ⛔ **Attention!** ⛔\n\n## This action will permanently delete the following Resource Group(s):\n\n{resources:grid}\n\n\n### Recommended steps before deletion\n\n- Review the resource(s) information thoroughly before continuing with the deletion.\n- Ensure that the resource(s) is not currently in use.\n\n\n### Required Permissions\n\n- To complete this action, you must have _Contributor_ permissions for the Resource Group(s) where the resource(s) are located.",
+                                "description": "# ⛔ **Attention!** ⛔\n\n## This action will permanently delete the following Resource Group(s):\n\n{resourcegroups:grid}\n\n\n### Recommended steps before deletion\n\n- Review the resource(s) information thoroughly before continuing with the deletion.\n- Ensure that the resource(s) is not currently in use.\n\n\n### Required Permissions\n\n- To complete this action, you must have _Contributor_ permissions for the Resource Group(s) where the resource(s) are located.",
                                 "actionName": "Delete Resource(s)",
                                 "runLabel": "Delete Resource(s)"
                               }
