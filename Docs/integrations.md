@@ -11,3 +11,10 @@ The following tools use and based on queries from the Orphaned Resources Workboo
 
 - Additionally you can view Orphaned Resources in your environment.
 - If you run AzGovViz with parameter -DoAzureConsumption then the orphaned resources output will show you potential cost savings for orphaned resources with intent 'cost savings'.
+
+### Azure Quick Review
+*Author: @CarlosMendible*
+
+[AzQR](https://aka.ms/azqr) Azure Quick Review (azqr) is a powerful command-line interface (CLI) tool that specializes in analyzing Azure resources to ensure compliance with Azure's best practices and recommendations.
+
+- Scan Orphaned Resources in your environment.
