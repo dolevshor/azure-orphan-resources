@@ -80,7 +80,7 @@
               "showDefault": false
             },
             "queryType": 8,
-            "value": "true"
+            "value": "false"
           }
         ],
         "style": "pills",
