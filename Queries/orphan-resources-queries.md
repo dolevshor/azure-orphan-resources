@@ -181,12 +181,12 @@ resources
 
 #### Front Door WAF Policy
 
-[Front Door WAF Policy](https://learn.microsoft.com/en-us/azure/web-application-firewall/afds/afds-overview) without associations. (Frontend Endpoint Links, Security Policy Links)
+[Front Door WAF Policy](https://learn.microsoft.com/en-us/azure/web-application-firewall/afds/afds-overview) without Security Policy Links association.
 
 ```kql
 resources
 | where type == "microsoft.network/frontdoorwebapplicationfirewallpolicies"
-| where properties.frontendEndpointLinks== "[]" and properties.securityPolicyLinks == "[]"
+| where properties.securityPolicyLinks == "[]"
 | extend Details = pack_all()
 | project Resource=id, resourceGroup, location, subscriptionId, Sku=sku.name, tags, Details
 ```
