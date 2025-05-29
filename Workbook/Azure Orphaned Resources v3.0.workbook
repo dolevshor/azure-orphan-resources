@@ -79,8 +79,7 @@
               "additionalResourceOptions": [],
               "showDefault": false
             },
-            "queryType": 8,
-            "value": "false"
+            "queryType": 8
           }
         ],
         "style": "pills",
@@ -497,7 +496,7 @@
                   "type": 3,
                   "content": {
                     "version": "KqlItem/1.0",
-                    "query": "resources\r\n| where type =~ \"microsoft.network/frontdoorwebapplicationfirewallpolicies\"\r\n| where resourceGroup in~ ({ResourceGroup:value})\r\n| where properties.frontendEndpointLinks== \"[]\"\r\n| summarize count_ = count() by type\r\n| extend count_ = iff(count_ == 0, 0, count_)\r\n| union (datatable(type:string, count_:long) [\"microsoft.network/frontdoorwebapplicationfirewallpolicies\", 0])\r\n| summarize total_count = max(count_) by type",
+                    "query": "resources\r\n| where type =~ \"microsoft.network/frontdoorwebapplicationfirewallpolicies\"\r\n| where resourceGroup in~ ({ResourceGroup:value})\r\n| where properties.securityPolicyLinks== \"[]\"\r\n| summarize count_ = count() by type\r\n| extend count_ = iff(count_ == 0, 0, count_)\r\n| union (datatable(type:string, count_:long) [\"microsoft.network/frontdoorwebapplicationfirewallpolicies\", 0])\r\n| summarize total_count = max(count_) by type",
                     "size": 3,
                     "title": " ",
                     "queryType": 1,
@@ -3752,7 +3751,7 @@
                   "type": 3,
                   "content": {
                     "version": "KqlItem/1.0",
-                    "query": "resources\r\n| where type =~ \"microsoft.network/frontdoorwebapplicationfirewallpolicies\"\r\n| where resourceGroup in~ ({ResourceGroup:value})\r\n| where properties.frontendEndpointLinks== \"[]\"\r\n| summarize count_ = count() by type\r\n| extend count_ = iff(count_ == 0, 0, count_)\r\n| union (datatable(type:string, count_:long) [\"microsoft.network/frontdoorwebapplicationfirewallpolicies\", 0])\r\n| summarize total_count = max(count_) by type",
+                    "query": "resources\r\n| where type =~ \"microsoft.network/frontdoorwebapplicationfirewallpolicies\"\r\n| where resourceGroup in~ ({ResourceGroup:value})\r\n| where properties.securityPolicyLinks== \"[]\"\r\n| summarize count_ = count() by type\r\n| extend count_ = iff(count_ == 0, 0, count_)\r\n| union (datatable(type:string, count_:long) [\"microsoft.network/frontdoorwebapplicationfirewallpolicies\", 0])\r\n| summarize total_count = max(count_) by type",
                     "size": 4,
                     "title": "Total",
                     "queryType": 1,
@@ -3787,7 +3786,7 @@
                   "type": 3,
                   "content": {
                     "version": "KqlItem/1.0",
-                    "query": "resources\r\n| where type =~ \"microsoft.network/frontdoorwebapplicationfirewallpolicies\"\r\n| where resourceGroup in~ ({ResourceGroup:value})\r\n| where properties.frontendEndpointLinks== \"[]\"\r\n| summarize count(type) by tostring(sku.name)",
+                    "query": "resources\r\n| where type =~ \"microsoft.network/frontdoorwebapplicationfirewallpolicies\"\r\n| where resourceGroup in~ ({ResourceGroup:value})\r\n| where properties.securityPolicyLinks == \"[]\"\r\n| summarize count(type) by tostring(sku.name)",
                     "size": 4,
                     "title": "Count by SKU",
                     "queryType": 1,
@@ -3808,7 +3807,7 @@
                   "type": 3,
                   "content": {
                     "version": "KqlItem/1.0",
-                    "query": "resources\r\n| where type =~ \"microsoft.network/frontdoorwebapplicationfirewallpolicies\"\r\n| where resourceGroup in~ ({ResourceGroup:value})\r\n| where properties.frontendEndpointLinks == \"[]\" and properties.securityPolicyLinks == \"[]\"\r\n| extend Details = pack_all()\r\n| project subscriptionId, Resource=id, resourceGroup, location, SKU=sku.name, tags, Details",
+                    "query": "resources\r\n| where type =~ \"microsoft.network/frontdoorwebapplicationfirewallpolicies\"\r\n| where resourceGroup in~ ({ResourceGroup:value})\r\n| where properties.securityPolicyLinks == \"[]\"\r\n| extend Details = pack_all()\r\n| project subscriptionId, Resource=id, resourceGroup, location, SKU=sku.name, tags, Details",
                     "size": 3,
                     "title": "Orphaned Front Door WAF Policy",
                     "noDataMessage": "No orphaned Front Door WAF Policy found.",
