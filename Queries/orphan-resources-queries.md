@@ -169,12 +169,12 @@ resources
 
 #### Load Balancers
 
-[Load Balancers](https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-overview) with empty backend address pools.
+[Load Balancers](https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-overview) without backend address pools and without Inbound NAT Rules.
 
 ```kql
 resources
 | where type == "microsoft.network/loadbalancers"
-| where properties.backendAddressPools == "[]"
+| where properties.backendAddressPools == "[]" and properties.inboundNatRules == "[]"
 | extend Details = pack_all()
 | project subscriptionId, Resource=id, resourceGroup, location, Type=tostring(sku.name), tags, Details
 ```
