@@ -3474,7 +3474,7 @@
                 {
                   "type": 1,
                   "content": {
-                    "json": "[Load Balancers](https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-overview) with empty backend address pools.",
+                    "json": "[Load Balancers](https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-overview) without backend address pools and without Inbound NAT Rules.",
                     "style": "upsell"
                   },
                   "name": "text - Title - Info"
